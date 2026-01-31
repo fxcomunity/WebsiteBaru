@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi PDF Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <button class="menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-title">
+            <i class="fas fa-file-pdf"></i> Trading PDF
+        </div>
+        <button class="music-btn" onclick="toggleMusicPlayer()" title="Music Player">
+            <i class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari PDF..." onkeyup="filterPDFs()">
+            <i class="fas fa-search"></i>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <p>Akses cepat ke fitur</p>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="showHome()">
+                <i class="fas fa-home"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="sidebar-item" onclick="showHome()">
+                <i class="fas fa-folder-open"></i>
+                <span>Semua PDF</span>
+            </div>
+            <div class="sidebar-item" onclick="showMusic()">
+                <i class="fas fa-music"></i>
+                <span>Musik</span>
+            </div>
+            <div class="sidebar-item" onclick="showFavorites()">
+                <i class="fas fa-star"></i>
+                <span>Favorit</span>
+            </div>
+            <div class="sidebar-item" onclick="window.open('https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', '_blank')">
+                <i class="fab fa-whatsapp"></i>
+                <span>FX Community</span>
+            </div>
+            <div class="sidebar-item" onclick="window.open('https://wa.me/62895404147521', '_blank')">
+                <i class="fas fa-headset"></i>
+                <span>Admin Support</span>
+            </div>
+            <div class="sidebar-item" onclick="showAbout()">
+                <i class="fas fa-info-circle"></i>
+                <span>Tentang</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Container -->
+        <div class="container">
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <div class="category-pill active" onclick="filterByCategory('all')">Semua</div>
+                <div class="category-pill" onclick="filterByCategory('fx-basic')">Trading FX</div>
+                <div class="category-pill coming-soon" onclick="event.preventDefault(); showComingSoon()">
+                    Saham <span class="soon-badge">Soon</span>
+                </div>
+            </div>
+
+            <!-- PDF Grid -->
+            <div class="pdf-grid" id="pdfGrid"></div>
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-search"></i>
+                <p>Tidak ada PDF yang ditemukan</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdfViewerModal" class="modal" style="display: none;">
+        <div class="modal-content pdf-viewer-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <button class="back-btn" onclick="closePDFViewer()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <span id="pdfViewerTitle"></span>
+                </div>
+                <button class="close-btn" onclick="closePDFViewer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal" style="display: none;">
+        <div class="modal-content share-modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Bagikan PDF</span>
+                <button class="close-btn" onclick="closeShareModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="share-content">
+                    <div class="share-section">
+                        <h3>Pilih Cara Berbagi</h3>
+                        <div class="share-options">
+                            <button class="share-option" onclick="shareViaQRCode()">
+                                <i class="fas fa-qrcode"></i>
+                                <span>QR Code</span>
+                            </button>
+                            <button class="share-option" onclick="shareViaLink()">
+                                <i class="fas fa-link"></i>
+                                <span>Salin Link</span>
+                            </button>
+                            <button class="share-option" onclick="shareViaWhatsApp()">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>WhatsApp</span>
+                            </button>
+                            <button class="share-option" onclick="shareViaWeb()">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Bagikan</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="share-section" id="qrCodeContainer" style="display: none;">
+                        <h3>QR Code</h3>
+                        <div id="qrCode" style="display: flex; justify-content: center; padding: 20px;"></div>
+                        <button class="btn-primary" onclick="downloadQRCode()">
+                            <i class="fas fa-download"></i> Unduh QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Player Modal -->
+    <div id="musicPlayerModal" class="modal" style="display: none;">
+        <div class="modal-content music-player-modal-content">
+            <div class="modal-header">
+                <button class="back-btn" onclick="closeMusicPlayer()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <span id="musicPlayerTitle" class="modal-title"></span>
+                <button class="close-btn" onclick="closeMusicPlayer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="now-playing">
+                    <div class="album-art">
+                        <i class="fas fa-compact-disc"></i>
+                    </div>
+                    <h3 id="nowPlayingTitle"></h3>
+                    <p id="nowPlayingArtist"></p>
+                </div>
+                
+                <div class="player-controls">
+                    <div class="progress-bar">
+                        <div id="progress"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+                
+                <div class="media-controls">
+                    <button class="control-btn" onclick="previousTrack()">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn play-btn" id="playPauseBtn" onclick="togglePlayPause()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" onclick="nextTrack()">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-section">
+                    <h4>Playlist</h4>
+                    <div class="playlist" id="playlistItems"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Music Control -->
+    <div id="floatingMusicControl" class="floating-music-control" style="display: none;">
+        <div class="floating-info">
+            <i class="fas fa-music"></i>
+            <span>Musik</span>
+        </div>
+        <div class="floating-controls">
+            <button id="floatingPlayBtn" onclick="toggleBackgroundMusic()" class="floating-play-btn">
+                <i class="fas fa-pause"></i>
+            </button>
+            <input type="range" id="floatingVolumeSlider" class="floating-volume-slider" min="0" max="100" value="30" onchange="setMusicVolume(this.value)">
+        </div>
+    </div>
+
+    <!-- About Content -->
+    <div id="aboutContent" style="display: none;">
+        <!-- Content will be dynamically generated by JavaScript -->
+    </div>
+
+    <!-- Music Player Section -->
+    <div id="musicContent" class="music-section" style="display: none;">
+        <div class="container">
+            <div class="music-header">
+                <h2><i class="fas fa-music"></i> Musik Player</h2>
+                <p>Koleksi musik lokal untuk Anda</p>
+            </div>
+            
+            <!-- Music Grid -->
+            <div class="music-grid" id="musicGrid"></div>
+        </div>
+    </div>
+
+    <!-- Floating Contact Widget -->
+    <div id="floatingContactWidget" class="floating-contact-widget">
+        <div class="widget-header" onclick="toggleContactWidget()">
+            <i class="fas fa-envelope"></i>
+            <span>Hubungi Kami</span>
+            <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="widget-body" id="widgetBody" style="display: none;">
+            <form id="floatingContactForm" onsubmit="submitFloatingContact(event)">
+                <div class="form-group">
+                    <input type="text" id="fcName" required placeholder="Nama Anda" maxlength="50">
+                </div>
+                
+                <div class="form-group">
+                    <select id="fcCategory" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="pertanyaan">Pertanyaan</option>
+                        <option value="bug">Bug Report</option>
+                        <option value="saran">Saran</option>
+                        <option value="partnership">Kerjasama</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <textarea id="fcMessage" required placeholder="Pesan Anda..." maxlength="500" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="widget-submit-btn">
+                    <i class="fas fa-paper-plane"></i> Kirim
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" onclick="event.preventDefault(); showAbout();">Tentang Kami</a>
+                <a href="https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0" target="_blank">FX Community</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://wa.me/62895404147521" target="_blank" class="social-btn whatsapp-btn" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <button onclick="toggleContactWidget()" class="social-btn hubungi-btn" title="Hubungi Kami">
+                    <i class="fas fa-envelope"></i> Hubungi Kami
+                </button>
+                <a href="https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0" target="_blank" class="social-btn community-btn" title="FX Community">
+                    <i class="fab fa-whatsapp"></i> Community
+                </a>
+                <a href="https://www.instagram.com/si.palingjack/" target="_blank" class="social-btn" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@uciii0106" target="_blank" class="social-btn" title="TikTok">
+                    <i class="fab fa-tiktok\"></i>
+                </a>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 Koleksi PDF Trading. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="music-data.js"></script>
+    <script src="linktree-data.js"></script>
+    <!-- Linktree Modal -->
+    <div id="linktreeModal" class="linktree-modal" style="display: none;">
+        <div class="linktree-card">
+            <button class="lt-close-btn" onclick="closeLinktree()"><i class="fas fa-times"></i></button>
+            <div class="lt-profile">
+                <div class="lt-avatar"><i class="fas fa-user-circle"></i></div>
+                <h3>FX Trading Hub</h3>
+                <p>Koleksi link penting & cepat</p>
+            </div>
+            <div class="lt-links" id="linktreeList"></div>
+        </div>
+    </div>
+
+    <!-- Floating Linktree Button -->
+    <button id="linktreeFloatingBtn" class="linktree-floating-btn" onclick="openLinktree()" title="Link Saya">
+        <i class="fas fa-link"></i>
+    </button>
+
+    <script src="script.js"></script>
+    
+
+</body>
+</html>
