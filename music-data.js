@@ -2,7 +2,7 @@
 const musicData = [
     {
         id: 1,
-        title: "DJ EEEE AAAA ENGKOL",
+        title: "DJ",
         artist: "SENCY X SO ASU SLOW VIRAL TIKTOK",
         file: "https://github.com/fxcomunity/WebsiteBaru/releases/download/v1/DJ.EAAA.mp4",
         duration: 0,
@@ -25,3 +25,4 @@ const musicData = [
         favorite: false
     }
 ];
+
