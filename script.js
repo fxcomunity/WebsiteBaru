@@ -571,7 +571,6 @@ document.addEventListener('keydown', function(event) {
 document.addEventListener('DOMContentLoaded', function() {
     applyDeviceStyles();
     renderPDFs(allPDFs);
-    initializeAudio();
     
     document.addEventListener('click', function(event) {
         const sidebar = document.getElementById('sidebar');
@@ -583,163 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleSidebar();
         }
     });
-    
-    // Initialize audio
-    initializeAudio();
 });
-
-// Music Player Functions
-function initializeAudio() {
-    // Floating control akan ditampilkan ketika user play musik dari Music Player
-    const floatingControl = document.getElementById('floatingMusicControl');
-    if (floatingControl) {
-        floatingControl.style.display = 'none';
-    }
-}
-
-function toggleMusicPlayer() {
-    // Toggle background music dari header button
-    const audio = document.getElementById('musicAudio');
-    if (audio) {
-        toggleBackgroundMusic();
-    }
-}
-
-function toggleBackgroundMusic() {
-    const audio = document.getElementById('musicAudio');
-    const playBtn = document.querySelector('.floating-play-btn i');
-    
-    if (!audio) return;
-    
-    if (audio.paused) {
-        // Play
-        audio.play();
-        isAudioPlaying = true;
-        if (playBtn) playBtn.className = 'fas fa-pause';
-    } else {
-        // Pause
-        audio.pause();
-        isAudioPlaying = false;
-        if (playBtn) playBtn.className = 'fas fa-play';
-    }
-    
-    updateMusicButtonState();
-}
-
-function setMusicVolume(value) {
-    audioVolume = value;
-    const audio = document.getElementById('musicAudio');
-    if (audio) {
-        audio.volume = value / 100;
-    }
-}
-
-// Music Player Functions
-let currentMusicIndex = 0;
-let musicPlayer = null;
-let musicPlaylist = [];
-
-function showMusic() {
-    showHome();
-    document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('musicContent').style.display = 'block';
-    document.getElementById('aboutContent').style.display = 'none';
-    currentView = 'music';
-    renderMusicGrid();
-}
-
-function renderMusicGrid() {
-    const musicGrid = document.getElementById('musicGrid');
-    musicGrid.innerHTML = '';
-    
-    musicData.forEach((track, index) => {
-        const card = document.createElement('div');
-        card.className = 'music-card';
-        card.innerHTML = `
-            <div class="music-card-cover">
-                <i class="fas fa-music"></i>
-            </div>
-            <h3>${track.title}</h3>
-            <p>${track.artist}</p>
-            <div class="music-card-actions">
-                <button class="music-btn music-play-btn" onclick="playTrack(${index})">
-                    <i class="fas fa-play"></i> Play
-                </button>
-                <button class="music-btn music-favorite-btn ${track.favorite ? 'liked' : ''}" onclick="toggleMusicFavorite(${index})">
-                    <i class="fas fa-heart"></i>
-                </button>
-            </div>
-        `;
-        musicGrid.appendChild(card);
-    });
-}
-
-function playTrack(index) {
-    currentMusicIndex = index;
-    const track = musicData[index];
-    
-    // Setup music player
-    musicPlaylist = musicData.map(t => t);
-    musicPlayer = document.getElementById('musicPlayerModal');
-    
-    // Update modal title
-    document.getElementById('musicPlayerTitle').textContent = track.title;
-    document.getElementById('nowPlayingTitle').textContent = track.title;
-    document.getElementById('nowPlayingArtist').textContent = track.artist;
-    
-    // Create audio element
-    let audio = document.getElementById('musicAudio');
-    if (!audio) {
-        audio = document.createElement('audio');
-        audio.id = 'musicAudio';
-        audio.addEventListener('timeupdate', updateMusicProgress);
-        audio.addEventListener('ended', nextTrack);
-        audio.volume = audioVolume / 100;
-        document.body.appendChild(audio);
-    }
-    
-    audio.src = track.file;
-    audio.volume = audioVolume / 100;
-    audio.play();
-    isAudioPlaying = true;
-    
-    // Update playlist
-    renderPlaylist();
-    
-    // Show modal
-    musicPlayer.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    
-    // Update play button
-    const playBtn = document.getElementById('playPauseBtn');
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    
-    // Show floating control as background music indicator
-    const floatingControl = document.getElementById('floatingMusicControl');
-    if (floatingControl) {
-        floatingControl.style.display = 'flex';
-        const floatingTitle = floatingControl.querySelector('.floating-info span');
-        if (floatingTitle) {
-            floatingTitle.textContent = track.title;
-        }
-    }
-    
-    // Update header music button
-    updateMusicButtonState();
-}
-
-function renderPlaylist() {
-    const playlistItems = document.getElementById('playlistItems');
-    playlistItems.innerHTML = '';
-    
-    musicPlaylist.forEach((track, index) => {
-        const item = document.createElement('div');
-        item.className = `playlist-item ${index === currentMusicIndex ? 'active' : ''}`;
-        item.textContent = track.title;
-        item.onclick = () => playTrack(index);
-        playlistItems.appendChild(item);
-    });
-}
 
 function updateMusicProgress() {
     const audio = document.getElementById('musicAudio');
@@ -774,12 +617,12 @@ function togglePlayPause() {
 }
 
 function nextTrack() {
-    currentMusicIndex = (currentMusicIndex + 1) % musicPlaylist.length;
+    currentMusicIndex = (currentMusicIndex + 1) % musicData.length;
     playTrack(currentMusicIndex);
 }
 
 function previousTrack() {
-    currentMusicIndex = (currentMusicIndex - 1 + musicPlaylist.length) % musicPlaylist.length;
+    currentMusicIndex = (currentMusicIndex - 1 + musicData.length) % musicData.length;
     playTrack(currentMusicIndex);
 }
 
@@ -929,4 +772,19 @@ document.addEventListener('click', function(e) {
     if (modal.contains(e.target) || (btn && btn.contains(e.target))) return;
     closeLinktree();
 });
+
+// Music modal open/close
+function openMusicModal() {
+    const modal = document.getElementById('musicModal');
+    if (!modal) return;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMusicModal() {
+    const modal = document.getElementById('musicModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
