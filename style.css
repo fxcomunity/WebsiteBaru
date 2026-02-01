@@ -1799,3 +1799,86 @@ body {
         margin-top: 6px;
     }
 }
+
+/* Spotify-like Music Modal Styling (appended) */
+#musicModal .modal-content {
+    background: linear-gradient(180deg, #07121a 0%, #061623 100%);
+    color: #e6f7ee;
+    max-width: 880px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#musicModal .modal-header {
+    background: linear-gradient(90deg,#0b2026 0%, rgba(11,32,38,0.6) 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding: 16px 18px;
+}
+
+#musicModal .modal-body {
+    display: flex;
+    gap: 20px;
+    padding: 18px;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+#musicModal audio { 
+    width: 100%;
+    background: transparent;
+    margin-bottom: 12px;
+}
+
+#musicModal .music-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: transparent;
+    transition: background 0.18s, transform 0.12s;
+    cursor: pointer;
+    color: #dff6ea;
+    margin-bottom: 8px;
+}
+
+#musicModal .music-list-item:hover {
+    background: rgba(255,255,255,0.03);
+    transform: translateY(-2px);
+}
+
+#musicModal .music-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#153034,#082028);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: rgba(255,255,255,0.12);
+    margin-right: 12px;
+}
+
+.music-left { display:flex; align-items:center; gap:12px; }
+.music-meta .music-title { font-weight:700; color:#fff; }
+.music-meta .music-artist { font-size:12px; color:rgba(255,255,255,0.6); margin-top:4px; }
+
+.music-right .music-play-small {
+    background: linear-gradient(90deg,#1db954,#1ed760);
+    border: none;
+    color: #042113;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight:700;
+    cursor: pointer;
+}
+
+.music-right .music-play-small:hover { filter:brightness(1.05); }
+
+@media(min-width:900px) {
+    #musicModal .modal-body { flex-direction: row; }
+    #musicModal .modal-body audio { max-width: 320px; }
+    #musicModal .modal-body #musicList { flex:1; }
+}
