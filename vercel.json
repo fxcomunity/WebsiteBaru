@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "public": true,
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "./",
+  
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/whatsapp-community",
+      "destination": "https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0",
+      "permanent": true
+    },
+    {
+      "source": "/admin-support",
+      "destination": "https://wa.me/62895404147521",
+      "permanent": true
+    }
+  ]
+}
