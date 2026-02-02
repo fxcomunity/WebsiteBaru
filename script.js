@@ -787,4 +787,3 @@ function closeMusicModal() {
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
-
