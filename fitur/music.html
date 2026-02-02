@@ -195,7 +195,7 @@
         .music-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             max-height: 500px;
             overflow-y: auto;
             padding-right: 8px;
@@ -220,34 +220,33 @@
         }
         
         .music-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 35px 40px 1fr 40px;
             align-items: center;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             gap: 12px;
             border-left: 3px solid transparent;
             position: relative;
         }
         
         .music-item:hover {
-            background: rgba(29, 185, 84, 0.2);
+            background: rgba(29, 185, 84, 0.15);
             border-left-color: #1db954;
-            padding-left: 18px;
         }
         
         .music-item.active {
-            background: rgba(29, 185, 84, 0.3);
+            background: rgba(29, 185, 84, 0.25);
             border-left-color: #1db954;
         }
         
-        .music-item .music-index {
+        .music-index {
             color: #b3b3b3;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            width: 25px;
             text-align: center;
         }
         
@@ -257,34 +256,44 @@
         
         .music-item.active .music-index {
             color: #1db954;
+            font-weight: 700;
         }
         
         .music-icon {
-            font-size: 24px;
+            font-size: 20px;
             color: #1db954;
-            width: 30px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
         .music-item:hover .music-icon {
-            transform: scale(1.2);
+            transform: scale(1.15);
+        }
+        
+        .music-item.active .music-icon {
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .music-info {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
             min-width: 0;
         }
         
         .music-title {
             font-weight: 600;
             color: #fff;
-            margin-bottom: 4px;
-            font-size: 14px;
+            font-size: 13px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: color 0.3s ease;
+            transition: color 0.2s ease;
         }
         
         .music-item:hover .music-title {
@@ -292,7 +301,7 @@
         }
         
         .music-artist {
-            font-size: 12px;
+            font-size: 11px;
             color: #b3b3b3;
             white-space: nowrap;
             overflow: hidden;
@@ -304,20 +313,29 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            transition: all 0.2s ease;
+            font-size: 13px;
             flex-shrink: 0;
+            opacity: 0;
+        }
+        
+        .music-item:hover .play-btn {
+            opacity: 1;
+        }
+        
+        .music-item.active .play-btn {
+            opacity: 1;
         }
         
         .play-btn:hover {
             background: #1ed760;
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
         
         .play-btn:active {

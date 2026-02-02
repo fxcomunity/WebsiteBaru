@@ -52,27 +52,26 @@ function renderMusicButtons() {
     
     musicData.forEach((music, index) => {
         const item = document.createElement('div');
-        item.className = 'music-list-item';
+        item.className = 'music-item';
         item.setAttribute('role', 'button');
         item.tabIndex = 0;
         item.onclick = () => playMusic(index);
         item.onkeypress = (e) => { if (e.key === 'Enter') playMusic(index); };
 
         item.innerHTML = `
-            <div class="music-left">
-                <div class="music-thumb"><i class="fas fa-compact-disc"></i></div>
-                <div class="music-meta">
-                    <div class="music-title">${music.title}</div>
-                    <div class="music-artist">${music.artist}</div>
-                </div>
+            <div class="music-index">${String(index + 1).padStart(2, '0')}</div>
+            <div class="music-icon"><i class="fas fa-compact-disc"></i></div>
+            <div class="music-info">
+                <div class="music-title">${music.title}</div>
+                <div class="music-artist">${music.artist}</div>
             </div>
-            <div class="music-right">
-                <button class="music-play-small" aria-label="Play">▶</button>
-            </div>
+            <button class="play-btn" aria-label="Play">
+                <i class="fas fa-play"></i>
+            </button>
         `;
 
-        // Play when clicking the small play button as well
-        item.querySelector('.music-play-small').onclick = (ev) => { 
+        // Play when clicking the play button as well
+        item.querySelector('.play-btn').onclick = (ev) => { 
             ev.stopPropagation(); 
             playMusic(index); 
         };
