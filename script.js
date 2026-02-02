@@ -1,7 +1,6 @@
 // Global variables
 let currentCategory = 'all';
 let allPDFs = [...pdfData];
-let favorites = JSON.parse(localStorage.getItem('pdfFavorites')) || [];
 let currentView = 'all'; // 'all', 'favorites', 'about'
 let currentPDFShareData = null;
 let backgroundAudio = null;
@@ -261,32 +260,6 @@ function copyToClipboard(text) {
     }
     
     document.body.removeChild(textarea);
-}
-
-// Fungsi untuk toggle favorit
-function toggleFavorite(url, name, category) {
-    const index = favorites.findIndex(fav => fav.url === url);
-    
-    if (index > -1) {
-        favorites.splice(index, 1);
-        showNotification('Dihapus dari favorit');
-    } else {
-        favorites.push({ url, name, category });
-        showNotification('Ditambahkan ke favorit');
-    }
-    
-    localStorage.setItem('pdfFavorites', JSON.stringify(favorites));
-    
-    if (currentView === 'favorites') {
-        showFavorites();
-    } else {
-        renderPDFs(getCurrentPDFs());
-    }
-}
-
-// Fungsi untuk cek apakah PDF adalah favorit
-function isFavorite(url) {
-    return favorites.some(fav => fav.url === url);
 }
 
 // Fungsi untuk show notification
