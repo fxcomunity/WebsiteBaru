@@ -7,97 +7,184 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../style.css">
     <style>
-        .fitur-container {
-            max-width: 800px;
-            margin: 20px auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
+        }
+        
+        .fitur-container {
+            max-width: 700px;
+            margin: 0 auto;
         }
         
         .fitur-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #1F4788;
+            gap: 15px;
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
         
         .fitur-header a {
-            color: #1F4788;
+            color: #667eea;
             text-decoration: none;
-            font-size: 20px;
-            transition: opacity 0.3s;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f4ff;
         }
         
         .fitur-header a:hover {
-            opacity: 0.7;
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
         }
         
         .fitur-header h1 {
             margin: 0;
             flex: 1;
-            color: #1F4788;
+            color: #667eea;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .fitur-header h1 i {
+            color: #764ba2;
         }
         
         .music-player-section {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .player-header {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f4ff;
         }
         
         .player-header i {
-            font-size: 32px;
-            color: #1F4788;
+            font-size: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .player-header h2 {
             margin: 0;
-            color: #1F4788;
+            color: #333;
+            font-size: 24px;
         }
         
         audio {
             width: 100%;
-            margin: 20px 0;
+            margin: 25px 0;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background-color: #f0f4ff;
         }
         
         .music-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 20px;
         }
         
         .music-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            padding: 18px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f4ff 100%);
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             gap: 15px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .music-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
         }
         
         .music-item:hover {
-            background: #e8f0fa;
-            transform: translateX(5px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(8px);
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+        
+        .music-item:hover .music-title,
+        .music-item:hover .music-artist {
+            color: white;
+        }
+        
+        .music-item:hover .music-icon {
+            color: white;
+            transform: scale(1.2) rotate(15deg);
+        }
+        
+        .music-item:hover .play-btn {
+            background: white;
+            color: #667eea;
+            transform: scale(1.15);
         }
         
         .music-icon {
             font-size: 28px;
-            color: #1F4788;
-            width: 40px;
+            color: #667eea;
+            width: 45px;
             text-align: center;
+            transition: all 0.3s ease;
         }
         
         .music-info {
@@ -105,34 +192,55 @@
         }
         
         .music-title {
-            font-weight: 600;
-            color: #1F4788;
-            margin-bottom: 4px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 15px;
+            transition: color 0.3s ease;
         }
         
         .music-artist {
             font-size: 13px;
-            color: #666;
+            color: #999;
+            transition: color 0.3s ease;
         }
         
         .play-btn {
-            background: #1F4788;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             font-size: 16px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         
-        .play-btn:hover {
-            background: #153558;
-            transform: scale(1.1);
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 600px) {
+            .fitur-container {
+                max-width: 100%;
+            }
+            
+            .music-player-section {
+                padding: 20px;
+            }
+            
+            .fitur-header h1 {
+                font-size: 22px;
+            }
+            
+            .player-header h2 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
