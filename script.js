@@ -175,19 +175,29 @@ function shareViaQRCode() {
     const qrContainer = document.getElementById('qrCodeContainer');
     const qrCode = document.getElementById('qrCode');
     
+    // Clear previous QR code
     qrCode.innerHTML = '';
+    qrCode.style.display = 'flex';
     
-    // Generate QR Code dengan link fxcommunity
-    new QRCode(document.getElementById('qrCode'), {
-        text: 'https://fxcommunity.vercel.app/',
-        width: 256,
-        height: 256,
-        colorDark: '#1F4788',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-    });
-    
-    qrContainer.style.display = 'block';
+    // Delay sedikit untuk memastikan HTML sudah clear
+    setTimeout(() => {
+        try {
+            // Generate QR Code dengan link fxcommunity
+            new QRCode(document.getElementById('qrCode'), {
+                text: 'https://fxcommunity.vercel.app/',
+                width: 256,
+                height: 256,
+                colorDark: '#1F4788',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            qrContainer.style.display = 'block';
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+            showNotification('Gagal membuat QR Code', 'error');
+        }
+    }, 100);
 }
 
 // Fungsi untuk share via link
@@ -474,70 +484,100 @@ function showAbout() {
         <div class="about-container">
             <div class="about-header">
                 <i class="fas fa-info-circle"></i>
-                <h2>Tentang Aplikasi</h2>
+                <h2>FX Community - Koleksi PDF Trading</h2>
             </div>
             
             <div class="about-section">
-                <h3><i class="fas fa-book-reader"></i> Koleksi PDF Trading</h3>
-                <p>Platform digital yang menyediakan berbagai materi pembelajaran trading forex. Kami mengumpulkan PDF berkualitas tinggi untuk membantu Anda belajar trading dari dasar hingga mahir.</p>
+                <h3><i class="fas fa-star"></i> Tentang Kami</h3>
+                <p>FX Community adalah platform pembelajaran trading yang komprehensif dan terpercaya. Kami menyediakan koleksi materi trading berkualitas tinggi dari berbagai sumber terbaik. Misi kami adalah memberdayakan trader pemula hingga profesional dengan pengetahuan dan alat yang diperlukan untuk sukses di pasar forex.</p>
+                <p>Bergabunglah dengan ribuan trader yang telah mempercayai kami sebagai sumber pembelajaran utama mereka!</p>
             </div>
             
             <div class="about-section">
-                <h3><i class="fas fa-lightbulb"></i> Fitur Unggulan</h3>
+                <h3><i class="fas fa-rocket"></i> Fitur Unggulan</h3>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Viewer PDF langsung tanpa redirect</li>
-                    <li><i class="fas fa-check-circle"></i> Fitur share dengan QR Code</li>
-                    <li><i class="fas fa-check-circle"></i> Kategori Trading FX yang lengkap</li>
+                    <li><i class="fas fa-check-circle"></i> Fitur share dengan QR Code resmi</li>
+                    <li><i class="fas fa-check-circle"></i> Koleksi PDF Trading FX yang lengkap</li>
                     <li><i class="fas fa-check-circle"></i> Fitur favorit untuk menyimpan materi penting</li>
                     <li><i class="fas fa-check-circle"></i> Pencarian cepat dan mudah</li>
-                    <li><i class="fas fa-check-circle"></i> Music Player dengan koleksi lagu</li>
-                    <li><i class="fas fa-check-circle"></i> Responsive di semua device</li>
+                    <li><i class="fas fa-check-circle"></i> Music Player dengan koleksi lagu inspiratif</li>
+                    <li><i class="fas fa-check-circle"></i> Responsive design di semua device</li>
+                    <li><i class="fas fa-check-circle"></i> Linktree dengan link penting & cepat</li>
                 </ul>
             </div>
             
             <div class="about-section device-specific">
-                <h3><i class="fas ${deviceInfo.deviceIcon}"></i> Informasi Device Anda</h3>
+                <h3><i class="fas ${deviceInfo.deviceIcon}"></i> Informasi Perangkat Anda</h3>
                 <div class="device-info">
                     <div class="info-item">
-                        <span class="info-label">Device:</span>
-                        <span class="info-value">${deviceInfo.deviceType}</span>
+                        <span class="info-label">📱 Tipe Device:</span>
+                        <span class="info-value"><strong>${deviceInfo.deviceType}</strong></span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Sistem Operasi:</span>
-                        <span class="info-value">${deviceInfo.deviceOS}</span>
+                        <span class="info-label">🖥️ Sistem Operasi:</span>
+                        <span class="info-value"><strong>${deviceInfo.deviceOS}</strong></span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Total PDF:</span>
-                        <span class="info-value">${allPDFs.length} dokumen</span>
+                        <span class="info-label">🌐 Browser:</span>
+                        <span class="info-value"><strong>${deviceInfo.browserName}</strong></span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">PDF Favorit:</span>
-                        <span class="info-value">${favorites.length} dokumen</span>
+                        <span class="info-label">📚 Total PDF Tersedia:</span>
+                        <span class="info-value"><strong>${allPDFs.length} dokumen</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">❤️ PDF Favorit Anda:</span>
+                        <span class="info-value"><strong>${favorites.length} dokumen</strong></span>
                     </div>
                 </div>
             </div>
             
             <div class="about-section">
-                <h3><i class="fas fa-question-circle"></i> Cara Menggunakan</h3>
+                <h3><i class="fas fa-book"></i> Materi Pembelajaran</h3>
+                <p>Kami menyediakan materi pembelajaran dalam berbagai kategori:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-chart-line"></i> <strong>Trading FX Basic</strong> - Dasar-dasar forex untuk pemula</li>
+                    <li><i class="fas fa-chart-area"></i> <strong>Analisa Teknikal</strong> - Strategi dan pattern trading</li>
+                    <li><i class="fas fa-brain"></i> <strong>Psikologi Trading</strong> - Mindset dan emotional control</li>
+                    <li><i class="fas fa-graduation-cap"></i> <strong>Trading Lanjutan</strong> - Strategi profesional dan advanced concepts</li>
+                </ul>
+            </div>
+            
+            <div class="about-section">
+                <h3><i class="fas fa-question-circle"></i> Cara Menggunakan Platform</h3>
                 <ol class="usage-list">
-                    <li>Pilih kategori PDF yang ingin Anda pelajari</li>
-                    <li>Gunakan fitur pencarian untuk menemukan materi spesifik</li>
-                    <li>Klik tombol "Lihat" untuk membaca PDF langsung</li>
-                    <li>Gunakan tombol share untuk membagikan dengan QR Code</li>
-                    <li>Klik ikon hati untuk menambahkan ke favorit</li>
+                    <li><strong>Jelajahi Kategori</strong> - Pilih kategori PDF yang ingin Anda pelajari</li>
+                    <li><strong>Cari Materi</strong> - Gunakan fitur pencarian untuk menemukan topik spesifik</li>
+                    <li><strong>Baca PDF</strong> - Klik tombol "Lihat" untuk membaca PDF langsung di aplikasi</li>
+                    <li><strong>Bagikan</strong> - Gunakan tombol share untuk membagikan dengan QR Code resmi</li>
+                    <li><strong>Simpan Favorit</strong> - Klik ikon hati untuk menyimpan materi penting</li>
+                    <li><strong>Akses Linktree</strong> - Gunakan tombol link untuk akses ke link penting lainnya</li>
                 </ol>
             </div>
             
+            <div class="about-section">
+                <h3><i class="fas fa-community"></i> Komunitas FX</h3>
+                <p>Jadilah bagian dari komunitas trader FX yang aktif dan saling mendukung. Berbagi pengalaman, strategi, dan tips dengan trader lainnya.</p>
+                <p>Ikuti komunitas kami untuk mendapatkan update terbaru, webinar, dan event eksklusif!</p>
+            </div>
+            
             <div class="about-section contact-section">
-                <h3><i class="fas fa-envelope"></i> Hubungi Kami</h3>
-                <p>Ada pertanyaan atau saran? Jangan ragu untuk menghubungi kami!</p>
-                <a href="https://wa.me/62895404147521" target="_blank" class="contact-btn">
-                    <i class="fab fa-whatsapp"></i> Chat di WhatsApp
-                </a>
+                <h3><i class="fas fa-comments"></i> Hubungi Kami</h3>
+                <p>Punya pertanyaan, saran, atau ingin bergabung dengan komunitas kami? Hubungi kami sekarang!</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 15px;">
+                    <a href="https://wa.me/62895404147521" target="_blank" class="contact-btn" style="flex: 1; min-width: 150px;">
+                        <i class="fab fa-whatsapp"></i> Admin Support
+                    </a>
+                    <a href="https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0" target="_blank" class="contact-btn" style="flex: 1; min-width: 150px;">
+                        <i class="fab fa-whatsapp"></i> Join Komunitas
+                    </a>
+                </div>
             </div>
             
             <div class="about-footer">
-                <p>&copy; 2025 Koleksi PDF Trading</p>
+                <p>&copy; 2025 FX Community | Koleksi PDF Trading</p>
+                <p style="font-size: 12px; color: #888; margin-top: 8px;">Platform pembelajaran trading untuk semua level</p>
             </div>
         </div>
     `;
