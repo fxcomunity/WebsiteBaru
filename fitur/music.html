@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik - FX Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .fitur-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .fitur-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1F4788;
+        }
+        
+        .fitur-header a {
+            color: #1F4788;
+            text-decoration: none;
+            font-size: 20px;
+            transition: opacity 0.3s;
+        }
+        
+        .fitur-header a:hover {
+            opacity: 0.7;
+        }
+        
+        .fitur-header h1 {
+            margin: 0;
+            flex: 1;
+            color: #1F4788;
+        }
+        
+        .music-player-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .player-header i {
+            font-size: 32px;
+            color: #1F4788;
+        }
+        
+        .player-header h2 {
+            margin: 0;
+            color: #1F4788;
+        }
+        
+        audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .music-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .music-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+        
+        .music-item:hover {
+            background: #e8f0fa;
+            transform: translateX(5px);
+        }
+        
+        .music-icon {
+            font-size: 28px;
+            color: #1F4788;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .music-info {
+            flex: 1;
+        }
+        
+        .music-title {
+            font-weight: 600;
+            color: #1F4788;
+            margin-bottom: 4px;
+        }
+        
+        .music-artist {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .play-btn {
+            background: #1F4788;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .play-btn:hover {
+            background: #153558;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="fitur-container">
+        <div class="fitur-header">
+            <a href="/" title="Kembali ke beranda">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1><i class="fas fa-music"></i> Musik DJ</h1>
+        </div>
+        
+        <div class="music-player-section">
+            <div class="player-header">
+                <i class="fas fa-compact-disc"></i>
+                <h2>Music Player</h2>
+            </div>
+            
+            <audio id="audioPlayer" controls></audio>
+            
+            <div class="music-list" id="musicList"></div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="music.js"></script>
+    <script>
+        // Initialize music player for this page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMusicButtons();
+            
+            // Set first track as default
+            if (musicData.length > 0) {
+                const audioEl = document.getElementById('audioPlayer');
+                audioEl.src = musicData[0].file;
+            }
+        });
+    </script>
+</body>
+</html>
