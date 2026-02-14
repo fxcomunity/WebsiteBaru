@@ -66,8 +66,20 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
     <script src="../../music-data.js"></script>
     <script src="music.js"></script>
+    <script>
+        // Load footer via fetch to keep markup DRY
+        fetch('../../footer/music.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('footer-container').innerHTML = html;
+            })
+            .catch(err => console.log('Footer load error:', err));
+    </script>
 </body>
 
 </html>

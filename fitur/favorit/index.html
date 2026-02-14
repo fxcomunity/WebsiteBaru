@@ -47,6 +47,9 @@
         <div id="favoritesList"></div>
     </div>
 
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
     <script src="../data.js"></script>
     <script src="favorites.js"></script>
     <script>
@@ -131,6 +134,13 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             renderFavoritesPage();
+            // Load footer via fetch
+            fetch('../../footer/favorites.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('footer-container').innerHTML = html;
+                })
+                .catch(err => console.log('Footer load error:', err));
         });
     </script>
 </body>
