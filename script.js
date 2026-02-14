@@ -11,14 +11,14 @@ let audioVolume = 30;
 function getDeviceInfo() {
     const userAgent = navigator.userAgent;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
-    const isTablet = /(iPad|Android(?!.*mobile))/i.test(userAgent) || 
-                     (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
-    
+    const isTablet = /(iPad|Android(?!.*mobile))/i.test(userAgent) ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+
     let deviceType = 'Desktop';
     let deviceIcon = 'fa-desktop';
     let deviceOS = 'Unknown';
     let deviceClass = 'desktop';
-    
+
     // Deteksi OS dan Device Type
     if (/iPhone/.test(userAgent)) {
         deviceType = 'iPhone';
@@ -58,7 +58,7 @@ function getDeviceInfo() {
         deviceOS = 'Linux';
         deviceClass = 'linux-desktop';
     }
-    
+
     // Get browser info
     let browserName = 'Unknown';
     if (userAgent.indexOf('Firefox') > -1) browserName = 'Firefox';
@@ -66,7 +66,7 @@ function getDeviceInfo() {
     else if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) browserName = 'Safari';
     else if (userAgent.indexOf('Edg') > -1) browserName = 'Edge';
     else if (userAgent.indexOf('Opera') > -1 || userAgent.indexOf('OPR') > -1) browserName = 'Opera';
-    
+
     return {
         deviceType,
         deviceIcon,
@@ -88,7 +88,7 @@ function applyDeviceStyles() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    
+
     sidebar.classList.toggle('active');
     overlay.classList.toggle('active');
 }
@@ -103,7 +103,7 @@ function getGoogleDriveId(url) {
 function getGoogleDriveUrls(url) {
     const fileId = getGoogleDriveId(url);
     if (!fileId) return { view: url, download: url, share: url, embed: url };
-    
+
     return {
         view: `https://drive.google.com/file/d/${fileId}/view`,
         download: `https://drive.google.com/uc?export=download&id=${fileId}`,
@@ -118,10 +118,10 @@ function viewPDF(url, name) {
     const modal = document.getElementById('pdfViewerModal');
     const iframe = document.getElementById('pdfFrame');
     const title = document.getElementById('pdfViewerTitle');
-    
+
     title.textContent = name;
     iframe.src = urls.embed;
-    modal.style.display = 'block';
+    modal.style.display = 'flex'; // Changed to flex to match CSS
     document.body.style.overflow = 'hidden';
 }
 
@@ -129,7 +129,7 @@ function viewPDF(url, name) {
 function closePDFViewer() {
     const modal = document.getElementById('pdfViewerModal');
     const iframe = document.getElementById('pdfFrame');
-    
+
     iframe.src = '';
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -150,7 +150,7 @@ function sharePDF(url, name) {
 // Fungsi untuk open share modal
 function openShareModal() {
     const modal = document.getElementById('shareModal');
-    modal.style.display = 'block';
+    modal.style.display = 'flex'; // Changed to flex
     document.body.style.overflow = 'hidden';
 }
 
@@ -159,7 +159,7 @@ function closeShareModal() {
     const modal = document.getElementById('shareModal');
     const qrContainer = document.getElementById('qrCodeContainer');
     const qrCode = document.getElementById('qrCode');
-    
+
     qrCode.innerHTML = '';
     qrContainer.style.display = 'none';
     modal.style.display = 'none';
@@ -170,14 +170,14 @@ function closeShareModal() {
 // Fungsi untuk share via QR Code
 function shareViaQRCode() {
     if (!currentPDFShareData) return;
-    
+
     const qrContainer = document.getElementById('qrCodeContainer');
     const qrCode = document.getElementById('qrCode');
-    
+
     // Clear previous QR code
     qrCode.innerHTML = '';
     qrCode.style.display = 'flex';
-    
+
     // Delay sedikit untuk memastikan HTML sudah clear
     setTimeout(() => {
         try {
@@ -190,7 +190,7 @@ function shareViaQRCode() {
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
-            
+
             qrContainer.style.display = 'block';
         } catch (error) {
             console.error('Error generating QR code:', error);
@@ -202,7 +202,7 @@ function shareViaQRCode() {
 // Fungsi untuk share via link
 function shareViaLink() {
     if (!currentPDFShareData) return;
-    
+
     copyToClipboard('https://fxcommunity.vercel.app/');
     showNotification('Link berhasil disalin ke clipboard!');
 }
@@ -210,7 +210,7 @@ function shareViaLink() {
 // Fungsi untuk share via WhatsApp
 function shareViaWhatsApp() {
     if (!currentPDFShareData) return;
-    
+
     const text = `Lihat PDF: ${currentPDFShareData.name}\n${currentPDFShareData.url}`;
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/?text=${encoded}`, '_blank');
@@ -220,7 +220,7 @@ function shareViaWhatsApp() {
 // Fungsi untuk share via web share API
 function shareViaWeb() {
     if (!currentPDFShareData) return;
-    
+
     if (navigator.share) {
         navigator.share({
             title: currentPDFShareData.name,
@@ -237,7 +237,7 @@ function shareViaWeb() {
 function downloadQRCode() {
     const canvas = document.querySelector('#qrCode canvas');
     if (!canvas) return;
-    
+
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
     link.download = `${currentPDFShareData.name.replace(/\.pdf/i, '')}-qrcode.png`;
@@ -252,13 +252,13 @@ function copyToClipboard(text) {
     textarea.style.opacity = '0';
     document.body.appendChild(textarea);
     textarea.select();
-    
+
     try {
         document.execCommand('copy');
     } catch (err) {
         showNotification('Gagal menyalin link', 'error');
     }
-    
+
     document.body.removeChild(textarea);
 }
 
@@ -266,14 +266,14 @@ function copyToClipboard(text) {
 function showNotification(message, type = 'success') {
     const oldNotif = document.querySelector('.notification');
     if (oldNotif) oldNotif.remove();
-    
+
     const notif = document.createElement('div');
     notif.className = `notification ${type}`;
     notif.textContent = message;
     document.body.appendChild(notif);
-    
+
     setTimeout(() => notif.classList.add('show'), 10);
-    
+
     setTimeout(() => {
         notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
@@ -283,15 +283,15 @@ function showNotification(message, type = 'success') {
 // Fungsi untuk mendapatkan PDFs sesuai view saat ini
 function getCurrentPDFs() {
     let pdfs = allPDFs;
-    
+
     if (currentView === 'favorites') {
         pdfs = favorites;
     }
-    
+
     if (currentCategory !== 'all') {
         pdfs = pdfs.filter(pdf => pdf.category === currentCategory);
     }
-    
+
     return pdfs;
 }
 
@@ -299,11 +299,11 @@ function getCurrentPDFs() {
 function renderPDFs(pdfs) {
     const pdfGrid = document.getElementById('pdfGrid');
     const emptyState = document.getElementById('emptyState');
-    
+
     if (pdfs.length === 0) {
         pdfGrid.style.display = 'none';
         emptyState.style.display = 'block';
-        
+
         if (currentView === 'favorites') {
             emptyState.innerHTML = `
                 <i class="fas fa-heart-broken"></i>
@@ -318,16 +318,16 @@ function renderPDFs(pdfs) {
         }
         return;
     }
-    
+
     pdfGrid.style.display = 'grid';
     emptyState.style.display = 'none';
     pdfGrid.innerHTML = '';
-    
+
     pdfs.forEach(pdf => {
         const card = document.createElement('div');
         card.className = 'pdf-card';
         const isFav = isFavorite(pdf.url);
-        
+
         // Extract category display name
         const categoryMap = {
             'fx-basic': 'Basic FX',
@@ -335,9 +335,9 @@ function renderPDFs(pdfs) {
             'fx-technical': 'Technical FX',
             'fx-psychology': 'Psychology'
         };
-        
+
         const categoryDisplay = categoryMap[pdf.category] || pdf.category;
-        
+
         card.innerHTML = `
             <div class="pdf-thumbnail">
                 <div class="thumbnail-content">
@@ -363,7 +363,7 @@ function renderPDFs(pdfs) {
                 </div>
             </div>
         `;
-        
+
         pdfGrid.appendChild(card);
     });
 }
@@ -371,18 +371,18 @@ function renderPDFs(pdfs) {
 // Fungsi untuk filter berdasarkan kategori
 function filterByCategory(category) {
     currentCategory = category;
-    
+
     // Update active pill
     const pills = document.querySelectorAll('.category-pill:not(.coming-soon)');
     pills.forEach(pill => {
         pill.classList.remove('active');
-        if (pill.textContent.toLowerCase().includes(category) || 
+        if (pill.textContent.toLowerCase().includes(category) ||
             (category === 'all' && pill.textContent === 'Semua') ||
             (category === 'fx-basic' && pill.textContent === 'Trading FX')) {
             pill.classList.add('active');
         }
     });
-    
+
     renderPDFs(getCurrentPDFs());
 }
 
@@ -394,15 +394,15 @@ function showComingSoon() {
 // Fungsi untuk filter berdasarkan pencarian
 function filterPDFs() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    
+
     let filteredPDFs = getCurrentPDFs();
-    
+
     if (searchTerm) {
-        filteredPDFs = filteredPDFs.filter(pdf => 
+        filteredPDFs = filteredPDFs.filter(pdf =>
             pdf.name.toLowerCase().includes(searchTerm)
         );
     }
-    
+
     renderPDFs(filteredPDFs);
 }
 
@@ -410,14 +410,14 @@ function filterPDFs() {
 function showHome() {
     currentView = 'all';
     currentCategory = 'all';
-    
+
     document.getElementById('mainContent').style.display = 'block';
     document.getElementById('musicContent').style.display = 'none';
     document.getElementById('aboutContent').style.display = 'none';
     document.getElementById('searchInput').value = '';
-    
+
     filterByCategory('all');
-    
+
     toggleSidebar();
 }
 
@@ -425,11 +425,11 @@ function showHome() {
 function showFavorites() {
     currentView = 'favorites';
     currentCategory = 'all';
-    
+
     document.getElementById('mainContent').style.display = 'block';
     document.getElementById('aboutContent').style.display = 'none';
     document.getElementById('searchInput').value = '';
-    
+
     const pills = document.querySelectorAll('.category-pill');
     pills.forEach(pill => {
         pill.classList.remove('active');
@@ -437,7 +437,7 @@ function showFavorites() {
             pill.classList.add('active');
         }
     });
-    
+
     renderPDFs(favorites);
     toggleSidebar();
 }
@@ -445,21 +445,21 @@ function showFavorites() {
 // showAbout function removed - About page moved to fitur/about.html
 
 // Close modals when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const pdfModal = document.getElementById('pdfViewerModal');
     const shareModal = document.getElementById('shareModal');
-    
+
     if (pdfModal && event.target === pdfModal) {
         closePDFViewer();
     }
-    
+
     if (shareModal && event.target === shareModal) {
         closeShareModal();
     }
 });
 
 // Close modals on escape key
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
         closePDFViewer();
         closeShareModal();
@@ -467,16 +467,16 @@ document.addEventListener('keydown', function(event) {
 });
 
 // Initialize saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     applyDeviceStyles();
     renderPDFs(allPDFs);
-    
-    document.addEventListener('click', function(event) {
+
+    document.addEventListener('click', function (event) {
         const sidebar = document.getElementById('sidebar');
         const menuBtn = document.querySelector('.menu-btn');
-        
-        if (sidebar && sidebar.classList.contains('active') && 
-            !sidebar.contains(event.target) && 
+
+        if (sidebar && sidebar.classList.contains('active') &&
+            !sidebar.contains(event.target) &&
             !menuBtn.contains(event.target)) {
             toggleSidebar();
         }
@@ -486,10 +486,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateMusicProgress() {
     const audio = document.getElementById('musicAudio');
     if (!audio) return;
-    
+
     const progress = (audio.currentTime / audio.duration) * 100;
     document.getElementById('progress').style.width = progress + '%';
-    
+
     // Update time display
     document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
     document.getElementById('duration').textContent = formatTime(audio.duration);
@@ -505,7 +505,7 @@ function formatTime(seconds) {
 function togglePlayPause() {
     const audio = document.getElementById('musicAudio');
     const playBtn = document.getElementById('playPauseBtn');
-    
+
     if (audio.paused) {
         audio.play();
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -530,7 +530,7 @@ function closeMusicPlayer() {
     if (audio && audio.paused) {
         // Floating control akan tetap visible karena musik masih jalan di background
     }
-    
+
     document.getElementById('musicPlayerModal').style.display = 'none';
     document.body.style.overflow = 'auto';
 }
@@ -548,7 +548,7 @@ function toggleContactWidget() {
     const widget = document.getElementById('floatingContactWidget');
     const widgetBody = document.getElementById('widgetBody');
     const header = widget.querySelector('.widget-header');
-    
+
     if (widgetBody.style.display === 'none') {
         widgetBody.style.display = 'block';
         header.classList.remove('collapsed');
@@ -561,11 +561,11 @@ function toggleContactWidget() {
 
 function submitFloatingContact(event) {
     event.preventDefault();
-    
+
     const name = document.getElementById('fcName').value;
     const category = document.getElementById('fcCategory').value;
     const message = document.getElementById('fcMessage').value;
-    
+
     const categoryMap = {
         'pertanyaan': '❓ Pertanyaan',
         'bug': '🐛 Bug Report',
@@ -573,20 +573,20 @@ function submitFloatingContact(event) {
         'partnership': '🤝 Kerjasama',
         'lainnya': '📋 Lainnya'
     };
-    
+
     const whatsappMessage = `*HUBUNGI KAMI - TRADING PDF*\n\n` +
         `*Nama:* ${name}\n` +
         `*Kategori:* ${categoryMap[category] || category}\n\n` +
         `*Pesan:*\n${message}`;
-    
+
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const whatsappURL = `https://wa.me/62895404147521?text=${encodedMessage}`;
-    
+
     window.open(whatsappURL, '_blank');
-    
+
     // Reset form
     document.getElementById('floatingContactForm').reset();
-    
+
     // Collapse widget after submit
     const widgetBody = document.getElementById('widgetBody');
     const header = document.querySelector('.widget-header');
@@ -595,7 +595,7 @@ function submitFloatingContact(event) {
 }
 
 // Close widget when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const widget = document.getElementById('floatingContactWidget');
     if (widget && !widget.contains(event.target)) {
         const widgetBody = document.getElementById('widgetBody');
@@ -640,7 +640,7 @@ function renderLinktree() {
         span.textContent = item.title;
         a.appendChild(span);
 
-        a.addEventListener('click', function(e) {
+        a.addEventListener('click', function (e) {
             // Internal anchors: handle in-page actions
             if (item.url && item.url.startsWith('#')) {
                 e.preventDefault();
@@ -664,7 +664,7 @@ function renderLinktree() {
 }
 
 // Close Linktree on outside click
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     const modal = document.getElementById('linktreeModal');
     const btn = document.getElementById('linktreeFloatingBtn');
     if (!modal || modal.style.display !== 'flex') return;

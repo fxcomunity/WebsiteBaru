@@ -3,29 +3,21 @@
    FX Community PDF Favorites
 ========================= */
 
-// Load favorites from localStorage
 let favorites = JSON.parse(localStorage.getItem('pdfFavorites')) || [];
 
-/* =========================
-   TOGGLE FAVORITE
-========================= */
 function toggleFavorite(url, name, category) {
     const index = favorites.findIndex(fav => fav.url === url);
     
     if (index > -1) {
-        // Remove from favorites
         favorites.splice(index, 1);
         showNotification('Dihapus dari favorit');
     } else {
-        // Add to favorites
         favorites.push({ url, name, category });
         showNotification('Ditambahkan ke favorit');
     }
     
-    // Save to localStorage
     localStorage.setItem('pdfFavorites', JSON.stringify(favorites));
     
-    // Refresh view if in favorites mode
     if (currentView === 'favorites') {
         showFavorites();
     } else {
@@ -33,23 +25,14 @@ function toggleFavorite(url, name, category) {
     }
 }
 
-/* =========================
-   CHECK IF FAVORITE
-========================= */
 function isFavorite(url) {
     return favorites.some(fav => fav.url === url);
 }
 
-/* =========================
-   GET FAVORITE COUNT
-========================= */
 function getFavoriteCount() {
     return favorites.length;
 }
 
-/* =========================
-   CLEAR ALL FAVORITES
-========================= */
 function clearAllFavorites() {
     if (confirm('Yakin ingin menghapus semua favorit? Tindakan ini tidak bisa dibatalkan.')) {
         favorites = [];
@@ -59,9 +42,6 @@ function clearAllFavorites() {
     }
 }
 
-/* =========================
-   EXPORT FAVORITES
-========================= */
 function exportFavorites() {
     if (favorites.length === 0) {
         showNotification('Tidak ada favorit untuk diekspor', 'error');
@@ -80,9 +60,6 @@ function exportFavorites() {
     showNotification('Favorit berhasil diekspor');
 }
 
-/* =========================
-   IMPORT FAVORITES
-========================= */
 function importFavorites(event) {
     const file = event.target.files[0];
     if (!file) return;

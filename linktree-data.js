@@ -1,11 +1,35 @@
-const linktreeLinks = [
-    { title: 'Website Utama', url: 'https://example.com', icon: 'fas fa-globe' },
-    { title: 'FX Community (WhatsApp)', url: 'https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', icon: 'fab fa-whatsapp' },
-    { title: 'Music Playlist', url: '#music', icon: 'fas fa-music' },
-    { title: 'PDF Catalog', url: '#catalog', icon: 'fas fa-file-pdf' },
-    { title: 'Contact (WhatsApp)', url: 'https://wa.me/6281234567890', icon: 'fas fa-comment-dots' }
-];
-
+// Linktree Data for FX Community
 function getLinktreeLinks() {
-    return linktreeLinks;
+    return [
+        {
+            title: "Katalog PDF",
+            icon: "fas fa-book",
+            url: "#catalog"
+        },
+        {
+            title: "Musik Focus",
+            icon: "fas fa-music",
+            url: "#music"
+        },
+        {
+            title: "WhatsApp Community",
+            icon: "fab fa-whatsapp",
+            url: "https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0"
+        },
+        {
+            title: "Admin Support",
+            icon: "fas fa-headset",
+            url: "https://wa.me/62895404147521"
+        },
+        {
+            title: "Instagram",
+            icon: "fab fa-instagram",
+            url: "https://www.instagram.com/si.palingjack/"
+        },
+        {
+            title: "TikTok",
+            icon: "fab fa-tiktok",
+            url: "https://www.tiktok.com/@uciii0106"
+        }
+    ];
 }

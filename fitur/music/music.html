@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik - FX Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body class="fitur-body">
+    <div class="fitur-container">
+        <div class="fitur-header">
+            <a href="../../index.html" title="Kembali ke beranda">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1><i class="fas fa-music" style="color: var(--primary);"></i> Musik Focus</h1>
+        </div>
+
+        <div class="music-player-section">
+            <div>
+                <div class="album-art" id="albumArt">🎵</div>
+
+                <div class="track-info centered">
+                    <div class="music-title" id="nowPlayingTitle">Pilih Lagu</div>
+                    <div class="music-artist" id="nowPlayingArtist">FX Community Playlist</div>
+                </div>
+
+                <div class="player-controls">
+                    <div class="centered" style="margin-bottom:12px;">
+                        <button class="big-play-btn" id="mainPlayBtn" aria-label="Play/Pause"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="progress-bar" id="progressBar">
+                        <div id="progress"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+
+                    <div class="centered" style="gap:10px; margin-top:12px; flex-direction:row;">
+                        <button class="control-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+                        <button class="control-btn play-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+                        <button class="control-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" />
+                        <label id="volumeLabel">Vol</label>
+                    </div>
+
+                    <audio id="audioPlayer"></audio>
+                </div>
+            </div>
+
+            <div>
+                <div class="music-list-header" style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <i class="fas fa-list-ul" style="color: var(--primary);"></i>
+                    <h3 style="color: var(--text-primary); margin: 0;">Daftar Putar</h3>
+                </div>
+                <div class="music-list" id="musicList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../music-data.js"></script>
+    <script src="music.js"></script>
+</body>
+
+</html>
