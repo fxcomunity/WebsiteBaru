@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Sedang Maintenance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .maintenance-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .maintenance-icon {
+            font-size: 80px;
+            color: #667eea;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .maintenance-text {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .status-info {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .status-info strong {
+            color: #333;
+        }
+
+        .device-check {
+            background: #f0f4ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+
+        .access-form {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .maintenance-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .maintenance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .maintenance-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .divider {
+            color: #999;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .contact-info a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading animation */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #667eea;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="maintenance-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <h1>🔧 Website Sedang Maintenance</h1>
+        <p class="maintenance-text">
+            Kami sedang melakukan pembaruan untuk memberikan pengalaman terbaik. Website akan kembali online dalam beberapa saat.
+        </p>
+
+        <div class="status-info">
+            <strong>Status:</strong> Sedang Maintenance<br>
+            <strong>Waktu Perkiraan:</strong> ~ 2 jam<br>
+            <strong>Last Update:</strong> <span id="updateTime">Just now</span>
+        </div>
+
+        <div id="deviceCheckSection" class="device-check" style="display: none;">
+            <p id="deviceCheckMessage"></p>
+        </div>
+
+        <div class="access-form">
+            <form onsubmit="checkAccess(event)">
+                <div class="form-group">
+                    <label for="accessPin">Kode Akses (untuk Admin)</label>
+                    <input type="password" id="accessPin" placeholder="Masukkan kode akses..." autocomplete="off">
+                </div>
+                <button type="submit" class="maintenance-btn">
+                    <span id="btnText">Verifikasi Akses</span>
+                </button>
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+            </form>
+        </div>
+
+        <div class="contact-info">
+            <p>Pertanyaan? <a href="https://wa.me/62895404147521" target="_blank">Hubungi Admin</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Maintenance configuration
+        const MAINTENANCE_CONFIG = {
+            enabled: true,
+            allowedIPs: ['192.168.1.4', '127.0.0.1', 'localhost'],
+            allowedMACs: ['d8:0e:29:fe:57:1f', '20-0B-74-94-EB-00'],
+            adminPin: '1234', // Simple PIN for admin access
+            maintenanceEndTime: new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
+        };
+
+        // Check device on page load
+        window.addEventListener('load', async function() {
+            const ipInfo = await getDeviceIP();
+            console.log('Device IP:', ipInfo);
+        });
+
+        // Function to get device IP
+        async function getDeviceIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.log('Could not get IP:', error);
+                return 'unknown';
+            }
+        }
+
+        // Check if device is authorized
+        async function isAuthorizedDevice() {
+            try {
+                const ip = await getDeviceIP();
+                // Check if IP is in allowed list
+                if (MAINTENANCE_CONFIG.allowedIPs.includes(ip)) {
+                    return true;
+                }
+
+                // For MAC address - in real implementation, this would need backend
+                // Browser cannot directly access MAC addresses for security reasons
+                const userAgent = navigator.userAgent.toLowerCase();
+                console.log('User Agent:', userAgent);
+
+                return false;
+            } catch (error) {
+                console.error('Authorization check error:', error);
+                return false;
+            }
+        }
+
+        // Handle access verification
+        function checkAccess(event) {
+            event.preventDefault();
+
+            const pin = document.getElementById('accessPin').value;
+            const btnText = document.getElementById('btnText');
+            const errorMsg = document.getElementById('errorMessage');
+            const successMsg = document.getElementById('successMessage');
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if (!pin) {
+                errorMsg.textContent = 'Silakan masukkan kode akses';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Show loading state
+            btnText.innerHTML = '<span class="spinner"></span> Verifikasi...';
+            document.querySelector('button').disabled = true;
+
+            // Simulate verification delay
+            setTimeout(() => {
+                if (pin === MAINTENANCE_CONFIG.adminPin) {
+                    successMsg.textContent = '✓ Akses diterima. Mengalihkan...';
+                    successMsg.style.display = 'block';
+                    
+                    // Store access token in session
+                    sessionStorage.setItem('maintenanceAccess', 'true');
+                    sessionStorage.setItem('accessTime', Date.now());
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    errorMsg.textContent = '✗ Kode akses salah. Coba lagi.';
+                    errorMsg.style.display = 'block';
+                    btnText.textContent = 'Verifikasi Akses';
+                    document.querySelector('button').disabled = false;
+                    document.getElementById('accessPin').value = '';
+                }
+            }, 800);
+        }
+
+        // Update time display
+        function updateTimeDisplay() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('updateTime').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTimeDisplay();
+        setInterval(updateTimeDisplay, 60000); // Update every minute
+    </script>
+</body>
+</html>

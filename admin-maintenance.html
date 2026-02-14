@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Maintenance Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: white;
+            border-radius: 12px 12px 0 0;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #667eea;
+        }
+
+        .admin-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .admin-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .admin-panel {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .control-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .toggle-label strong {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .toggle-label small {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Config Form */
+        .config-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-danger:hover {
+            background: #f5c6cb;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #004085;
+            margin-bottom: 20px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #155724;
+            margin-bottom: 20px;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #f5222d;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #721c24;
+            margin-bottom: 20px;
+        }
+
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .list-item-value {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .list-item-remove {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .list-item-remove:hover {
+            background: #ff5252;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 1px solid #667eea30;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .action-card i {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 20px;
+            }
+
+            .admin-panel {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-cog"></i> Admin Control Panel</h1>
+            <p>Kelola mode maintenance website Anda</p>
+        </div>
+
+        <div class="admin-panel">
+            <!-- Status Section -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-toggle-on"></i> Status Maintenance
+                </div>
+                <div class="toggle-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenance()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="toggle-label">
+                        <strong>Mode Maintenance</strong>
+                        <small>Aktifkan untuk mengambil website offline</small>
+                    </div>
+                    <span class="status-badge" id="statusBadge">
+                        <i class="fas fa-circle"></i> Inactive
+                    </span>
+                </div>
+                <div class="info-box" style="margin-top: 15px;">
+                    <i class="fas fa-info-circle"></i> Ketika mode maintenance aktif, hanya IP/MAC yang terotorisasi yang dapat mengakses website.
+                </div>
+            </div>
+
+            <!-- IP Management Section -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-network-wired"></i> IP Address yang Diizinkan
+                </div>
+                <div class="list-group" id="ipList"></div>
+                <div class="form-row" style="margin-top: 20px;">
+                    <input type="text" id="newIP" placeholder="Contoh: 192.168.1.4">
+                    <button class="btn btn-primary" onclick="addIP()">
+                        <i class="fas fa-plus"></i> Tambah IP
+                    </button>
+                </div>
+            </div>
+
+            <!-- MAC Management Section -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-microchip"></i> MAC Address yang Diizinkan
+                </div>
+                <div class="list-group" id="macList"></div>
+                <div class="form-row" style="margin-top: 20px;">
+                    <input type="text" id="newMAC" placeholder="Contoh: d8:0e:29:fe:57:1f">
+                    <button class="btn btn-primary" onclick="addMAC()">
+                        <i class="fas fa-plus"></i> Tambah MAC
+                    </button>
+                </div>
+            </div>
+
+            <!-- PIN Management Section -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-key"></i> Admin PIN
+                </div>
+                <div class="form-group">
+                    <label>Kode Akses Admin</label>
+                    <input type="password" id="adminPin" placeholder="Masukkan PIN (minimum 4 digit)">
+                    <small style="color: #999; margin-top: 5px;">PIN ini digunakan untuk akses admin saat maintenance mode aktif</small>
+                </div>
+            </div>
+
+            <!-- Maintenance Message Section -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-envelope"></i> Pesan Maintenance
+                </div>
+                <div class="form-group">
+                    <label>Pesan yang Ditampilkan</label>
+                    <textarea id="maintenanceMessage" placeholder="Masukkan pesan maintenance..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Estimasi Waktu (jam)</label>
+                    <input type="number" id="estimatedTime" min="1" max="24" value="2">
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i> Aksi Cepat
+                </div>
+                <div class="quick-actions">
+                    <div class="action-card" onclick="enableMaintenance()">
+                        <i class="fas fa-power-off"></i>
+                        <p>Aktifkan Maintenance</p>
+                    </div>
+                    <div class="action-card" onclick="disableMaintenance()">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Matikan Maintenance</p>
+                    </div>
+                    <div class="action-card" onclick="saveConfig()">
+                        <i class="fas fa-save"></i>
+                        <p>Simpan Konfigurasi</p>
+                    </div>
+                    <div class="action-card" onclick="resetConfig()">
+                        <i class="fas fa-undo"></i>
+                        <p>Reset ke Default</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="button-group" style="margin-top: 30px; border-top: 1px solid #e0e0e0; padding-top: 30px;">
+                <button class="btn btn-primary" onclick="saveConfig()">
+                    <i class="fas fa-save"></i> Simpan Semua Perubahan
+                </button>
+                <button class="btn btn-secondary" onclick="loadConfig()">
+                    <i class="fas fa-redo"></i> Reload Konfigurasi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load configuration on page load
+        window.addEventListener('load', loadConfig);
+
+        function loadConfig() {
+            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            
+            document.getElementById('maintenanceToggle').checked = config.enabled;
+            document.getElementById('adminPin').value = config.adminPin;
+            document.getElementById('maintenanceMessage').value = config.message;
+            document.getElementById('estimatedTime').value = config.estimatedHours;
+            
+            renderIPList(config.allowedIPs);
+            renderMACList(config.allowedMACs);
+            updateStatusBadge(config.enabled);
+        }
+
+        function getDefaultConfig() {
+            return {
+                enabled: false,
+                allowedIPs: ['192.168.1.4', '127.0.0.1'],
+                allowedMACs: ['d8:0e:29:fe:57:1f', '20-0B-74-94-EB-00'],
+                adminPin: '1234',
+                message: 'Kami sedang melakukan pembaruan untuk memberikan pengalaman terbaik.',
+                estimatedHours: 2
+            };
+        }
+
+        function saveConfig() {
+            const config = {
+                enabled: document.getElementById('maintenanceToggle').checked,
+                allowedIPs: Array.from(document.querySelectorAll('[data-ip]')).map(el => el.dataset.ip),
+                allowedMACs: Array.from(document.querySelectorAll('[data-mac]')).map(el => el.dataset.mac),
+                adminPin: document.getElementById('adminPin').value || '1234',
+                message: document.getElementById('maintenanceMessage').value,
+                estimatedHours: parseInt(document.getElementById('estimatedTime').value)
+            };
+
+            localStorage.setItem('maintenanceConfig', JSON.stringify(config));
+            
+            // Also update maintenance-check.js (would need backend for real implementation)
+            showSuccess('Konfigurasi berhasil disimpan!');
+        }
+
+        function toggleMaintenance() {
+            const isEnabled = document.getElementById('maintenanceToggle').checked;
+            updateStatusBadge(isEnabled);
+        }
+
+        function enableMaintenance() {
+            document.getElementById('maintenanceToggle').checked = true;
+            updateStatusBadge(true);
+            showSuccess('Maintenance mode diaktifkan');
+        }
+
+        function disableMaintenance() {
+            document.getElementById('maintenanceToggle').checked = false;
+            updateStatusBadge(false);
+            showSuccess('Website kembali online');
+        }
+
+        function updateStatusBadge(isEnabled) {
+            const badge = document.getElementById('statusBadge');
+            if (isEnabled) {
+                badge.className = 'status-badge active';
+                badge.innerHTML = '<i class="fas fa-circle"></i> Active';
+            } else {
+                badge.className = 'status-badge inactive';
+                badge.innerHTML = '<i class="fas fa-circle"></i> Inactive';
+            }
+        }
+
+        function addIP() {
+            const ipInput = document.getElementById('newIP');
+            const ip = ipInput.value.trim();
+            
+            if (!ip) {
+                showError('Masukkan IP address terlebih dahulu');
+                return;
+            }
+
+            if (!isValidIP(ip)) {
+                showError('Format IP tidak valid');
+                return;
+            }
+
+            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            if (!config.allowedIPs.includes(ip)) {
+                config.allowedIPs.push(ip);
+                renderIPList(config.allowedIPs);
+                ipInput.value = '';
+                showSuccess('IP berhasil ditambahkan');
+            } else {
+                showError('IP sudah ada dalam daftar');
+            }
+        }
+
+        function addMAC() {
+            const macInput = document.getElementById('newMAC');
+            const mac = macInput.value.trim();
+            
+            if (!mac) {
+                showError('Masukkan MAC address terlebih dahulu');
+                return;
+            }
+
+            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            if (!config.allowedMACs.includes(mac)) {
+                config.allowedMACs.push(mac);
+                renderMACList(config.allowedMACs);
+                macInput.value = '';
+                showSuccess('MAC berhasil ditambahkan');
+            } else {
+                showError('MAC sudah ada dalam daftar');
+            }
+        }
+
+        function removeIP(ip) {
+            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            config.allowedIPs = config.allowedIPs.filter(item => item !== ip);
+            renderIPList(config.allowedIPs);
+            showSuccess('IP berhasil dihapus');
+        }
+
+        function removeMAC(mac) {
+            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            config.allowedMACs = config.allowedMACs.filter(item => item !== mac);
+            renderMACList(config.allowedMACs);
+            showSuccess('MAC berhasil dihapus');
+        }
+
+        function renderIPList(ips) {
+            const container = document.getElementById('ipList');
+            container.innerHTML = ips.map(ip => `
+                <div class="list-item" data-ip="${ip}">
+                    <span class="list-item-value">${ip}</span>
+                    <button class="list-item-remove" onclick="removeIP('${ip}')">Hapus</button>
+                </div>
+            `).join('');
+        }
+
+        function renderMACList(macs) {
+            const container = document.getElementById('macList');
+            container.innerHTML = macs.map(mac => `
+                <div class="list-item" data-mac="${mac}">
+                    <span class="list-item-value">${mac}</span>
+                    <button class="list-item-remove" onclick="removeMAC('${mac}')">Hapus</button>
+                </div>
+            `).join('');
+        }
+
+        function resetConfig() {
+            if (confirm('Reset semua pengaturan ke default?')) {
+                localStorage.removeItem('maintenanceConfig');
+                loadConfig();
+                showSuccess('Konfigurasi direset ke default');
+            }
+        }
+
+        function isValidIP(ip) {
+            const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$|^localhost$|^127\.0\.0\.1$/;
+            return ipRegex.test(ip);
+        }
+
+        function showSuccess(message) {
+            const notification = document.createElement('div');
+            notification.className = 'success-box';
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; max-width: 300px; z-index: 10000;';
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.className = 'error-box';
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; max-width: 300px; z-index: 10000;';
+            notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
