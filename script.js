@@ -324,6 +324,8 @@ function renderPDFs(pdfs) {
                 <i class="fas fa-search"></i>
                 <p>Tidak ada PDF yang ditemukan</p>
             `;
+            // Show notification when no PDFs found
+            showNotification('Tidak ada PDF yang cocok dengan pencarian Anda', 'info');
         }
         return;
     }
@@ -409,9 +411,15 @@ function filterPDFs() {
     let filteredPDFs = getCurrentPDFs();
 
     if (searchTerm) {
+        const beforeFilterCount = filteredPDFs.length;
         filteredPDFs = filteredPDFs.filter(pdf =>
             pdf.name.toLowerCase().includes(searchTerm)
         );
+        
+        // Show notification if search returned no results
+        if (beforeFilterCount > 0 && filteredPDFs.length === 0) {
+            showNotification(`Pencarian "${searchTerm}" tidak menemukan PDF`, 'info');
+        }
     }
 
     renderPDFs(filteredPDFs);

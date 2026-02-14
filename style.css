@@ -641,6 +641,10 @@ body {
     border-left-color: var(--error);
 }
 
+.notification.info {
+    border-left-color: var(--primary);
+}
+
 /* Modal */
 .modal {
     position: fixed;
