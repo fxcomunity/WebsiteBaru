@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - FX Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="fitur-body">
+    <div class="fitur-container">
+        <div class="fitur-header">
+            <a href="../index.html" title="Kembali ke beranda">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1><i class="fas fa-question-circle" style="color: var(--primary);"></i> FAQ</h1>
+        </div>
+
+        <div class="faq-intro">
+            <p>Temukan jawaban untuk pertanyaan yang sering diajukan tentang FX Community dan layanan kami.</p>
+            <div class="faq-search">
+                <input type="text" id="faqSearch" placeholder="Cari FAQ..." onkeyup="searchFAQ()">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+        <!-- FAQ Section: Popular -->
+        <div class="faq-section">
+            <h2 class="faq-section-title"><i class="fas fa-fire"></i> Pertanyaan Populer</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apa sih FX Community itu?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        FX Community adalah platform pembelajaran trading terpadu yang menyediakan koleksi PDF materi trading berkualitas tinggi.
+                        Platform kami dirancang untuk membantu trader dari semua tingkat keahlian meningkatkan skill dan pengetahuan mereka
+                        tentang forex, saham, dan analisis teknikal.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah FX Community gratis?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Saat ini, FX Community menyediakan akses gratis ke semua PDF dan materi pembelajaran. Kami ingin memastikan
+                        setiap trader memiliki kesempatan yang sama untuk belajar dan berkembang tanpa hambatan finansial.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara menggunakan platform ini?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        <strong>Langkah-langkahnya sangat mudah:</strong>
+                    </p>
+                    <ol style="margin-top: 10px;">
+                        <li>Kunjungi homepage FX Community</li>
+                        <li>Gunakan fitur pencarian untuk menemukan PDF yang Anda cari</li>
+                        <li>Klik "View" untuk membaca atau "Download" untuk mengunduh</li>
+                        <li>Simpan PDF favorit Anda di halaman Favorit untuk akses cepat</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah ada fitur musik di platform ini?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Ya! Kami memiliki fitur <strong>Musik Focus</strong> yang menyediakan playlist musik untuk menemani sesi trading Anda.
+                        Musik yang tepat dapat membantu meningkatkan konsentrasi dan fokus saat menganalisis pasar. Akses fitur ini dari menu
+                        utama atau navigasi samping.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section: Account & Access -->
+        <div class="faq-section">
+            <h2 class="faq-section-title"><i class="fas fa-user-circle"></i> Akun & Akses</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah saya perlu membuat akun untuk menggunakan platform?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Tidak perlu! FX Community dirancang agar dapat diakses tanpa perlu registrasi. Anda bisa langsung menjelajahi,
+                        mencari, dan membaca PDF tanpa login. Namun, untuk menyimpan favorit secara permanen, Anda dapat menggunakan
+                        fitur simpan browser kami.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara menyimpan PDF favorit saya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Setiap PDF memiliki tombol <strong>hati</strong> di sudut kanan atas. Klik tombol ini untuk menambahkan PDF ke
+                        daftar favorit Anda. PDF favorit akan disimpan di browser lokal (localStorage) dan dapat diakses kapan saja dari
+                        halaman <strong>Favorit Saya</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bisakah saya mengekspor daftar favorit saya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Tentu! Di halaman <strong>Favorit Saya</strong>, Anda akan menemukan tombol "Ekspor" yang memungkinkan Anda
+                        mengunduh daftar favorit dalam format JSON. Anda juga bisa mengimpor file JSON yang sudah disimpan sebelumnya
+                        menggunakan tombol "Impor".
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara berbagi PDF dengan teman?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Setiap PDF memiliki tombol <strong>Bagikan</strong>. Klik tombol tersebut untuk membuka opsi berbagi melalui:
+                    </p>
+                    <ul style="margin-top: 10px;">
+                        <li>QR Code — scan untuk akses cepat</li>
+                        <li>Salin Link — copy URL dan bagikan</li>
+                        <li>WhatsApp — bagikan langsung ke WhatsApp</li>
+                        <li>Web Share API — bagikan ke berbagai platform</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section: Technical -->
+        <div class="faq-section">
+            <h2 class="faq-section-title"><i class="fas fa-cog"></i> Teknis & Kompatibilitas</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Platform ini kompatibel dengan perangkat apa saja?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        FX Community adalah platform web yang responsive dan dapat diakses dari:
+                    </p>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Desktop/Laptop</strong> — Chrome, Firefox, Safari, Edge</li>
+                        <li><strong>Tablet</strong> — iPad, Samsung Tab, dll</li>
+                        <li><strong>Mobile</strong> — iPhone, Android (semua browser modern)</li>
+                    </ul>
+                    <p style="margin-top: 10px;">Platform kami dioptimalkan untuk semua ukuran layar dengan desain responsif.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah platform ini aman digunakan?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Ya! FX Community menggunakan protokol keamanan standar industri. Platform kami tidak meminta data pribadi sensitif,
+                        dan semua data favorit disimpan secara lokal di perangkat Anda menggunakan browser storage. Kami berkomitmen pada
+                        privasi dan keamanan pengguna.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bisakah saya mengakses platform offline?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Sementara ini, platform memerlukan koneksi internet untuk menjelajahi dan membuka PDF. Namun, setelah mengunduh
+                        PDF ke perangkat Anda, Anda dapat membacanya kapan saja tanpa koneksi internet. Fitur offline mode sedang dalam
+                        pengembangan untuk rilis mendatang.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana jika saya menemukan bug atau error?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Kami sangat menghargai laporan bug Anda! Silakan gunakan tombol <strong>Hubungi Kami</strong> di bawah halaman
+                        atau kirim pesan WhatsApp ke admin dengan detail bug yang Anda temukan. Tim kami akan segera menginvestigasi dan
+                        memperbaikinya.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section: Content & Learning -->
+        <div class="faq-section">
+            <h2 class="faq-section-title"><i class="fas fa-book"></i> Konten & Pembelajaran</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Berapa banyak PDF yang tersedia?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Kami terus memperbarui koleksi kami dengan PDF baru setiap bulan. Saat ini memiliki lebih dari 40+ materi berkualitas tinggi,
+                        dengan fokus pada forex, saham, dan analisis teknikal. Cek halaman beranda untuk melihat koleksi terbaru kami.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah PDF ini cocok untuk pemula?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Tentu saja! Kami memiliki materi untuk semua tingkat keahlian, dari pemula hingga advanced. Mulai dari
+                        <strong>Konsep Dasar Forex</strong>, <strong>Analisis Teknikal Pemula</strong>, hingga strategi trading profesional.
+                        Setiap PDF dirancang untuk mudah dipahami dengan contoh praktis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara memilih PDF mana yang harus saya pelajari dulu?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        <strong>Rekomendasi kami untuk pemula:</strong>
+                    </p>
+                    <ol style="margin-top: 10px;">
+                        <li>Mulai dengan "Pengenalan Pasar Forex"</li>
+                        <li>Lanjut ke "Analisis Teknikal Dasar"</li>
+                        <li>Pelajari "Manajemen Risiko dalam Trading"</li>
+                        <li>Praktik dengan "Strategi Trading Sederhana"</li>
+                        <li>Tingkatkan ke materi advanced sesuai kebutuhan</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah ada update PDF secara berkala?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Ya! Kami secara berkala memperbarui konten PDF untuk mencerminkan kondisi pasar terkini dan best practices terbaru
+                        dalam trading. Anda dapat melihat tanggal update setiap PDF di laman detail. Subscribe newsletter kami untuk
+                        mendapatkan notifikasi PDF baru.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section: Community & Support -->
+        <div class="faq-section">
+            <h2 class="faq-section-title"><i class="fas fa-heart"></i> Komunitas & Dukungan</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara bergabung dengan komunitas FX Community?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Kami menyelenggarakan komunitas aktif di WhatsApp Group. Untuk bergabung:
+                    </p>
+                    <ol style="margin-top: 10px;">
+                        <li>Klik tombol "Community" atau "FX Community" di beranda atau footer</li>
+                        <li>Anda akan diarahkan ke WhatsApp Group kami</li>
+                        <li>Perkenalkan diri dan bergabunglah dalam diskusi</li>
+                    </ol>
+                    <p style="margin-top: 10px;">
+                        Komunitas kami adalah tempat yang aman untuk berbagi strategi, bertanya, dan belajar bersama trader lain.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana cara menghubungi tim dukungan?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Anda dapat menghubungi kami melalui beberapa cara:
+                    </p>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>WhatsApp Admin:</strong> Gunakan tombol "WhatsApp" atau "Hubungi Kami" di beranda</li>
+                        <li><strong>Form Kontak:</strong> Isi form di widget "Hubungi Kami" (tombol amplop)</li>
+                        <li><strong>Discord/Instagram:</strong> Follow media sosial kami untuk update terbaru</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Apakah ada webinar atau kelas online?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Kami sedang mengembangkan program webinar dan workshop online untuk memberikan pembelajaran yang lebih interaktif.
+                        Subscribe ke newsletter kami untuk mendapatkan informasi terbaru tentang peluncuran fitur ini. Bergabunglah dengan
+                        komunitas WhatsApp kami untuk menjadi yang pertama mengetahui.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleAnswer(this)">
+                    <span>Bagaimana caranya menjadi kontributor PDF?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Kami dengan senang hati menerima kontribusi dari trader berpengalaman dan content creator. Jika Anda memiliki
+                        materi berkualitas yang ingin kami publikasikan, silakan hubungi kami melalui WhatsApp admin. Kami akan mendiskusikan
+                        syarat dan ketentuan untuk kontribusi Anda.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <script>
+        function toggleAnswer(button) {
+            const item = button.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+            
+            // Close all other items
+            document.querySelectorAll('.faq-item').forEach(el => {
+                if (el !== item) {
+                    const otherAnswer = el.querySelector('.faq-answer');
+                    otherAnswer.style.maxHeight = '0';
+                    otherAnswer.style.opacity = '0';
+                    el.querySelector('.faq-question').classList.remove('active');
+                }
+            });
+            
+            // Toggle current item
+            if (isOpen) {
+                answer.style.maxHeight = '0';
+                answer.style.opacity = '0';
+                button.classList.remove('active');
+            } else {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                answer.style.opacity = '1';
+                button.classList.add('active');
+            }
+        }
+
+        function searchFAQ() {
+            const searchTerm = document.getElementById('faqSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.faq-item');
+            
+            items.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Load footer via fetch
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../../footer/faq.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('footer-container').innerHTML = html;
+                })
+                .catch(err => console.log('Footer load error:', err));
+        });
+    </script>
+</body>
+
+</html>
