@@ -1,6 +1,8 @@
 // Global variables
 let currentCategory = 'all';
-let allPDFs = [...pdfData];
+let tradingFxPDFs = typeof tradingFxData !== 'undefined' ? tradingFxData : [];
+let sahamPDFs = typeof sahamData !== 'undefined' ? sahamData : [];
+let allPDFs = [...tradingFxPDFs, ...sahamPDFs];
 let currentView = 'all'; // 'all', 'favorites', 'about'
 let currentPDFShareData = null;
 let backgroundAudio = null;
@@ -282,14 +284,21 @@ function showNotification(message, type = 'success') {
 
 // Fungsi untuk mendapatkan PDFs sesuai view saat ini
 function getCurrentPDFs() {
-    let pdfs = allPDFs;
+    let pdfs = [];
+
+    // Combine PDFs based on current category
+    if (currentCategory === 'all') {
+        pdfs = [...tradingFxPDFs, ...sahamPDFs];
+    } else if (currentCategory === 'trading-fx') {
+        pdfs = [...tradingFxPDFs];
+    } else if (currentCategory === 'saham') {
+        pdfs = [...sahamPDFs];
+    } else {
+        pdfs = allPDFs;
+    }
 
     if (currentView === 'favorites') {
         pdfs = favorites;
-    }
-
-    if (currentCategory !== 'all') {
-        pdfs = pdfs.filter(pdf => pdf.category === currentCategory);
     }
 
     return pdfs;
@@ -373,12 +382,14 @@ function filterByCategory(category) {
     currentCategory = category;
 
     // Update active pill
-    const pills = document.querySelectorAll('.category-pill:not(.coming-soon)');
+    const pills = document.querySelectorAll('.category-pill');
     pills.forEach(pill => {
         pill.classList.remove('active');
-        if (pill.textContent.toLowerCase().includes(category) ||
-            (category === 'all' && pill.textContent === 'Semua') ||
-            (category === 'fx-basic' && pill.textContent === 'Trading FX')) {
+        const pillText = pill.textContent.trim();
+        
+        if ((category === 'all' && pillText === 'Semua') ||
+            (category === 'trading-fx' && pillText === 'Trading FX') ||
+            (category === 'saham' && pillText === 'Saham')) {
             pill.classList.add('active');
         }
     });

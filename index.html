@@ -96,10 +96,8 @@
             <!-- Category Filter -->
             <div class="category-filter">
                 <div class="category-pill active" onclick="filterByCategory('all')">Semua</div>
-                <div class="category-pill" onclick="filterByCategory('fx-basic')">Trading FX</div>
-                <div class="category-pill coming-soon" onclick="event.preventDefault(); showComingSoon()">
-                    Saham <span class="soon-badge">Soon</span>
-                </div>
+                <div class="category-pill" onclick="filterByCategory('trading-fx')">Trading FX</div>
+                <div class="category-pill" onclick="filterByCategory('saham')">Saham</div>
             </div>
 
             <!-- PDF Grid -->
@@ -271,7 +269,8 @@
     <div id="footer-container"></div>
 
     <!-- Script Files - FIXED: Removed duplicate data.js -->
-    <script src="data.js"></script>
+    <script src="data/trading-fx/data.js"></script>
+    <script src="data/saham/data.js"></script>
     <script src="linktree-data.js"></script>
     <script src="fitur/favorit/favorites.js"></script>
     <script src="fitur/music/music.js"></script>
