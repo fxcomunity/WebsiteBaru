@@ -243,6 +243,17 @@
         document.getElementById('deviceBrowser').textContent = deviceInfo.browserName;
         document.getElementById('totalPDF').textContent = (typeof pdfData !== 'undefined' ? pdfData.length : '40') + '+';
         document.getElementById('pdfCount').textContent = (typeof pdfData !== 'undefined' ? pdfData.length : '40') + '+';
+        
+        // Load footer via fetch
+        fetch('../../footer/about.html')
+            .then(r => r.text())
+            .then(html => {
+                const footerContainer = document.createElement('div');
+                footerContainer.id = 'footer-container';
+                footerContainer.innerHTML = html;
+                document.body.appendChild(footerContainer);
+            })
+            .catch(err => console.log('Footer load error:', err));
     </script>
 </body>
 
