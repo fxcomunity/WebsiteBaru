@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
-    <script src="maintenance-check.js"></script>
+    <script src="admin/maintenance-check.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -27,6 +27,9 @@
         <div class="header-title">
             <i class="fas fa-chart-line"></i> FX Community
         </div>
+        <button id="adminLoginBtn" class="admin-login-btn" title="Admin Login" onclick="window.open('admin/','_blank')">
+            <i class="fas fa-user-shield"></i>
+        </button>
     </div>
 
     <!-- Hero Section -->
@@ -129,6 +132,8 @@
             </div>
         </div>
     </div>
+
+        <!-- Admin login moved to /admin/index.html -->
 
     <!-- Share Modal -->
     <div id="shareModal" class="modal" style="display: none;">

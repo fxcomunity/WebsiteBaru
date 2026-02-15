@@ -131,6 +131,50 @@ body {
     letter-spacing: -0.5px;
 }
 
+/* Admin login button at top-right */
+.admin-login-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+.admin-login-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(59,130,246,0.25);
+}
+
+/* Admin login modal tweaks */
+.admin-login-content {
+    max-width: 420px;
+    padding: 0;
+}
+.admin-login-content .modal-body {
+    padding: 20px;
+}
+.admin-login-content input[type="text"],
+.admin-login-content input[type="password"] {
+    padding: 12px 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    outline: none;
+}
+.admin-login-content input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 6px rgba(59,130,246,0.08);
+}
+
 /* Search */
 .search-container {
     padding: 20px;
