@@ -1,3 +1,6 @@
+// Remote maintenance JSON file (publicly readable) - update this file on your host to toggle global maintenance
+const REMOTE_MAINTENANCE_URL = '/maintenance.json';
+
 // Default Maintenance Mode Configuration (can be overridden by localStorage)
 const DEFAULT_MAINTENANCE_CONFIG = {
     enabled: false, // Set to true to enable maintenance mode
@@ -127,7 +130,19 @@ if (document.head) {
 
 // Check maintenance mode on page load
 async function checkMaintenanceMode() {
-    const cfg = getMaintenanceConfig();
+    // Load local config first
+    let cfg = getMaintenanceConfig();
+
+    // Try remote config; if present, use it to override local settings
+    try {
+        const remoteCfg = await fetchRemoteMaintenanceConfig();
+        if (remoteCfg) {
+            console.log('🌐 Using remote maintenance config', remoteCfg);
+            cfg = Object.assign({}, cfg, remoteCfg);
+        }
+    } catch (e) {
+        console.warn('Remote maintenance config check failed', e && e.message);
+    }
 
     // If maintenance disabled, allow normal access immediately
     if (!cfg.enabled) {
@@ -312,7 +327,18 @@ function isLocalIPAddress(ip) {
 // Grant temporary access (for admin override)
 function grantMaintenanceAccess(pin) {
     const cfg = getMaintenanceConfig();
-    
+    // If the user is already authenticated as admin (admin login), allow access without PIN
+    try {
+        if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('fx_isAdmin') === '1') {
+            sessionStorage.setItem('maintenanceAccess', 'true');
+            sessionStorage.setItem('accessTime', Date.now().toString());
+            console.log('✅ Admin session detected - access granted without PIN');
+            return true;
+        }
+    } catch (e) {
+        // ignore sessionStorage errors
+    }
+
     if (pin === cfg.adminPin) {
         sessionStorage.setItem('maintenanceAccess', 'true');
         sessionStorage.setItem('accessTime', Date.now().toString());
@@ -377,4 +403,27 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', checkMaintenanceMode);
 } else {
     checkMaintenanceMode();
+}
+
+// Try to fetch remote maintenance config (public JSON). Returns object or null.
+async function fetchRemoteMaintenanceConfig() {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const res = await fetch(REMOTE_MAINTENANCE_URL + '?_=' + Date.now(), { signal: controller.signal, cache: 'no-store' });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+            console.warn('Remote maintenance JSON not available:', res.status);
+            return null;
+        }
+
+        const data = await res.json();
+        if (data && typeof data === 'object') return data;
+        return null;
+    } catch (err) {
+        console.warn('Failed to fetch remote maintenance config:', err && err.message);
+        return null;
+    }
 }

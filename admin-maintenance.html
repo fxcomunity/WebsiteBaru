@@ -498,6 +498,9 @@
                 <button class="btn btn-secondary" onclick="loadConfig()">
                     <i class="fas fa-redo"></i> Reload Konfigurasi
                 </button>
+                <button class="btn btn-secondary" onclick="generateMaintenanceJson()">
+                    <i class="fas fa-file-download"></i> Ekspor maintenance.json
+                </button>
             </div>
         </div>
     </div>
@@ -507,7 +510,7 @@
         window.addEventListener('load', loadConfig);
 
         function loadConfig() {
-            const config = JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
+            const config = JSON.parse(localStorage.getItem('fx_maintenance_config')) || JSON.parse(localStorage.getItem('maintenanceConfig')) || getDefaultConfig();
             
             document.getElementById('maintenanceToggle').checked = config.enabled;
             document.getElementById('adminPin').value = config.adminPin;
@@ -541,6 +544,8 @@
             };
 
             localStorage.setItem('maintenanceConfig', JSON.stringify(config));
+            // Also save to global key used by maintenance-check.js for compatibility
+            localStorage.setItem('fx_maintenance_config', JSON.stringify(config));
             
             // Also update maintenance-check.js (would need backend for real implementation)
             showSuccess('Konfigurasi berhasil disimpan!');
@@ -659,6 +664,37 @@
                 loadConfig();
                 showSuccess('Konfigurasi direset ke default');
             }
+        }
+
+        // Export current config as maintenance.json and prompt download / copy
+        function generateMaintenanceJson() {
+            const config = {
+                enabled: document.getElementById('maintenanceToggle').checked,
+                allowedIPs: Array.from(document.querySelectorAll('[data-ip]')).map(el => el.dataset.ip),
+                allowedMACs: Array.from(document.querySelectorAll('[data-mac]')).map(el => el.dataset.mac),
+                adminPin: document.getElementById('adminPin').value || '1234',
+                maintenancePage: 'maintenance.html'
+            };
+
+            const jsonStr = JSON.stringify(config, null, 2);
+
+            // Copy to clipboard
+            navigator.clipboard?.writeText(jsonStr).then(() => {
+                showSuccess('Konfigurasi disalin ke clipboard. Upload file maintenance.json ke root situs Anda.');
+            }).catch(() => {
+                // ignore clipboard errors
+            });
+
+            // Trigger download
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'maintenance.json';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
         }
 
         function isValidIP(ip) {

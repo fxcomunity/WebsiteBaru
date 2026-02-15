@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "allowedIPs": ["127.0.0.1", "localhost"],
+  "allowedMACs": [],
+  "adminPin": "1234",
+  "maintenancePage": "maintenance.html"
+}

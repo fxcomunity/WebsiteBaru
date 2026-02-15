@@ -29,6 +29,9 @@ Your website now has a professional maintenance mode system that allows you to t
 - Customize maintenance messages
 - Save configuration to browser storage
 
+### 4. `maintenance.json` (Optional - Global)
+- Public JSON file placed at the site root (`/maintenance.json`). If present, the site will fetch this file and honor its `enabled` value globally. Update or replace this file on your hosting to toggle maintenance for all users.
+
 ### 4. `MAINTENANCE_GUIDE.md`
 - Complete documentation
 - Configuration instructions
@@ -48,6 +51,11 @@ Your website now has a professional maintenance mode system that allows you to t
 1. Open `maintenance-check.js`
 2. Change line 2: `enabled: false` → `enabled: true`
 3. Save the file
+
+### Method 3: Global JSON (Recommended for all devices)
+1. Place or update `maintenance.json` at your site root (e.g., `https://your-site.com/maintenance.json`).
+2. Edit the `enabled` property to `true` or `false` and save/deploy the file.
+3. The site will fetch this file and apply maintenance mode site-wide (clients may cache; deploy with cache-control or use file replace).
 
 ---
 
@@ -133,6 +141,9 @@ In `admin-maintenance.html`:
 3. Try entering admin PIN: `1234`
 4. After PIN, you get 24-hour access
 5. ✅ Test successful!
+
+### Alternative: Admin Account Verification
+- If you forget the maintenance PIN, log in to the admin panel (`/admin/index.html`). The admin session will act as a verification factor and allow you to grant access or change the PIN from the admin control panel.
 
 ---
 
