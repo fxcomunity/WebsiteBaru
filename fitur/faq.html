@@ -12,16 +12,63 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../maintenance-check.js"></script>
+    <script src="../admin/maintenance-check.js"></script>
 </head>
 
 <body class="fitur-body">
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
     <div class="fitur-container">
+        <!-- Header -->
         <div class="fitur-header">
-            <a href="../index.html" title="Kembali ke beranda">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1><i class="fas fa-question-circle" style="color: var(--primary);"></i> FAQ</h1>
+            <div class="header-left">
+                <a href="../index.html" class="home-btn" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+
+            <div class="header-center">
+                <h1>
+                    <i class="fas fa-question-circle"></i>
+                    FAQ
+                </h1>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile-container" id="adminProfile" style="display: none;">
+                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                    <div id="adminDropdown" class="admin-dropdown">
+                        <div class="dropdown-header">
+                            <div class="admin-avatar">
+                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                            </div>
+                            <div class="admin-info">
+                                <span id="adminNameDisplayHeader">Admin</span>
+                                <small>Administrator</small>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="../admin/panel.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                            <a href="../admin/settings.html" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button onclick="adminLogout()" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="faq-intro">
@@ -367,6 +414,36 @@
     <div id="footer-container"></div>
 
     <script>
+        // Admin Profile Logic
+        function checkAdminSession() {
+            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
+            const profileEl = document.getElementById('adminProfile');
+            if (isAdmin && profileEl) {
+                profileEl.style.display = 'block';
+                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
+                document.getElementById('adminNameDisplayHeader').textContent = adminName;
+            }
+        }
+
+        function toggleAdminDropdown() {
+            const dropdown = document.getElementById('adminDropdown');
+            dropdown.classList.toggle('active');
+            
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function adminLogout() {
+            if (confirm('Yakin ingin keluar dari sesi admin?')) {
+                sessionStorage.removeItem('fx_isAdmin');
+                window.location.reload();
+            }
+        }
+
         function toggleAnswer(button) {
             const item = button.parentElement;
             const answer = item.querySelector('.faq-answer');
@@ -412,7 +489,8 @@
 
         // Load footer via fetch
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('../../footer/faq.html')
+            checkAdminSession();
+            fetch('../footer/faq.html')
                 .then(r => r.text())
                 .then(html => {
                     document.getElementById('footer-container').innerHTML = html;

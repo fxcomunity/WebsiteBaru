@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — FX Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink: #0a0a0f;
+            --surface: #12121e;
+            --surface-raised: #1c1c2e;
+            --border: rgba(255,255,255,0.07);
+            --accent: #7c5fff;
+            --accent-2: #e35fff;
+            --accent-3: #5fddff;
+            --text: #f0eeff;
+            --text-dim: #8886a8;
+            --text-muted: #4e4c6a;
+            --danger: #ff5f7e;
+        }
+
+        html, body {
+            min-height: 100vh;
+            background: var(--ink);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── BACKGROUND ── */
+        .bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+
+        /* Grid lines */
+        .bg::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(124,95,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124,95,255,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+        }
+
+        /* Glows */
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,95,255,0.12), transparent 70%);
+            top: -150px; left: -150px;
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+
+        .glow-2 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(227,95,255,0.10), transparent 70%);
+            bottom: -100px; right: -100px;
+            animation: drift 20s ease-in-out infinite alternate-reverse;
+        }
+
+        .glow-3 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,95,126,0.08), transparent 70%);
+            top: 40%; left: 60%;
+            animation: drift 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift {
+            0%   { transform: translate(0,0) scale(1); }
+            100% { transform: translate(40px,30px) scale(1.1); }
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: fixed; top:0; left:0; right:0; z-index:100;
+            height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(10,10,15,0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 0.85rem;
+            color: var(--text); text-decoration: none;
+        }
+
+        .nav-mark {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        .nav-badge {
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 13px;
+            background: rgba(255,95,126,0.08);
+            border: 1px solid rgba(255,95,126,0.2);
+            border-radius: 100px;
+            font-size: 0.72rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--danger);
+        }
+
+        /* ── PAGE ── */
+        .page {
+            position: relative; z-index: 1;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 80px 24px 48px;
+            text-align: center;
+        }
+
+        /* ── 404 NUMBER ── */
+        .num-wrap {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(7rem, 20vw, 14rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--danger) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradShift 6s ease infinite;
+            position: relative; z-index: 1;
+        }
+
+        @keyframes gradShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Shadow / echo */
+        .num-shadow {
+            position: absolute;
+            inset: 0;
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(7rem, 20vw, 14rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(124,95,255,0.12);
+            transform: translate(6px, 8px);
+            z-index: 0;
+            user-select: none;
+        }
+
+        /* ── ICON ── */
+        .icon-wrap {
+            width: 72px; height: 72px;
+            margin: 0 auto 24px;
+            background: rgba(255,95,126,0.08);
+            border: 1px solid rgba(255,95,126,0.2);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; color: var(--danger);
+            animation: float 5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-10px); }
+        }
+
+        /* ── TEXT ── */
+        .title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 14px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: clamp(0.88rem, 2vw, 1rem);
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 440px;
+            margin: 0 auto 36px;
+        }
+
+        /* ── SUGGESTIONS ── */
+        .suggestions {
+            background: rgba(124,95,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 28px;
+            margin-bottom: 36px;
+            max-width: 440px; width: 100%;
+            text-align: left;
+        }
+
+        .suggestions-title {
+            font-size: 0.78rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .suggestions-list {
+            display: flex; flex-direction: column; gap: 10px;
+            list-style: none;
+        }
+
+        .suggestions-list li {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.875rem; color: var(--text-dim);
+        }
+
+        .suggestions-list li::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-row {
+            display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 28px; border-radius: 12px; border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            box-shadow: 0 4px 20px rgba(124,95,255,0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(124,95,255,0.5);
+        }
+
+        .btn-ghost {
+            background: var(--surface-raised);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ── FOOTER NOTE ── */
+        .foot-note {
+            margin-top: 48px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .suggestions { padding: 18px 20px; }
+            .btn-row { flex-direction: column; align-items: stretch; }
+            .btn { justify-content: center; }
+            .nav { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">
+        <div class="nav-mark">⚡</div>
+        FX<span style="color:var(--accent)">Community</span>
+    </a>
+    <div class="nav-badge">
+        <i class="fas fa-circle-exclamation" style="font-size:10px;"></i>
+        Error 404
+    </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+    <!-- Icon -->
+    <div class="icon-wrap">
+        <i class="fas fa-triangle-exclamation"></i>
+    </div>
+
+    <!-- 404 Number -->
+    <div class="num-wrap">
+        <div class="num-shadow">404</div>
+        <div class="num">404</div>
+    </div>
+
+    <!-- Text -->
+    <h1 class="title">Halaman Tidak Ditemukan</h1>
+    <p class="subtitle">
+        Maaf, halaman yang kamu cari tidak tersedia. URL mungkin salah, atau halaman telah dipindahkan.
+    </p>
+
+    <!-- Suggestions -->
+    <div class="suggestions">
+        <div class="suggestions-title">
+            <i class="fas fa-lightbulb"></i>
+            Yang bisa kamu lakukan
+        </div>
+        <ul class="suggestions-list">
+            <li>Periksa kembali URL yang dimasukkan</li>
+            <li>Kembali ke halaman sebelumnya</li>
+            <li>Kunjungi halaman utama FX Community</li>
+            <li>Hubungi kami jika masalah berlanjut</li>
+        </ul>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+        <a href="../index.html" class="btn btn-primary">
+            <i class="fas fa-house"></i> Kembali ke Beranda
+        </a>
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            <i class="fas fa-arrow-left"></i> Halaman Sebelumnya
+        </a>
+    </div>
+
+    <div class="foot-note">
+        &copy; <span id="yr"></span> FX Community &nbsp;·&nbsp; Semua hak dilindungi
+    </div>
+</div>
+
+<script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

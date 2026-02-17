@@ -12,20 +12,331 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../../style.css">
-    <script src="../../maintenance-check.js"></script>
+    <style>
+        /* Favorit Specific Section */
+        .controls {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .social-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 140px;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: var(--bg-hover);
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Favorites Grid */
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+        }
+
+        .favorite-card {
+            background: rgba(30, 30, 60, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .favorite-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .favorite-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            background: rgba(45, 45, 90, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .favorite-card:hover::before {
+            opacity: 1;
+        }
+
+        .favorite-icon {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 5px 15px rgba(99, 102, 241, 0.3));
+        }
+
+        .favorite-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 3.2rem;
+        }
+
+        .favorite-category {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .favorite-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            flex: 1;
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .btn-view:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px var(--shadow-lg);
+        }
+
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+        }
+
+        .btn-remove:hover {
+            background: var(--error);
+            color: white;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .empty-favorites {
+            text-align: center;
+            padding: clamp(40px, 10vw, 80px) 20px;
+            background: rgba(30, 30, 60, 0.3);
+            border-radius: 32px;
+            border: 2px dashed var(--border);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .empty-favorites i {
+            font-size: 5rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .empty-favorites p {
+            margin-bottom: 30px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-secondary);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px var(--shadow-lg);
+            display: none;
+            z-index: 10000;
+            align-items: center;
+            gap: 15px;
+            animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        .notification.error {
+            border-color: var(--error);
+            border-left: 5px solid var(--error);
+        }
+
+        .notification.success {
+            border-color: var(--success);
+            border-left: 5px solid var(--success);
+        }
+
+        /* Footer */
+        #footer-container {
+            margin-top: clamp(40px, 10vw, 80px);
+        }
+
+        @media (max-width: 768px) {
+            .fitur-container {
+                padding: 16px;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .social-btn {
+                width: 100%;
+            }
+            .fitur-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+            .header-left {
+                width: 100%;
+                justify-content: center;
+            }
+            .admin-profile {
+                width: 100%;
+            }
+            .admin-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .admin-dropdown {
+                width: 100%;
+                position: static;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .favorite-card {
+                padding: 20px;
+            }
+            .favorite-icon {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../style.css">
+    <script src="../../admin/maintenance-check.js"></script>
 </head>
 
 <body class="fitur-body">
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
     <div class="fitur-container">
+        <!-- Header -->
         <div class="fitur-header">
-            <a href="../../index.html" title="Kembali ke beranda">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1><i class="fas fa-heart" style="color: var(--error);"></i> Favorit Saya</h1>
+            <div class="header-left">
+                <a href="../../index.html" class="home-btn" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+
+            <div class="header-center">
+                <h1>
+                    <i class="fas fa-heart"></i>
+                    Favorit Saya
+                </h1>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile-container" id="adminProfile" style="display: none;">
+                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                    <div id="adminDropdown" class="admin-dropdown">
+                        <div class="dropdown-header">
+                            <div class="admin-avatar">
+                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                            </div>
+                            <div class="admin-info">
+                                <span id="adminNameDisplayHeader">Admin</span>
+                                <small>Administrator</small>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="../../admin/panel.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                            <a href="../../admin/settings.html" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button onclick="adminLogout()" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="favorites-stats" id="favoriteStats"
-            style="text-align: center; color: var(--text-secondary); margin-bottom: 24px;">
+            style="text-align: center; color: var(--text-secondary); margin-bottom: 24px; font-weight: 500;">
             Anda memiliki <strong>0</strong> PDF favorit
         </div>
 
@@ -57,6 +368,37 @@
     <script>
         const originalToggleFavorite = window.toggleFavorite;
 
+        // Admin Profile Logic
+        function checkAdminSession() {
+            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
+            const profileEl = document.getElementById('adminProfile');
+            if (isAdmin && profileEl) {
+                profileEl.style.display = 'block';
+                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
+                document.getElementById('adminNameDisplayHeader').textContent = adminName;
+            }
+        }
+
+        function toggleAdminDropdown() {
+            const dropdown = document.getElementById('adminDropdown');
+            dropdown.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function adminLogout() {
+            if (confirm('Yakin ingin keluar dari sesi admin?')) {
+                sessionStorage.removeItem('fx_isAdmin');
+                window.location.reload();
+            }
+        }
+
         function toggleFavorite(url, name, category) {
             if (typeof originalToggleFavorite === 'function') originalToggleFavorite(url, name, category);
             renderFavoritesPage();
@@ -85,7 +427,7 @@
             const toast = document.createElement('div');
             toast.className = 'notification show';
             if (type === 'error') toast.classList.add('error');
-            toast.innerText = message;
+            toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${message}`;
             document.body.appendChild(toast);
             setTimeout(() => {
                 toast.classList.remove('show');
@@ -101,10 +443,12 @@
                 statsContainer.innerHTML = 'Anda belum memiliki PDF favorit';
                 listContainer.innerHTML = `
                     <div class="empty-favorites">
-                        <i class="fas fa-heart-broken" style="font-size: 64px; margin-bottom: 16px; opacity: 0.5;"></i>
-                        <p>Belum ada favorit</p>
-                        <p style="font-size: 14px; margin-top: 8px;">Klik ikon hati pada PDF untuk menambahkannya ke favorit</p>
-                        <a href="../../index.html" style="display: inline-block; margin-top: 16px; padding: 10px 20px; border-radius: 8px; text-decoration: none;">← Kembali ke Beranda</a>
+                        <i class="fas fa-heart-broken" style="opacity: 0.5;"></i>
+                        <p style="font-size: 1.2rem; font-weight: 600; margin-bottom: 8px;">Belum ada favorit</p>
+                        <p style="color: var(--text-secondary); margin-bottom: 24px;">Klik ikon hati pada PDF untuk menambahkannya ke favorit</p>
+                        <a href="../../index.html" class="social-btn" style="display: inline-flex; margin: 0 auto; background: var(--gradient-primary); border: none;">
+                            <i class="fas fa-arrow-left"></i> Jelajahi PDF
+                        </a>
                     </div>
                 `;
                 return;
@@ -114,16 +458,19 @@
 
             let html = '<div class="favorites-grid">';
             favorites.forEach(fav => {
+                const icon = fav.category?.includes('basic') ? '📊' : 
+                            fav.category?.includes('advanced') ? '📈' : 
+                            fav.category?.includes('technical') ? '📉' : '📚';
                 html += `
                     <div class="favorite-card">
-                        <div class="favorite-icon">${fav.category === 'fx-basic' ? '📊' : fav.category === 'fx-advanced' ? '📈' : fav.category === 'fx-technical' ? '📉' : '📚'}</div>
+                        <div class="favorite-icon">${icon}</div>
                         <div class="favorite-title">${fav.name}</div>
-                        <div class="favorite-category">${fav.category}</div>
+                        <div class="favorite-category">${fav.category || 'PDF Document'}</div>
                         <div class="favorite-actions">
                             <button class="action-btn btn-view" onclick="viewPDF('${fav.url}', '${fav.name.replace(/'/g, "\\'")}')">
                                 <i class="fas fa-eye"></i> Lihat
                             </button>
-                            <button class="action-btn btn-remove" onclick="removeFavorite('${fav.url}')">
+                            <button class="action-btn btn-remove" onclick="removeFavorite('${fav.url}')" title="Hapus dari favorit">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -135,6 +482,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            checkAdminSession();
             renderFavoritesPage();
             // Load footer via fetch
             fetch('../../footer/favorites.html')

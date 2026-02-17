@@ -19,7 +19,14 @@ function setNowPlayingUI(index) {
     if (titleEl) titleEl.textContent = data.title;
     if (artistEl) artistEl.textContent = data.artist;
     if (albumEl) albumEl.textContent = '♪';
-    document.querySelectorAll('.music-item').forEach((it, i) => it.classList.toggle('active', i === index));
+    
+    document.querySelectorAll('.music-item').forEach((it, i) => {
+        const isActive = i === index;
+        it.classList.toggle('active', isActive);
+        if (isActive) {
+            it.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
 }
 
 function playMusic(index) {
@@ -62,6 +69,25 @@ function initPlayerControls() {
     if (nextBtn) nextBtn.addEventListener('click', nextTrack);
     if (vol && a) vol.addEventListener('input', (e) => { a.volume = e.target.value; });
 
+    // Keyboard controls for volume and playback
+    document.addEventListener('keydown', (e) => {
+        if (!a) return;
+        
+        const step = 0.05;
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            a.volume = Math.min(1, a.volume + step);
+            if (vol) vol.value = a.volume;
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            a.volume = Math.max(0, a.volume - step);
+            if (vol) vol.value = a.volume;
+        } else if (e.code === 'Space') {
+            e.preventDefault();
+            togglePlayPause();
+        }
+    });
+
     if (progressBar && a) {
         progressBar.addEventListener('click', (e) => {
             if (!a.duration) return;
@@ -101,15 +127,13 @@ function renderMusicButtons() {
         item.tabIndex = 0;
         item.onclick = () => playMusic(index);
         item.innerHTML = `
-            <div class="music-thumb"><i class="fas fa-music"></i></div>
-            <div class="music-meta">
-                <div class="music-title">${music.title}</div>
-                <div class="music-artist">${music.artist}</div>
+            <div class="music-item-icon"><i class="fas fa-music"></i></div>
+            <div class="music-item-info">
+                <div class="music-item-title">${music.title}</div>
+                <div class="music-item-artist">${music.artist}</div>
             </div>
-            <button class="small-play" aria-label="Play"><i class="fas fa-play"></i></button>
+            <div class="music-item-duration">${music.duration || '0:00'}</div>
         `;
-        const smallPlay = item.querySelector('.small-play');
-        if (smallPlay) smallPlay.addEventListener('click', (ev) => { ev.stopPropagation(); playMusic(index); });
         container.appendChild(item);
     });
 }

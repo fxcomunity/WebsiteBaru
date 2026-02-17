@@ -9,596 +9,409 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #12122b;
+            --bg-card: rgba(30, 30, 60, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #a8a8d8;
+            --text-muted: #6b6b8f;
+            --border: rgba(99, 102, 241, 0.2);
+            --success: #10b981;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-attachment: fixed;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
-            position: relative;
+            padding: 20px;
             overflow-x: hidden;
-            overflow-y: auto;
+            position: relative;
         }
 
-        /* Animated Background Particles */
-        body::before,
-        body::after {
-            content: '';
+        /* Background Animation Enhanced */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-1 {
             position: absolute;
-            border-radius: 50%;
-            opacity: 0.1;
-            animation: float 20s infinite ease-in-out;
+            top: -10%;
+            left: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            animation: move 20s infinite alternate;
         }
 
-        body::before {
-            width: 300px;
-            height: 300px;
-            background: white;
-            top: -150px;
-            left: -150px;
-            animation-delay: 0s;
+        .glow-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: move 25s infinite alternate-reverse;
         }
 
-        body::after {
-            width: 400px;
-            height: 400px;
-            background: white;
-            bottom: -200px;
-            right: -200px;
-            animation-delay: 5s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(50px, -50px); }
-            50% { transform: translate(-30px, 30px); }
-            75% { transform: translate(40px, 20px); }
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
         }
 
         /* Main Container */
         .maintenance-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.3);
-            padding: 48px;
+            background: var(--bg-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: clamp(24px, 5vw, 40px);
+            padding: clamp(30px, 6vw, 60px);
             text-align: center;
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
-            animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            margin: auto;
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Icon Animation */
         .maintenance-icon {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
+            width: clamp(80px, 15vw, 120px);
+            height: clamp(80px, 15vw, 120px);
+            margin: 0 auto clamp(24px, 4vw, 40px);
+            background: var(--gradient-primary);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
-            animation: bounce 3s infinite ease-in-out;
+            box-shadow: 0 15px 35px var(--shadow);
+            animation: morph 8s ease-in-out infinite;
             position: relative;
         }
 
-        .maintenance-icon::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            opacity: 0.3;
-            animation: pulse-ring 2s infinite;
-        }
-
-        @keyframes pulse-ring {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.15); opacity: 0; }
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            25% {
-                transform: translateY(-15px) rotate(-5deg);
-            }
-            75% {
-                transform: translateY(-10px) rotate(5deg);
-            }
+        @keyframes morph {
+            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
         }
 
         .maintenance-icon i {
-            font-size: 52px;
+            font-size: clamp(32px, 6vw, 52px);
             color: white;
-            animation: spin 8s linear infinite;
-            position: relative;
-            z-index: 1;
+            animation: rotate-tool 4s linear infinite;
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes rotate-tool {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-20deg); }
+            75% { transform: rotate(20deg); }
+            100% { transform: rotate(0deg); }
         }
 
         /* Typography */
         h1 {
             font-family: 'Poppins', sans-serif;
-            color: #2d3748;
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: 800;
             margin-bottom: 16px;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to right, #fff, var(--text-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -1px;
         }
 
         .maintenance-text {
-            color: #4a5568;
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin-bottom: 32px;
-            font-weight: 400;
+            color: var(--text-secondary);
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            margin-bottom: clamp(30px, 5vw, 48px);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Status Card */
         .status-info {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-left: 4px solid #667eea;
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: clamp(16px, 3vw, 24px);
             margin-bottom: 32px;
-            text-align: left;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
         }
 
-        .status-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            color: #4a5568;
+        .status-item {
+            text-align: center;
+            padding: 12px;
+        }
+
+        .status-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .status-value {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
             font-size: 0.95rem;
         }
 
-        .status-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .status-row i {
-            color: #667eea;
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-
-        .status-row strong {
-            color: #2d3748;
-            font-weight: 600;
-            min-width: 120px;
-        }
-
-        /* Code Info Section */
-        .code-info {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            animation: slideIn 0.8s ease 0.2s backwards;
-            display: none;
-        }
-
-        .code-info p {
-            color: #059669;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 0;
-        }
-
-        .code-info i {
-            font-size: 18px;
+        .status-value i {
+            color: var(--primary);
+            margin-right: 6px;
         }
 
         /* Access Form */
         .access-form {
-            background: rgba(248, 250, 252, 0.8);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: 20px;
-            padding: 28px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: clamp(20px, 4vw, 32px);
             margin-top: 32px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-            animation: slideIn 0.8s ease 0.3s backwards;
         }
 
         .form-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .form-header i {
-            color: #667eea;
-            font-size: 20px;
+            margin-bottom: 24px;
         }
 
         .form-header h3 {
             font-family: 'Poppins', sans-serif;
-            color: #2d3748;
             font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+        .form-header h3 i {
+            color: var(--primary);
         }
 
         .input-wrapper {
             position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
         .input-icon {
             position: absolute;
-            left: 16px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #a0aec0;
-            font-size: 18px;
-            pointer-events: none;
-            transition: color 0.3s ease;
+            color: var(--text-muted);
+            font-size: 1.2rem;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px 14px 48px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input:focus + .input-icon {
-            color: #667eea;
-        }
-
-        .form-group input::placeholder {
-            color: #a0aec0;
-        }
-
-        /* Button */
         .maintenance-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
             width: 100%;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-            font-family: 'Inter', sans-serif;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .maintenance-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
-        }
-
-        .maintenance-btn:active {
-            transform: translateY(0);
-        }
-
-        .maintenance-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
         }
 
         .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: transparent;
+            border: 2px solid var(--border);
             margin-top: 12px;
         }
 
         .btn-secondary:hover {
-            background: #f7fafc;
+            background: var(--glass);
+            border-color: var(--primary);
+        }
+
+        /* Footer Info */
+        .contact-info {
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .contact-info a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info a:hover {
+            color: white;
+            text-decoration: underline;
         }
 
         /* Messages */
         .message {
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 0.9rem;
             margin-top: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
             display: none;
             align-items: center;
-            gap: 8px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #dc2626;
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #059669;
-        }
-
-        .message i {
-            font-size: 16px;
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin-loader 0.8s linear infinite;
-        }
-
-        @keyframes spin-loader {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Contact Info */
-        .contact-info {
-            margin-top: 28px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(226, 232, 240, 0.6);
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        .contact-info a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .contact-info a:hover {
-            color: #764ba2;
-            gap: 10px;
-        }
-
-        .contact-info a i {
-            font-size: 16px;
-        }
-
-        /* Progress Dots */
-        .progress-dots {
-            display: flex;
             justify-content: center;
             gap: 8px;
-            margin-top: 24px;
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
+        .error-message { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .success-message { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
             border-radius: 50%;
-            background: rgba(102, 126, 234, 0.3);
-            animation: dot-pulse 1.5s ease-in-out infinite;
+            animation: spin 0.8s linear infinite;
         }
 
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes dot-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.3); opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .maintenance-container {
-                padding: 32px 24px;
-                border-radius: 24px;
-            }
-
-            .maintenance-icon {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 24px;
-            }
-
-            .maintenance-icon i {
-                font-size: 44px;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .maintenance-text {
-                font-size: 1rem;
-            }
-
-            .status-info {
-                padding: 16px;
-            }
-
-            .access-form {
-                padding: 20px;
-            }
-
-            .status-row strong {
-                min-width: 100px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 16px;
-            }
-
-            .maintenance-container {
-                padding: 28px 20px;
-            }
-
-            .maintenance-icon {
-                width: 80px;
-                height: 80px;
-            }
-
-            .maintenance-icon i {
-                font-size: 36px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .status-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
-            }
-
-            .status-row strong {
-                min-width: auto;
-            }
+        .code-info {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
     <div class="maintenance-container">
         <!-- Icon -->
         <div class="maintenance-icon">
-            <i class="fas fa-tools"></i>
+            <i class="fas fa-screwdriver-wrench"></i>
         </div>
 
         <!-- Title & Description -->
-        <h1>🔧 Website Sedang Maintenance</h1>
+        <h1>Maintenance Mode</h1>
         <p class="maintenance-text">
-            Kami sedang melakukan pembaruan sistem untuk memberikan pengalaman terbaik. 
-            Website akan kembali online dalam waktu dekat.
+            Situs kami sedang dalam peningkatan untuk memberikan layanan yang lebih baik. Silakan cek kembali beberapa saat lagi.
         </p>
 
         <!-- Status Info -->
         <div class="status-info">
-            <div class="status-row">
-                <i class="fas fa-circle-notch"></i>
-                <strong>Status:</strong>
-                <span>Sedang Maintenance</span>
+            <div class="status-item">
+                <span class="status-label">Status</span>
+                <span class="status-value"><i class="fas fa-cog fa-spin"></i> Updating</span>
             </div>
-            <div class="status-row">
-                <i class="fas fa-clock"></i>
-                <strong>Estimasi Waktu:</strong>
-                <span>~ 2 jam</span>
+            <div class="status-item">
+                <span class="status-label">Estimasi</span>
+                <span class="status-value"><i class="fas fa-clock"></i> ~ 2 Jam</span>
             </div>
-            <div class="status-row">
-                <i class="fas fa-sync-alt"></i>
-                <strong>Last Update:</strong>
-                <span id="updateTime">Just now</span>
+            <div class="status-item">
+                <span class="status-label">Wilayah</span>
+                <span class="status-value"><i class="fas fa-globe"></i> Global</span>
             </div>
         </div>
 
-        <!-- Code Info (shown if active code exists) -->
+        <!-- Code Info -->
         <div id="codeInfoSection" class="code-info">
-            <p>
-                <i class="fas fa-check-circle"></i>
-                <span>Kode akses tersedia</span>
-            </p>
+            <i class="fas fa-key"></i> <span>Kode akses tersedia</span>
         </div>
 
         <!-- Access Form -->
         <div class="access-form">
             <div class="form-header">
-                <i class="fas fa-key"></i>
-                <h3>Akses Admin</h3>
+                <h3><i class="fas fa-user-shield"></i> Portal Akses Khusus</h3>
             </div>
             
             <form onsubmit="checkAccess(event)">
-                <div class="form-group">
-                    <label for="accessPin">
-                        <i class="fas fa-lock"></i> Kode Akses (berlaku 24 jam)
-                    </label>
-                    <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="accessPin" 
-                            placeholder="Masukkan kode 6 digit..." 
-                            autocomplete="off"
-                            maxlength="6"
-                        >
-                        <i class="fas fa-shield-alt input-icon"></i>
-                    </div>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="accessPin" 
+                        placeholder="Masukkan Kode Akses..." 
+                        autocomplete="off"
+                        maxlength="6"
+                    >
+                    <i class="fas fa-lock input-icon"></i>
                 </div>
+                
                 <button type="submit" class="maintenance-btn">
-                    <span id="btnText">Verifikasi Akses</span>
+                    <span id="btnText">Masuk Sekarang</span>
                 </button>
                 
                 <button type="button" class="maintenance-btn btn-secondary" onclick="requestAccessCode()">
                     <i class="fab fa-whatsapp"></i>
-                    <span>Minta Kode ke Admin</span>
+                    <span>Hubungi Admin</span>
                 </button>
                 
                 <div class="error-message message" id="errorMessage">
@@ -610,21 +423,14 @@
                     <span></span>
                 </div>
             </form>
-
-            <div class="progress-dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
         </div>
 
         <!-- Contact Info -->
         <div class="contact-info">
             <p>
-                Butuh bantuan? 
-                <a href="https://wa.me/62895404147521" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-whatsapp"></i>
-                    Hubungi Admin
+                Informasi lebih lanjut? 
+                <a href="https://wa.me/62895404147521" target="_blank">
+                    WhatsApp FX Support
                 </a>
             </p>
         </div>

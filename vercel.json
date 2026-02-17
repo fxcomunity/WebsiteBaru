@@ -39,5 +39,13 @@
       "destination": "https://wa.me/62895404147521",
       "permanent": true
     }
-  ]
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/$1.html"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }

@@ -20,22 +20,19 @@
                     </div>
                     <div class="logo-text">
                         <h3 class="footer-brand">FX Community</h3>
-                        <span class="footer-badge">About Us</span>
+                        <span class="footer-badge">Tentang Kami</span>
                     </div>
                 </div>
-                <p class="footer-tagline">Membangun Komunitas Trading yang Inklusif dan Profesional</p>
+                <p class="footer-tagline">Membangun Komunitas Trading yang Inklusif, Terpercaya, dan Profesional</p>
                 <div class="footer-socials">
-                    <a href="https://www.instagram.com/fxcommunity" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link instagram">
+                    <a href="https://www.instagram.com/si.palingjack/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="https://twitter.com/fxcommunity" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="social-link twitter">
-                        <i class="fab fa-twitter"></i>
+                    <a href="https://www.tiktok.com/@uciii0106" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-link tiktok">
+                        <i class="fab fa-tiktok"></i>
                     </a>
-                    <a href="https://www.youtube.com/fxcommunity" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-link youtube">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="https://discord.gg/fxcommunity" target="_blank" rel="noopener noreferrer" aria-label="Discord" class="social-link discord">
-                        <i class="fab fa-discord"></i>
+                    <a href="mailto:ajar0895404147521@gmail.com" rel="noopener noreferrer" aria-label="Email" class="social-link email">
+                        <i class="fas fa-envelope"></i>
                     </a>
                 </div>
             </div>
@@ -44,10 +41,10 @@
             <div class="footer-section footer-links">
                 <h4><i class="fas fa-compass"></i> Jelajahi</h4>
                 <ul>
-                    <li><a href="../../index.html"><i class="fas fa-home"></i> Beranda</a></li>
-                    <li><a href="../music/music.html"><i class="fas fa-music"></i> Koleksi Musik</a></li>
-                    <li><a href="../favorit/index.html"><i class="fas fa-heart"></i> Playlist Saya</a></li>
-                    <li><a href="../about.html"><i class="fas fa-info-circle"></i> Tentang Kami</a></li>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Beranda</a></li>
+                    <li><a href="./music/music.html"><i class="fas fa-music"></i> Koleksi Musik</a></li>
+                    <li><a href="./favorit/index.html"><i class="fas fa-heart"></i> Playlist Saya</a></li>
+                    <li><a href="./about.html"><i class="fas fa-info-circle"></i> Tentang Kami</a></li>
                 </ul>
             </div>
 
@@ -56,35 +53,28 @@
                 <h4><i class="fas fa-life-ring"></i> Bantuan</h4>
                 <ul>
                     <li><a href="./faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
-                    <li><a href="#events"><i class="fas fa-calendar-alt"></i> Event</a></li>
-                    <li><a href="#partnerships"><i class="fas fa-handshake"></i> Kerjasama</a></li>
-                    <li><a href="#contact"><i class="fas fa-envelope"></i> Kontak</a></li>
+                    <li><a href="https://wa.me/62895404147521" target="_blank"><i class="fas fa-envelope"></i> Kontak</a></li>
+                    <li><a href="../privacy/index.html">Kebijakan Privasi</a></li>
+                    <li><a href="../terms/index.html">Syarat Layanan</a></li>
                 </ul>
             </div>
 
-            <!-- Contact Info -->
-            <div class="footer-section footer-info">
-                <h4><i class="fas fa-paper-plane"></i> Hubungi Kami</h4>
-                <ul class="contact-list">
-                    <li>
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <a href="mailto:info@fxcommunity.com">info@fxcommunity.com</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <a href="tel:+62812345678">+62 (812) 345-678</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Indonesia</span>
-                        </div>
-                    </li>
-                </ul>
+            <!-- Newsletter -->
+            <div class="footer-section footer-newsletter">
+                <h4><i class="fas fa-bell"></i> Newsletter</h4>
+                <p class="newsletter-text">Dapatkan informasi program dan materi terbaru kami</p>
+                <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" placeholder="Email Anda" aria-label="Email" required>
+                        <button type="submit" aria-label="Subscribe">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="newsletter-privacy">
+                    <i class="fas fa-lock"></i> Kami menghargai privasi Anda
+                </div>
             </div>
         </div>
 
@@ -96,395 +86,10 @@
             <div class="footer-credits">
                 Dibangun dengan <i class="fas fa-heart pulse-heart"></i> untuk komunitas
                 <span class="separator">•</span>
-                <a href="#privacy">Kebijakan Privasi</a>
-                <span class="separator">•</span>
-                <a href="#terms">Syarat Layanan</a>
+                <a href="#status" class="status-link">
+                    <span class="status-dot"></span> Status
+                </a>
             </div>
         </div>
     </div>
 </footer>
-
-<style>
-/* Footer Base Styles */
-.site-footer {
-    position: relative;
-    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
-    color: var(--text-primary);
-    margin-top: 80px;
-    overflow: hidden;
-}
-
-.footer-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px 32px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Wave Decoration */
-.footer-wave {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: translateY(-99%);
-}
-
-.footer-wave svg {
-    position: relative;
-    display: block;
-    width: calc(100% + 1.3px);
-    height: 80px;
-}
-
-.footer-wave path {
-    fill: var(--bg-card);
-}
-
-/* Footer Top Grid */
-.footer-top {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    padding: 60px 0 40px;
-    border-bottom: 1px solid var(--border);
-}
-
-/* Footer Section */
-.footer-section h4 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-section h4 i {
-    color: var(--primary);
-    font-size: 1rem;
-}
-
-/* Branding Section */
-.footer-branding {
-    max-width: 320px;
-}
-
-.footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.logo-icon {
-    width: 56px;
-    height: 56px;
-    background: var(--gradient-primary);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: white;
-    box-shadow: 0 8px 24px var(--shadow-lg);
-    animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-.logo-text {
-    flex: 1;
-}
-
-.footer-brand {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0 0 4px 0;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.footer-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    padding: 2px 8px;
-    background: var(--bg-secondary);
-    border-radius: 6px;
-    border: 1px solid var(--border);
-}
-
-.footer-tagline {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-}
-
-/* Social Links */
-.footer-socials {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.social-link {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text-primary);
-    font-size: 18px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.social-link:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px var(--shadow-lg);
-}
-
-.social-link.instagram:hover {
-    background: linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-    border-color: #bc1888;
-    color: white;
-}
-
-.social-link.twitter:hover {
-    background: #1DA1F2;
-    border-color: #1DA1F2;
-    color: white;
-}
-
-.social-link.youtube:hover {
-    background: #FF0000;
-    border-color: #FF0000;
-    color: white;
-}
-
-.social-link.discord:hover {
-    background: #5865F2;
-    border-color: #5865F2;
-    color: white;
-}
-
-/* Footer Links */
-.footer-links ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-links li {
-    margin-bottom: 12px;
-}
-
-.footer-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    padding: 4px 0;
-}
-
-.footer-links a i {
-    font-size: 0.85rem;
-    width: 16px;
-    opacity: 0.7;
-}
-
-.footer-links a:hover {
-    color: var(--primary);
-    transform: translateX(4px);
-}
-
-.footer-links a:hover i {
-    opacity: 1;
-}
-
-/* Contact List */
-.contact-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.contact-list li {
-    margin-bottom: 16px;
-}
-
-.contact-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-.contact-item i {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
-    font-size: 0.95rem;
-}
-
-.contact-item a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.contact-item a:hover {
-    color: var(--primary);
-}
-
-.contact-item span {
-    color: var(--text-secondary);
-}
-
-/* Footer Bottom */
-.footer-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding-top: 32px;
-    text-align: center;
-}
-
-.footer-copyright {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.footer-copyright strong {
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-.footer-credits {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 0.875rem;
-}
-
-.footer-credits a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-credits a:hover {
-    color: var(--primary);
-}
-
-.separator {
-    color: var(--border);
-}
-
-.pulse-heart {
-    color: #e74c3c;
-    animation: heartbeat 1.5s ease-in-out infinite;
-}
-
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    10%, 30% { transform: scale(1.1); }
-    20%, 40% { transform: scale(1); }
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .footer-top {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 32px;
-    }
-    
-    .footer-branding {
-        grid-column: 1 / -1;
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .footer-container {
-        padding: 0 16px 24px;
-    }
-    
-    .footer-top {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        padding: 48px 0 32px;
-    }
-    
-    .footer-bottom {
-        padding-top: 24px;
-    }
-    
-    .footer-credits {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .footer-wave svg {
-        height: 60px;
-    }
-    
-    .footer-logo {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    
-    .footer-socials {
-        justify-content: flex-start;
-    }
-    
-    .social-link {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-}
-
-/* Dark Mode Enhancement */
-@media (prefers-color-scheme: dark) {
-    .site-footer {
-        background: linear-gradient(180deg, var(--bg-card) 0%, #0a0a1a 100%);
-    }
-}
-</style>
-
-<script>
-// Set current year dynamically
-document.getElementById('currentYear').textContent = new Date().getFullYear();
-</script>

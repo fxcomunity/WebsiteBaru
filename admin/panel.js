@@ -35,50 +35,57 @@
         <div class="stats-grid" id="statsGrid"></div>
 
         <!-- Main Layout -->
-        <div style="display:grid;grid-template-columns:260px 1fr;gap:24px;margin-top:32px;">
+        <div class="main-panel-layout">
             <!-- Sidebar -->
-            <aside class="panel-section" style="height:fit-content;">
-                <div style="margin-bottom:20px;">
-                    <h3 style="font-family:'Poppins',sans-serif;font-size:1.25rem;margin-bottom:8px;color:var(--text-primary);">
-                        <i class="fas fa-bars" style="color:var(--primary);margin-right:8px;"></i>Menu
+            <aside class="panel-section sidebar-nav">
+                <div class="sidebar-header-box">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-bars"></i>Menu
                     </h3>
-                    <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Navigasi panel</p>
+                    <p class="sidebar-subtitle">Navigasi panel</p>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                    <button id="tabList" class="btn btn-secondary" style="justify-content:flex-start;">
+                <div class="sidebar-btns">
+                    <button id="goHome" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Beranda Situs
+                    </button>
+                    <button id="tabList" class="btn btn-secondary">
                         <i class="fas fa-list"></i> Daftar PDF
                     </button>
-                    <button id="tabAdd" class="btn btn-secondary" style="justify-content:flex-start;">
+                    <button id="tabAdd" class="btn btn-secondary">
                         <i class="fas fa-plus-circle"></i> Tambah PDF
                     </button>
-                    <button id="tabImport" class="btn btn-secondary" style="justify-content:flex-start;">
+                    <button id="tabImport" class="btn btn-secondary">
                         <i class="fas fa-file-import"></i> Import / Export
                     </button>
-                    <button id="tabMaintenance" class="btn btn-secondary" style="justify-content:flex-start;">
+                    <button id="tabMaintenance" class="btn btn-secondary">
                         <i class="fas fa-tools"></i> Maintenance
                     </button>
+                    <button id="tabSettings" class="btn btn-secondary">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
                 </div>
-                <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-                    <button id="logout" class="btn btn-danger" style="width:100%;justify-content:center;">
+                <div class="sidebar-footer">
+                    <button id="logout" class="btn btn-danger">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
                 <!-- Clock Widget -->
-                <div style="margin-top:20px;padding:16px;background:var(--bg-secondary);border-radius:12px;text-align:center;">
-                    <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:8px;">
+                <div class="clock-widget">
+                    <div class="clock-label">
                         <i class="fas fa-clock"></i> Waktu Sekarang
                     </div>
-                    <div id="clock" style="font-weight:800;font-family:'Poppins',sans-serif;font-size:1.5rem;color:var(--primary);"></div>
-                    <div id="date" style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;"></div>
+                    <div id="clock" class="clock-time"></div>
+                    <div id="date" class="clock-date"></div>
                 </div>
             </aside>
 
             <!-- Main Content -->
-            <main>
+            <main class="panel-main-content">
                 <div id="viewList" style="display:none"></div>
                 <div id="viewAdd" style="display:none"></div>
                 <div id="viewImport" style="display:none"></div>
                 <div id="viewMaintenance" style="display:none;"></div>
+                <div id="viewSettings" style="display:none;"></div>
             </main>
         </div>
     `;
@@ -132,13 +139,20 @@
     const viewAdd = document.getElementById('viewAdd');
     const viewImport = document.getElementById('viewImport');
     const viewMaintenance = document.getElementById('viewMaintenance');
+    const viewSettings = document.getElementById('viewSettings');
+
+    // Home navigation
+    document.getElementById('goHome').addEventListener('click', () => {
+        window.location.href = '../index.html';
+    });
 
     // Tab navigation with active states
     const tabs = {
         list: document.getElementById('tabList'),
         add: document.getElementById('tabAdd'),
         import: document.getElementById('tabImport'),
-        maintenance: document.getElementById('tabMaintenance')
+        maintenance: document.getElementById('tabMaintenance'),
+        settings: document.getElementById('tabSettings')
     };
 
     function setActiveTab(activeTab) {
@@ -157,6 +171,7 @@
         viewAdd.style.display = 'none';
         viewImport.style.display = 'none';
         viewMaintenance.style.display = 'none';
+        viewSettings.style.display = 'none';
         
         setActiveTab(name);
         
@@ -164,12 +179,23 @@
         if(name === 'add') { renderAdd(); viewAdd.style.display = 'block'; }
         if(name === 'import') { renderImport(); viewImport.style.display = 'block'; }
         if(name === 'maintenance') { renderMaintenance(); viewMaintenance.style.display = 'block'; }
+        if(name === 'settings') { renderSettings(); viewSettings.style.display = 'block'; }
     }
 
     tabs.list.addEventListener('click', () => showView('list'));
     tabs.add.addEventListener('click', () => showView('add'));
     tabs.import.addEventListener('click', () => showView('import'));
     tabs.maintenance.addEventListener('click', () => showView('maintenance'));
+    tabs.settings.addEventListener('click', () => showView('settings'));
+
+    // Check URL for page parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    if (page === 'settings') {
+        showView('settings');
+    } else {
+        showView('list');
+    }
     
     document.getElementById('logout').addEventListener('click', () => { 
         if(confirm('Yakin ingin logout?')) {
@@ -817,15 +843,19 @@
         });
 
         document.getElementById('activateNow').addEventListener('click', () => {
-            if(!confirm('Aktifkan maintenance mode sekarang? Semua pengguna akan diarahkan ke halaman maintenance.')) return;
+            if(!confirm('Aktifkan maintenance mode sekarang? Situs akan segera dialihkan ke halaman maintenance.')) return;
             const newCfg = {
                 enabled: true,
                 maintenancePage: document.getElementById('mntPage').value || 'maintenance.html',
                 allowedIPs: []
             };
             setCfg(newCfg);
-            alert('🚧 Maintenance mode diaktifkan!');
-            renderMaintenance(); // Refresh view
+            
+            // Revoke current admin session access so they also get redirected to verify
+            sessionStorage.removeItem('maintenanceAccess');
+            
+            alert('🚧 Maintenance mode diaktifkan! Anda akan dialihkan untuk melihat hasilnya.');
+            window.location.href = '../' + (newCfg.maintenancePage);
         });
 
         document.getElementById('deactivateNow').addEventListener('click', () => {
@@ -838,6 +868,87 @@
             setCfg(newCfg);
             alert('✅ Situs kembali online!');
             renderMaintenance(); // Refresh view
+        });
+    }
+
+    function renderSettings() {
+        viewSettings.innerHTML = '';
+        
+        const section = document.createElement('div');
+        section.className = 'panel-section';
+        
+        section.innerHTML = `
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-cog"></i> Pengaturan Akun
+                </div>
+            </div>
+            
+            <div style="display:grid; gap:24px; max-width: 500px;">
+                <!-- Change Name -->
+                <div class="form-group">
+                    <label style="display:block; color:var(--text-secondary); font-weight:600; margin-bottom:8px;">
+                        <i class="fas fa-user-tag"></i> Nama Admin
+                    </label>
+                    <input id="setAdminName" type="text" value="${localStorage.getItem('fx_adminName') || 'Admin'}" 
+                        style="width:100%; padding:12px 16px; background:var(--bg-secondary); border:2px solid var(--border); 
+                        border-radius:10px; color:var(--text-primary); font-size:1rem;">
+                </div>
+
+                <div class="dropdown-divider"></div>
+
+                <!-- Change Password -->
+                <div class="form-group">
+                    <label style="display:block; color:var(--text-secondary); font-weight:600; margin-bottom:8px;">
+                        <i class="fas fa-lock"></i> Password Baru
+                    </label>
+                    <input id="setAdminPass" type="password" placeholder="Biarkan kosong jika tidak ingin ganti" 
+                        style="width:100%; padding:12px 16px; background:var(--bg-secondary); border:2px solid var(--border); 
+                        border-radius:10px; color:var(--text-primary); font-size:1rem;">
+                </div>
+
+                <div class="form-group">
+                    <label style="display:block; color:var(--text-secondary); font-weight:600; margin-bottom:8px;">
+                        <i class="fas fa-shield-check"></i> Konfirmasi Password Baru
+                    </label>
+                    <input id="setAdminPassConf" type="password" placeholder="Ulangi password baru" 
+                        style="width:100%; padding:12px 16px; background:var(--bg-secondary); border:2px solid var(--border); 
+                        border-radius:10px; color:var(--text-primary); font-size:1rem;">
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <button id="saveSettings" class="btn btn-primary" style="width:100%; justify-content:center; padding:15px;">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        viewSettings.appendChild(section);
+
+        document.getElementById('saveSettings').addEventListener('click', () => {
+            const newName = document.getElementById('setAdminName').value.trim();
+            const newPass = document.getElementById('setAdminPass').value;
+            const passConf = document.getElementById('setAdminPassConf').value;
+
+            if (!newName) {
+                alert('Nama tidak boleh kosong!');
+                return;
+            }
+
+            if (newPass) {
+                if (newPass !== passConf) {
+                    alert('Konfirmasi password tidak cocok!');
+                    return;
+                }
+                localStorage.setItem('fx_adminPass', newPass);
+            }
+
+            localStorage.setItem('fx_adminName', newName);
+            alert('✅ Pengaturan berhasil disimpan!');
+            
+            // Reload to update UI if necessary
+            location.reload();
         });
     }
 

@@ -8,418 +8,537 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
     <style>
+        /* =============================================
+           RESET & ROOT VARIABLES
+        ============================================= */
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #8b5cf6;
-            --accent: #ec4899;
-            --bg-primary: #0f0f23;
-            --bg-secondary: #1a1a35;
-            --bg-card: #232347;
-            --bg-hover: #2d2d5f;
-            --text-primary: #ffffff;
-            --text-secondary: #a8a8d8;
-            --text-muted: #6b6b8f;
-            --border: #3a3a5f;
-            --success: #10b981;
-            --shadow: rgba(99, 102, 241, 0.1);
-            --shadow-lg: rgba(99, 102, 241, 0.2);
-            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            --player-radius: 28px;
+            --card-radius: 24px;
+            --item-radius: 16px;
+            --glow-primary: rgba(99, 102, 241, 0.35);
+            --glow-accent: rgba(168, 85, 247, 0.25);
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'DM Sans', sans-serif;
         }
 
-        /* Background Animation */
-        body::before {
-            content: '';
+        /* =============================================
+           AMBIENT BACKGROUND
+        ============================================= */
+        .ambient-orb {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+            border-radius: 50%;
+            filter: blur(80px);
             pointer-events: none;
             z-index: 0;
+            will-change: transform;
+        }
+        .ambient-orb-1 {
+            width: clamp(200px, 40vw, 500px);
+            height: clamp(200px, 40vw, 500px);
+            background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+            top: -10%;
+            left: -5%;
+            animation: drift-1 18s ease-in-out infinite alternate;
+        }
+        .ambient-orb-2 {
+            width: clamp(150px, 30vw, 400px);
+            height: clamp(150px, 30vw, 400px);
+            background: radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation: drift-2 22s ease-in-out infinite alternate;
+        }
+        .ambient-orb-3 {
+            width: clamp(100px, 20vw, 300px);
+            height: clamp(100px, 20vw, 300px);
+            background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 40%;
+            animation: drift-3 15s ease-in-out infinite alternate;
+        }
+        @keyframes drift-1 {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(5%, 8%) scale(1.1); }
+        }
+        @keyframes drift-2 {
+            from { transform: translate(0, 0) scale(1.05); }
+            to   { transform: translate(-6%, -5%) scale(0.95); }
+        }
+        @keyframes drift-3 {
+            from { transform: translate(0, 0); }
+            to   { transform: translate(-8%, 6%); }
         }
 
+        /* =============================================
+           LAYOUT CONTAINER
+        ============================================= */
         .fitur-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: clamp(12px, 3vw, 20px);
             position: relative;
             z-index: 1;
         }
 
-        /* Header */
+        /* =============================================
+           HEADER
+        ============================================= */
         .fitur-header {
-            display: flex;
-            align-items: center;
-            gap: clamp(12px, 3vw, 20px);
-            margin-bottom: clamp(20px, 4vw, 32px);
-            padding: clamp(14px, 3vw, 20px);
-            background: var(--bg-card);
-            border-radius: clamp(12px, 3vw, 20px);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+            font-family: 'Syne', sans-serif;
         }
-
-        .fitur-header a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: clamp(40px, 10vw, 44px);
-            height: clamp(40px, 10vw, 44px);
-            background: var(--gradient-primary);
-            border-radius: clamp(10px, 2.5vw, 12px);
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px var(--shadow);
-            flex-shrink: 0;
-        }
-
-        .fitur-header a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--shadow-lg);
-        }
-
         .fitur-header h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: clamp(1.1rem, 4vw, 2rem);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 2vw, 12px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+        .fitur-header h1 i {
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
 
-        .fitur-header h1 i {
-            font-size: clamp(1rem, 3.5vw, 1.5rem);
-        }
-
-        /* Music Player Section */
+        /* =============================================
+           MAIN GRID
+        ============================================= */
         .music-player-section {
             display: grid;
             grid-template-columns: 1fr;
-            gap: clamp(16px, 3vw, 24px);
+            gap: clamp(16px, 3vw, 28px);
+            align-items: start;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 900px) {
             .music-player-section {
-                grid-template-columns: minmax(300px, 400px) 1fr;
+                grid-template-columns: minmax(320px, 400px) 1fr;
+            }
+        }
+        @media (min-width: 1200px) {
+            .music-player-section {
+                grid-template-columns: 420px 1fr;
+                gap: 32px;
+            }
+        }
+        @media (min-width: 1440px) {
+            .music-player-section {
+                grid-template-columns: 460px 1fr;
+                gap: 40px;
             }
         }
 
-        @media (min-width: 1024px) {
-            .music-player-section {
-                grid-template-columns: minmax(350px, 450px) 1fr;
-            }
-        }
-
-        /* Player Card */
+        /* =============================================
+           PLAYER CARD
+        ============================================= */
         .player-card {
             background: var(--bg-card);
-            border-radius: clamp(16px, 4vw, 24px);
-            padding: clamp(20px, 5vw, 32px);
+            border-radius: var(--player-radius);
+            padding: clamp(20px, 5vw, 36px);
             border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 24px 48px -12px rgba(0,0,0,0.4),
+                0 0 80px -20px var(--glow-primary);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             position: relative;
             overflow: hidden;
             height: fit-content;
+            transition: box-shadow 0.5s ease;
         }
 
         .player-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
-            animation: pulse 8s ease-in-out infinite;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.15) 40%,
+                rgba(255,255,255,0.05) 100%
+            );
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(180deg); }
+        .player-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(
+                ellipse at 30% 20%,
+                rgba(99, 102, 241, 0.06) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            animation: inner-glow 10s ease-in-out infinite alternate;
         }
 
-        /* Album Art */
+        @keyframes inner-glow {
+            from { opacity: 0.5; transform: translate(0, 0); }
+            to   { opacity: 1;   transform: translate(5%, 3%); }
+        }
+
+        /* =============================================
+           ALBUM ART
+        ============================================= */
         .album-art-container {
             position: relative;
             margin-bottom: clamp(20px, 4vw, 28px);
             z-index: 1;
         }
 
-        .album-art {
-            width: 100%;
-            max-width: 400px;
+        .album-art-wrapper {
+            position: relative;
+            width: fit-content;
             margin: 0 auto;
+        }
+
+        /* Ring decoration */
+        .album-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            inset: -12px;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+        .album-ring-2 {
+            inset: -22px;
+            border-color: rgba(168, 85, 247, 0.12);
+        }
+
+        .album-art-wrapper:hover .album-ring,
+        .album-art-wrapper.playing .album-ring {
+            opacity: 1;
+        }
+
+        .album-art {
+            width: clamp(180px, 55vw, 340px);
             aspect-ratio: 1;
             background: var(--gradient-primary);
-            border-radius: clamp(16px, 4vw, 20px);
+            border-radius: clamp(20px, 5vw, 28px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(3rem, 12vw, 6rem);
-            box-shadow: 0 12px 40px var(--shadow-lg);
+            font-size: clamp(3rem, 12vw, 5.5rem);
+            box-shadow:
+                0 20px 60px -15px rgba(0,0,0,0.5),
+                0 0 40px -10px var(--glow-primary);
             position: relative;
             overflow: hidden;
-            animation: float 6s ease-in-out infinite;
+            animation: float 8s ease-in-out infinite;
+            transition: border-radius 0.6s var(--transition-smooth),
+                        box-shadow 0.5s ease;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        .album-art::before {
+            content: '';
+            position: absolute;
+            top: -30%; left: -30%;
+            width: 80%; height: 80%;
+            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .album-art::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            bottom: 0; right: 0;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(0,0,0,0.25) 0%, transparent 70%);
             pointer-events: none;
         }
 
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33%       { transform: translateY(-8px) rotate(0.5deg); }
+            66%       { transform: translateY(-4px) rotate(-0.5deg); }
+        }
+
         .album-art.playing {
-            animation: float 6s ease-in-out infinite, rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Vinyl Effect */
-        .vinyl-effect {
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            width: clamp(80px, 20vw, 120px);
-            height: clamp(80px, 20vw, 120px);
-            background: var(--gradient-accent);
             border-radius: 50%;
+            animation: float 8s ease-in-out infinite, spin 25s linear infinite;
+            box-shadow:
+                0 20px 60px -15px rgba(0,0,0,0.6),
+                0 0 60px -5px var(--glow-primary),
+                0 0 100px -20px var(--glow-accent);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* Vinyl shine dot */
+        .vinyl-dot {
+            position: absolute;
+            width: 18%;
+            height: 18%;
+            background: radial-gradient(circle, rgba(0,0,0,0.8) 40%, rgba(30,30,30,0.6) 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 2;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        .album-art.playing .vinyl-dot {
+            opacity: 1;
+        }
+
+        /* Ambient glow under art */
+        .album-glow {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            filter: blur(20px);
             opacity: 0.3;
-            filter: blur(30px);
-            animation: vinyl-glow 4s ease-in-out infinite;
+            transition: opacity 0.5s ease;
         }
 
-        @keyframes vinyl-glow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
+        .album-art.playing ~ .album-glow {
+            opacity: 0.55;
         }
 
-        /* Track Info */
+        /* =============================================
+           TRACK INFO
+        ============================================= */
         .track-info {
             text-align: center;
-            margin-bottom: clamp(24px, 5vw, 32px);
+            margin-bottom: clamp(20px, 4vw, 28px);
             z-index: 1;
             position: relative;
         }
 
         .music-title {
-            font-size: clamp(1.1rem, 4vw, 1.75rem);
+            font-size: clamp(1rem, 4.5vw, 1.5rem);
             font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            margin-bottom: clamp(6px, 1.5vw, 8px);
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 5px;
             color: var(--text-primary);
-            line-height: 1.3;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .music-artist {
-            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 400;
+            letter-spacing: 0.01em;
         }
 
-        /* Player Controls */
+        /* =============================================
+           PROGRESS BAR
+        ============================================= */
         .player-controls {
             z-index: 1;
             position: relative;
         }
 
+        .progress-section {
+            margin-bottom: clamp(18px, 3.5vw, 24px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: visible;
+            transition: height 0.2s ease;
+        }
+
+        .progress-bar:hover {
+            height: 7px;
+        }
+
+        #progress {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            transition: width 0.1s linear;
+            position: relative;
+            box-shadow: 0 0 12px var(--glow-primary);
+        }
+
+        #progress::after {
+            content: '';
+            position: absolute;
+            right: -7px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 15px;
+            height: 15px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4), 0 0 0 3px var(--glow-primary);
+            transition: transform 0.25s var(--transition-spring);
+        }
+
+        .progress-bar:hover #progress::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.02em;
+        }
+
+        /* =============================================
+           MAIN PLAY BUTTON
+        ============================================= */
         .big-play-btn {
-            width: clamp(64px, 15vw, 80px);
-            height: clamp(64px, 15vw, 80px);
+            width: clamp(64px, 14vw, 80px);
+            height: clamp(64px, 14vw, 80px);
             border-radius: 50%;
             background: var(--gradient-primary);
             border: none;
             color: white;
             font-size: clamp(22px, 5vw, 28px);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 24px var(--shadow-lg);
+            transition: all 0.35s var(--transition-spring);
+            box-shadow: 0 8px 28px -4px var(--glow-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto clamp(16px, 3vw, 20px);
+            margin: 0 auto clamp(18px, 3.5vw, 24px);
+            position: relative;
+        }
+
+        .big-play-btn::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(99, 102, 241, 0.3);
+            animation: ring-pulse 2.5s ease-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes ring-pulse {
+            0%   { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0;   transform: scale(1.5); }
         }
 
         .big-play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 32px var(--shadow-lg);
+            transform: scale(1.1);
+            box-shadow: 0 12px 36px -4px var(--glow-primary);
         }
 
         .big-play-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
         }
 
-        /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: clamp(5px, 1.5vw, 6px);
-            background: var(--bg-secondary);
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: clamp(10px, 2vw, 12px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-bar::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        #progress {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            transition: width 0.1s ease;
-            position: relative;
-        }
-
-        #progress::after {
-            content: '';
-            position: absolute;
-            right: -2px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: clamp(12px, 3vw, 14px);
-            height: clamp(12px, 3vw, 14px);
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Time Display */
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
-            font-weight: 500;
-            margin-bottom: clamp(20px, 4vw, 24px);
-        }
-
-        /* Control Buttons */
+        /* =============================================
+           CONTROL BUTTONS
+        ============================================= */
         .controls-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: clamp(8px, 2vw, 12px);
+            gap: clamp(8px, 2vw, 14px);
             margin-bottom: clamp(16px, 3vw, 20px);
         }
 
         .control-btn {
-            width: clamp(42px, 10vw, 48px);
-            height: clamp(42px, 10vw, 48px);
+            width: clamp(40px, 9.5vw, 46px);
+            height: clamp(40px, 9.5vw, 46px);
             border-radius: clamp(10px, 2.5vw, 12px);
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             color: var(--text-primary);
-            font-size: clamp(16px, 3.5vw, 18px);
+            font-size: clamp(14px, 3.5vw, 16px);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .control-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.35);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .play-btn {
+            width: clamp(46px, 11vw, 54px);
+            height: clamp(46px, 11vw, 54px);
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            box-shadow: 0 4px 16px var(--glow-primary);
+            color: white;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.08) translateY(0);
+            box-shadow: 0 6px 22px var(--glow-primary);
+        }
+
+        /* =============================================
+           VOLUME CONTROL
+        ============================================= */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2.5vw, 14px);
+            padding: clamp(11px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: clamp(12px, 3vw, 14px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        #volumeLabel {
+            color: var(--text-secondary);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            min-width: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .control-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .control-btn:active {
-            transform: translateY(0);
-        }
-
-        .play-btn {
-            width: clamp(50px, 12vw, 56px);
-            height: clamp(50px, 12vw, 56px);
-            background: var(--gradient-primary);
-            border: none;
-            box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        .play-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px var(--shadow-lg);
-        }
-
-        /* Volume Control */
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 2.5vw, 12px);
-            padding: clamp(12px, 3vw, 16px);
-            background: var(--bg-secondary);
-            border-radius: clamp(12px, 3vw, 16px);
-            border: 1px solid var(--border);
-        }
-
-        #volumeLabel {
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: clamp(0.8rem, 2vw, 0.875rem);
-            min-width: clamp(28px, 6vw, 32px);
-        }
-
         #volumeSlider {
             flex: 1;
-            height: clamp(5px, 1.5vw, 6px);
+            height: 4px;
             border-radius: 10px;
-            background: var(--bg-primary);
+            background: rgba(255, 255, 255, 0.08);
             outline: none;
             -webkit-appearance: none;
             cursor: pointer;
+            position: relative;
         }
 
         #volumeSlider::-webkit-slider-thumb {
@@ -427,155 +546,243 @@
             width: clamp(14px, 3.5vw, 16px);
             height: clamp(14px, 3.5vw, 16px);
             border-radius: 50%;
-            background: var(--gradient-primary);
+            background: white;
             cursor: pointer;
-            box-shadow: 0 2px 8px var(--shadow);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            border: 2px solid rgba(99, 102, 241, 0.6);
         }
 
         #volumeSlider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
+            border-color: var(--primary);
         }
 
         #volumeSlider::-moz-range-thumb {
-            width: clamp(14px, 3.5vw, 16px);
-            height: clamp(14px, 3.5vw, 16px);
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: var(--gradient-primary);
+            background: white;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px var(--shadow);
+            border: 2px solid rgba(99, 102, 241, 0.6);
         }
 
-        /* Music List */
+        /* =============================================
+           PLAYLIST CARD
+        ============================================= */
         .playlist-card {
             background: var(--bg-card);
-            border-radius: clamp(16px, 4vw, 24px);
-            padding: clamp(20px, 4vw, 28px);
+            border-radius: var(--card-radius);
+            padding: clamp(18px, 4vw, 28px);
             border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 24px 48px -12px rgba(0,0,0,0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             height: fit-content;
-        }
-
-        .music-list-header {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 2.5vw, 12px);
-            margin-bottom: clamp(16px, 3vw, 20px);
-            padding-bottom: clamp(12px, 3vw, 16px);
-            border-bottom: 2px solid var(--border);
-        }
-
-        .music-list-header i {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-        }
-
-        .music-list-header h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: clamp(1.1rem, 3.5vw, 1.5rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .music-list {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(6px, 1.5vw, 8px);
-            max-height: clamp(400px, 60vh, 600px);
-            overflow-y: auto;
-            padding-right: clamp(6px, 1.5vw, 8px);
-        }
-
-        /* Custom Scrollbar */
-        .music-list::-webkit-scrollbar {
-            width: clamp(6px, 1.5vw, 8px);
-        }
-
-        .music-list::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 10px;
-        }
-
-        .music-list::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .music-list::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-light);
-        }
-
-        /* Music Item */
-        .music-item {
-            display: flex;
-            align-items: center;
-            gap: clamp(12px, 3vw, 16px);
-            padding: clamp(10px, 2.5vw, 14px);
-            background: var(--bg-secondary);
-            border-radius: clamp(12px, 3vw, 16px);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .music-item::before {
+        .playlist-card::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--gradient-primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 100%
+            );
         }
 
-        .music-item:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary);
-            transform: translateX(4px);
+        /* =============================================
+           PLAYLIST HEADER
+        ============================================= */
+        .music-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: clamp(14px, 2.5vw, 20px);
+            padding-bottom: clamp(12px, 2.5vw, 18px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
-        .music-item:hover::before {
-            transform: scaleY(1);
+        .music-list-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .music-item.active {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-            border-color: var(--primary);
-        }
-
-        .music-item.active::before {
-            transform: scaleY(1);
-        }
-
-        .music-item-icon {
-            width: clamp(44px, 10vw, 48px);
-            height: clamp(44px, 10vw, 48px);
-            min-width: clamp(44px, 10vw, 48px);
-            border-radius: clamp(10px, 2.5vw, 12px);
-            background: var(--gradient-primary);
+        .music-list-header i {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--primary);
+            width: clamp(36px, 7vw, 40px);
+            height: clamp(36px, 7vw, 40px);
+            background: rgba(99, 102, 241, 0.12);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(18px, 4vw, 20px);
-            color: white;
-            box-shadow: 0 4px 12px var(--shadow);
+            flex-shrink: 0;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .music-list-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.35rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .track-count-badge {
+            font-size: clamp(0.7rem, 1.8vw, 0.78rem);
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+        }
+
+        /* =============================================
+           MUSIC LIST
+        ============================================= */
+        .music-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(7px, 1.5vw, 10px);
+            max-height: clamp(380px, 55vh, 680px);
+            overflow-y: auto;
+            padding-right: 4px;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        .music-list::-webkit-scrollbar { width: 4px; }
+        .music-list::-webkit-scrollbar-track { background: transparent; }
+        .music-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
+        .music-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(99,102,241,0.35);
+        }
+
+        /* =============================================
+           MUSIC ITEM
+        ============================================= */
+        .music-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2.5vw, 16px);
+            padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: var(--item-radius);
+            border: 1px solid rgba(255, 255, 255, 0.055);
+            cursor: pointer;
+            transition:
+                transform 0.3s var(--transition-spring),
+                background 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shimmer sweep on hover */
+        .music-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+
+        .music-item:hover::before {
+            left: 140%;
+        }
+
+        .music-item > * { position: relative; z-index: 1; }
+
+        .music-item:hover {
+            transform: translateX(6px) translateY(-1px);
+            background: rgba(99, 102, 241, 0.06);
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .music-item.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            box-shadow:
+                0 8px 24px -4px var(--glow-primary),
+                0 0 0 1px rgba(255,255,255,0.1) inset;
+            transform: translateX(4px);
+        }
+
+        .music-item.active:hover {
+            transform: translateX(4px) scale(1.01);
+        }
+
+        .music-item.active .music-item-title,
+        .music-item.active .music-item-artist,
+        .music-item.active .music-item-duration {
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .music-item.active .music-item-icon {
-            animation: pulse-icon 2s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            border-color: rgba(255,255,255,0.15);
         }
 
-        @keyframes pulse-icon {
-            0%, 100% { transform: scale(1); box-shadow: 0 4px 12px var(--shadow); }
-            50% { transform: scale(1.05); box-shadow: 0 6px 16px var(--shadow-lg); }
+        .music-item.active .music-item-duration {
+            background: rgba(255, 255, 255, 0.15);
         }
 
+        /* =============================================
+           MUSIC ITEM ICON
+        ============================================= */
+        .music-item-icon {
+            width: clamp(42px, 9vw, 50px);
+            height: clamp(42px, 9vw, 50px);
+            min-width: clamp(42px, 9vw, 50px);
+            border-radius: clamp(10px, 2.5vw, 13px);
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(17px, 4vw, 21px);
+            color: var(--primary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .music-item.active .music-item-icon {
+            animation: bounce-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce-icon {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.07); }
+        }
+
+        /* =============================================
+           MUSIC ITEM TEXT
+        ============================================= */
         .music-item-info {
             flex: 1;
             min-width: 0;
@@ -584,135 +791,223 @@
         .music-item-title {
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+            font-size: clamp(0.82rem, 2.2vw, 0.92rem);
+            letter-spacing: -0.01em;
+            font-family: 'DM Sans', sans-serif;
         }
 
         .music-item-artist {
             color: var(--text-secondary);
-            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 400;
         }
 
+        /* =============================================
+           MUSIC ITEM DURATION
+        ============================================= */
         .music-item-duration {
             color: var(--text-muted);
-            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            font-size: clamp(0.68rem, 1.7vw, 0.78rem);
             font-weight: 500;
-            padding: clamp(3px, 1vw, 4px) clamp(8px, 2vw, 12px);
-            background: var(--bg-primary);
-            border-radius: clamp(6px, 1.5vw, 8px);
+            padding: 3px clamp(7px, 1.8vw, 10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
             flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.03em;
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
-        /* Footer */
+        /* =============================================
+           PLAYING INDICATOR (active equalizer bars)
+        ============================================= */
+        .eq-bars {
+            display: none;
+            align-items: flex-end;
+            gap: 2px;
+            height: 16px;
+            margin-left: 4px;
+        }
+
+        .music-item.active .eq-bars { display: flex; }
+
+        .eq-bar {
+            width: 3px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 2px;
+            animation: eq-bounce 1s ease-in-out infinite;
+        }
+
+        .eq-bar:nth-child(1) { height: 40%; animation-delay: 0s;    animation-duration: 0.9s; }
+        .eq-bar:nth-child(2) { height: 80%; animation-delay: 0.15s; animation-duration: 0.7s; }
+        .eq-bar:nth-child(3) { height: 55%; animation-delay: 0.3s;  animation-duration: 1.0s; }
+        .eq-bar:nth-child(4) { height: 70%; animation-delay: 0.1s;  animation-duration: 0.8s; }
+
+        @keyframes eq-bounce {
+            0%, 100% { transform: scaleY(0.4); }
+            50%       { transform: scaleY(1);   }
+        }
+
+        /* =============================================
+           AUDIO ELEMENT
+        ============================================= */
+        audio { display: none; }
+
+        /* =============================================
+           FOOTER
+        ============================================= */
         #footer-container {
-            margin-top: clamp(40px, 8vw, 60px);
-            padding: clamp(24px, 5vw, 32px) clamp(12px, 3vw, 20px);
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            border-radius: clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px) 0 0;
+            width: 100%;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Mobile Specific Adjustments */
+        /* =============================================
+           RESPONSIVE: MOBILE
+        ============================================= */
         @media (max-width: 767px) {
-            .music-player-section {
-                grid-template-columns: 1fr;
-            }
+            .music-player-section { grid-template-columns: 1fr; }
 
             .player-card {
-                margin-bottom: 0;
-            }
-
-            .music-list {
-                max-height: 50vh;
-            }
-        }
-
-        /* Small Mobile */
-        @media (max-width: 480px) {
-            .music-item-duration {
-                display: none;
-            }
-
-            .fitur-header h1 i {
-                display: none;
-            }
-        }
-
-        /* Large Screens */
-        @media (min-width: 1400px) {
-            .fitur-container {
-                padding: 20px 40px;
-            }
-        }
-
-        /* Landscape Mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .music-player-section {
-                grid-template-columns: 1fr 1fr;
+                padding: 20px;
             }
 
             .album-art {
-                max-width: 250px;
+                width: clamp(160px, 65vw, 280px);
             }
 
-            .music-list {
-                max-height: 300px;
+            .music-list { max-height: 45vh; }
+
+            .controls-wrapper { gap: 8px; }
+        }
+
+        /* =============================================
+           RESPONSIVE: SMALL MOBILE
+        ============================================= */
+        @media (max-width: 480px) {
+            .music-item-duration { display: none; }
+            .fitur-header h1 i   { display: none; }
+            .track-count-badge   { display: none; }
+        }
+
+        /* =============================================
+           RESPONSIVE: LANDSCAPE MOBILE
+        ============================================= */
+        @media (max-height: 520px) and (orientation: landscape) {
+            .music-player-section { grid-template-columns: 1fr 1fr; }
+
+            .album-art { width: 200px; }
+
+            .music-list { max-height: 260px; }
+
+            .big-play-btn { width: 56px; height: 56px; font-size: 20px; }
+
+            .album-art.playing {
+                animation: spin 25s linear infinite;
             }
-
-            .big-play-btn {
-                width: 60px;
-                height: 60px;
-            }
         }
 
-        /* Utility Classes */
-        .centered {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* =============================================
+           RESPONSIVE: LARGE SCREENS
+        ============================================= */
+        @media (min-width: 1600px) {
+            .fitur-container { padding: 24px 48px; }
         }
 
-        /* Loading State */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        /* Smooth Transitions */
-        * {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-        }
+        /* =============================================
+           UTILITY
+        ============================================= */
+        .loading { opacity: 0.5; pointer-events: none; }
     </style>
-    <script src="../../maintenance-check.js"></script>
+    <script src="../../admin/maintenance-check.js"></script>
 </head>
 
 <body class="fitur-body">
+    <!-- Ambient Orbs -->
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+    <div class="ambient-orb ambient-orb-3"></div>
+
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
     <div class="fitur-container">
         <!-- Header -->
         <div class="fitur-header">
-            <a href="../../index.html" title="Kembali ke beranda">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>
-                <i class="fas fa-music"></i>
-                Musik Focus
-            </h1>
+            <div class="header-left">
+                <a href="../../index.html" class="home-btn" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+
+            <div class="header-center">
+                <h1>
+                    <i class="fas fa-music"></i>
+                    Musik Focus
+                </h1>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile-container" id="adminProfile" style="display: none;">
+                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                    <div id="adminDropdown" class="admin-dropdown">
+                        <div class="dropdown-header">
+                            <div class="admin-avatar">
+                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                            </div>
+                            <div class="admin-info">
+                                <span id="adminNameDisplayHeader">Admin</span>
+                                <small>Administrator</small>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="../../admin/panel.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                            <a href="../../admin/settings.html" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button onclick="adminLogout()" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Music Player Section -->
         <div class="music-player-section">
+
             <!-- Player Card -->
             <div class="player-card">
+
                 <!-- Album Art -->
                 <div class="album-art-container">
-                    <div class="album-art" id="albumArt">🎵</div>
-                    <div class="vinyl-effect"></div>
+                    <div class="album-art-wrapper" id="albumArtWrapper">
+                        <div class="album-ring"></div>
+                        <div class="album-ring album-ring-2"></div>
+                        <div class="album-art" id="albumArt">
+                            🎵
+                            <div class="vinyl-dot"></div>
+                        </div>
+                        <div class="album-glow"></div>
+                    </div>
                 </div>
 
                 <!-- Track Info -->
@@ -723,20 +1018,21 @@
 
                 <!-- Player Controls -->
                 <div class="player-controls">
+
                     <!-- Big Play Button -->
                     <button class="big-play-btn" id="mainPlayBtn" aria-label="Play/Pause">
                         <i class="fas fa-play"></i>
                     </button>
 
-                    <!-- Progress Bar -->
-                    <div class="progress-bar" id="progressBar">
-                        <div id="progress"></div>
-                    </div>
-
-                    <!-- Time Display -->
-                    <div class="time-display">
-                        <span id="currentTime">0:00</span>
-                        <span id="duration">0:00</span>
+                    <!-- Progress -->
+                    <div class="progress-section">
+                        <div class="progress-bar" id="progressBar">
+                            <div id="progress"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span id="duration">0:00</span>
+                        </div>
                     </div>
 
                     <!-- Control Buttons -->
@@ -766,13 +1062,17 @@
             <!-- Playlist Card -->
             <div class="playlist-card">
                 <div class="music-list-header">
-                    <i class="fas fa-list-ul"></i>
-                    <h3>Daftar Putar</h3>
+                    <div class="music-list-header-left">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>Daftar Putar</h3>
+                    </div>
+                    <span class="track-count-badge" id="trackCountBadge">0 lagu</span>
                 </div>
                 <div class="music-list" id="musicList">
                     <!-- Music items will be inserted here by JavaScript -->
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -783,39 +1083,1343 @@
     <script src="../../music-data.js"></script>
     <script src="music.js"></script>
     <script>
-        // Load footer
+        /* =============================================
+           ADMIN PROFILE LOGIC
+        ============================================= */
+        function checkAdminSession() {
+            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
+            const profileEl = document.getElementById('adminProfile');
+            if (isAdmin && profileEl) {
+                profileEl.style.display = 'block';
+                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
+                document.getElementById('adminNameDisplayHeader').textContent = adminName;
+            }
+        }
+
+        function toggleAdminDropdown() {
+            const dropdown = document.getElementById('adminDropdown');
+            dropdown.classList.toggle('active');
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function adminLogout() {
+            if (confirm('Yakin ingin keluar dari sesi admin?')) {
+                sessionStorage.removeItem('fx_isAdmin');
+                window.location.reload();
+            }
+        }
+
+        /* =============================================
+           FOOTER LOAD
+        ============================================= */
         fetch('../../footer/music.html')
             .then(r => r.text())
-            .then(html => {
-                document.getElementById('footer-container').innerHTML = html;
-            })
+            .then(html => { document.getElementById('footer-container').innerHTML = html; })
             .catch(err => console.log('Footer load error:', err));
 
-        // Add playing animation to album art
-        const audio = document.getElementById('audioPlayer');
-        const albumArt = document.getElementById('albumArt');
-        
-        audio.addEventListener('play', () => {
-            albumArt.classList.add('playing');
-        });
-        
-        audio.addEventListener('pause', () => {
-            albumArt.classList.remove('playing');
+        /* =============================================
+           DOM READY
+        ============================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminSession();
+
+            /* Track count badge */
+            const musicListEl = document.getElementById('musicList');
+            const badge = document.getElementById('trackCountBadge');
+            const observer = new MutationObserver(() => {
+                const count = musicListEl.querySelectorAll('.music-item').length;
+                badge.textContent = count + ' lagu';
+            });
+            observer.observe(musicListEl, { childList: true, subtree: false });
         });
 
-        // Update volume icon based on level
+        /* =============================================
+           ALBUM ART ANIMATION
+        ============================================= */
+        const audio      = document.getElementById('audioPlayer');
+        const albumArt   = document.getElementById('albumArt');
+        const artWrapper = document.getElementById('albumArtWrapper');
+
+        audio.addEventListener('play', () => {
+            albumArt.classList.add('playing');
+            artWrapper.classList.add('playing');
+        });
+
+        audio.addEventListener('pause', () => {
+            albumArt.classList.remove('playing');
+            artWrapper.classList.remove('playing');
+        });
+
+        /* =============================================
+           VOLUME ICON UPDATE
+        ============================================= */
         const volumeSlider = document.getElementById('volumeSlider');
-        const volumeLabel = document.getElementById('volumeLabel');
-        
+        const volumeLabel  = document.getElementById('volumeLabel');
+
         volumeSlider.addEventListener('input', (e) => {
-            const value = e.target.value;
-            if (value == 0) {
+            const v = parseFloat(e.target.value);
+            if (v === 0) {
                 volumeLabel.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            } else if (value < 0.5) {
+            } else if (v < 0.5) {
                 volumeLabel.innerHTML = '<i class="fas fa-volume-down"></i>';
             } else {
                 volumeLabel.innerHTML = '<i class="fas fa-volume-up"></i>';
             }
+        });
+
+        /* =============================================
+           INJECT EQ BARS INTO ACTIVE ITEM
+           (Observer watches for class changes on .music-item)
+        ============================================= */
+        function addEqBars(item) {
+            if (!item.querySelector('.eq-bars')) {
+                const eq = document.createElement('div');
+                eq.className = 'eq-bars';
+                eq.innerHTML = '<span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>';
+                const info = item.querySelector('.music-item-info');
+                if (info) info.appendChild(eq);
+            }
+        }
+
+        const listEl = document.getElementById('musicList');
+        const itemObserver = new MutationObserver((mutations) => {
+            mutations.forEach(m => {
+                m.addedNodes.forEach(node => {
+                    if (node.classList && node.classList.contains('music-item')) {
+                        addEqBars(node);
+                    }
+                });
+                if (m.type === 'attributes' && m.attributeName === 'class') {
+                    if (m.target.classList.contains('music-item')) {
+                        addEqBars(m.target);
+                    }
+                }
+            });
+        });
+
+        itemObserver.observe(listEl, {
+            childList: true,
+            attributes: true,
+            attributeFilter: ['class'],
+            subtree: true
+        });
+    </script>
+</body>
+
+</html><!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik - FX Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* =============================================
+           RESET & ROOT VARIABLES
+        ============================================= */
+        :root {
+            --player-radius: 28px;
+            --card-radius: 24px;
+            --item-radius: 16px;
+            --glow-primary: rgba(99, 102, 241, 0.35);
+            --glow-accent: rgba(168, 85, 247, 0.25);
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* =============================================
+           AMBIENT BACKGROUND
+        ============================================= */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+        .ambient-orb-1 {
+            width: clamp(200px, 40vw, 500px);
+            height: clamp(200px, 40vw, 500px);
+            background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+            top: -10%;
+            left: -5%;
+            animation: drift-1 18s ease-in-out infinite alternate;
+        }
+        .ambient-orb-2 {
+            width: clamp(150px, 30vw, 400px);
+            height: clamp(150px, 30vw, 400px);
+            background: radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation: drift-2 22s ease-in-out infinite alternate;
+        }
+        .ambient-orb-3 {
+            width: clamp(100px, 20vw, 300px);
+            height: clamp(100px, 20vw, 300px);
+            background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 40%;
+            animation: drift-3 15s ease-in-out infinite alternate;
+        }
+        @keyframes drift-1 {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(5%, 8%) scale(1.1); }
+        }
+        @keyframes drift-2 {
+            from { transform: translate(0, 0) scale(1.05); }
+            to   { transform: translate(-6%, -5%) scale(0.95); }
+        }
+        @keyframes drift-3 {
+            from { transform: translate(0, 0); }
+            to   { transform: translate(-8%, 6%); }
+        }
+
+        /* =============================================
+           LAYOUT CONTAINER
+        ============================================= */
+        .fitur-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =============================================
+           HEADER
+        ============================================= */
+        .fitur-header {
+            font-family: 'Syne', sans-serif;
+        }
+        .fitur-header h1 {
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+        .fitur-header h1 i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* =============================================
+           MAIN GRID
+        ============================================= */
+        .music-player-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(16px, 3vw, 28px);
+            align-items: start;
+        }
+
+        @media (min-width: 900px) {
+            .music-player-section {
+                grid-template-columns: minmax(320px, 400px) 1fr;
+            }
+        }
+        @media (min-width: 1200px) {
+            .music-player-section {
+                grid-template-columns: 420px 1fr;
+                gap: 32px;
+            }
+        }
+        @media (min-width: 1440px) {
+            .music-player-section {
+                grid-template-columns: 460px 1fr;
+                gap: 40px;
+            }
+        }
+
+        /* =============================================
+           PLAYER CARD
+        ============================================= */
+        .player-card {
+            background: var(--bg-card);
+            border-radius: var(--player-radius);
+            padding: clamp(20px, 5vw, 36px);
+            border: 1px solid var(--border);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 24px 48px -12px rgba(0,0,0,0.4),
+                0 0 80px -20px var(--glow-primary);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+            transition: box-shadow 0.5s ease;
+        }
+
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.15) 40%,
+                rgba(255,255,255,0.05) 100%
+            );
+        }
+
+        .player-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(
+                ellipse at 30% 20%,
+                rgba(99, 102, 241, 0.06) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            animation: inner-glow 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes inner-glow {
+            from { opacity: 0.5; transform: translate(0, 0); }
+            to   { opacity: 1;   transform: translate(5%, 3%); }
+        }
+
+        /* =============================================
+           ALBUM ART
+        ============================================= */
+        .album-art-container {
+            position: relative;
+            margin-bottom: clamp(20px, 4vw, 28px);
+            z-index: 1;
+        }
+
+        .album-art-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        /* Ring decoration */
+        .album-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            inset: -12px;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+        .album-ring-2 {
+            inset: -22px;
+            border-color: rgba(168, 85, 247, 0.12);
+        }
+
+        .album-art-wrapper:hover .album-ring,
+        .album-art-wrapper.playing .album-ring {
+            opacity: 1;
+        }
+
+        .album-art {
+            width: clamp(180px, 55vw, 340px);
+            aspect-ratio: 1;
+            background: var(--gradient-primary);
+            border-radius: clamp(20px, 5vw, 28px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3rem, 12vw, 5.5rem);
+            box-shadow:
+                0 20px 60px -15px rgba(0,0,0,0.5),
+                0 0 40px -10px var(--glow-primary);
+            position: relative;
+            overflow: hidden;
+            animation: float 8s ease-in-out infinite;
+            transition: border-radius 0.6s var(--transition-smooth),
+                        box-shadow 0.5s ease;
+        }
+
+        .album-art::before {
+            content: '';
+            position: absolute;
+            top: -30%; left: -30%;
+            width: 80%; height: 80%;
+            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .album-art::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(0,0,0,0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33%       { transform: translateY(-8px) rotate(0.5deg); }
+            66%       { transform: translateY(-4px) rotate(-0.5deg); }
+        }
+
+        .album-art.playing {
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite, spin 25s linear infinite;
+            box-shadow:
+                0 20px 60px -15px rgba(0,0,0,0.6),
+                0 0 60px -5px var(--glow-primary),
+                0 0 100px -20px var(--glow-accent);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* Vinyl shine dot */
+        .vinyl-dot {
+            position: absolute;
+            width: 18%;
+            height: 18%;
+            background: radial-gradient(circle, rgba(0,0,0,0.8) 40%, rgba(30,30,30,0.6) 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 2;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        .album-art.playing .vinyl-dot {
+            opacity: 1;
+        }
+
+        /* Ambient glow under art */
+        .album-glow {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
+        }
+
+        .album-art.playing ~ .album-glow {
+            opacity: 0.55;
+        }
+
+        /* =============================================
+           TRACK INFO
+        ============================================= */
+        .track-info {
+            text-align: center;
+            margin-bottom: clamp(20px, 4vw, 28px);
+            z-index: 1;
+            position: relative;
+        }
+
+        .music-title {
+            font-size: clamp(1rem, 4.5vw, 1.5rem);
+            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-artist {
+            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        /* =============================================
+           PROGRESS BAR
+        ============================================= */
+        .player-controls {
+            z-index: 1;
+            position: relative;
+        }
+
+        .progress-section {
+            margin-bottom: clamp(18px, 3.5vw, 24px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: visible;
+            transition: height 0.2s ease;
+        }
+
+        .progress-bar:hover {
+            height: 7px;
+        }
+
+        #progress {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            transition: width 0.1s linear;
+            position: relative;
+            box-shadow: 0 0 12px var(--glow-primary);
+        }
+
+        #progress::after {
+            content: '';
+            position: absolute;
+            right: -7px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 15px;
+            height: 15px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4), 0 0 0 3px var(--glow-primary);
+            transition: transform 0.25s var(--transition-spring);
+        }
+
+        .progress-bar:hover #progress::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.02em;
+        }
+
+        /* =============================================
+           MAIN PLAY BUTTON
+        ============================================= */
+        .big-play-btn {
+            width: clamp(64px, 14vw, 80px);
+            height: clamp(64px, 14vw, 80px);
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            font-size: clamp(22px, 5vw, 28px);
+            cursor: pointer;
+            transition: all 0.35s var(--transition-spring);
+            box-shadow: 0 8px 28px -4px var(--glow-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto clamp(18px, 3.5vw, 24px);
+            position: relative;
+        }
+
+        .big-play-btn::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(99, 102, 241, 0.3);
+            animation: ring-pulse 2.5s ease-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes ring-pulse {
+            0%   { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0;   transform: scale(1.5); }
+        }
+
+        .big-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 36px -4px var(--glow-primary);
+        }
+
+        .big-play-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* =============================================
+           CONTROL BUTTONS
+        ============================================= */
+        .controls-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 14px);
+            margin-bottom: clamp(16px, 3vw, 20px);
+        }
+
+        .control-btn {
+            width: clamp(40px, 9.5vw, 46px);
+            height: clamp(40px, 9.5vw, 46px);
+            border-radius: clamp(10px, 2.5vw, 12px);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            color: var(--text-primary);
+            font-size: clamp(14px, 3.5vw, 16px);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .control-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.35);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .play-btn {
+            width: clamp(46px, 11vw, 54px);
+            height: clamp(46px, 11vw, 54px);
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            box-shadow: 0 4px 16px var(--glow-primary);
+            color: white;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.08) translateY(0);
+            box-shadow: 0 6px 22px var(--glow-primary);
+        }
+
+        /* =============================================
+           VOLUME CONTROL
+        ============================================= */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2.5vw, 14px);
+            padding: clamp(11px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: clamp(12px, 3vw, 14px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        #volumeLabel {
+            color: var(--text-secondary);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            min-width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #volumeSlider {
+            flex: 1;
+            height: 4px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #volumeSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: clamp(14px, 3.5vw, 16px);
+            height: clamp(14px, 3.5vw, 16px);
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            border: 2px solid rgba(99, 102, 241, 0.6);
+        }
+
+        #volumeSlider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            border-color: var(--primary);
+        }
+
+        #volumeSlider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 2px solid rgba(99, 102, 241, 0.6);
+        }
+
+        /* =============================================
+           PLAYLIST CARD
+        ============================================= */
+        .playlist-card {
+            background: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: clamp(18px, 4vw, 28px);
+            border: 1px solid var(--border);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 24px 48px -12px rgba(0,0,0,0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            height: fit-content;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 100%
+            );
+        }
+
+        /* =============================================
+           PLAYLIST HEADER
+        ============================================= */
+        .music-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: clamp(14px, 2.5vw, 20px);
+            padding-bottom: clamp(12px, 2.5vw, 18px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .music-list-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .music-list-header i {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--primary);
+            width: clamp(36px, 7vw, 40px);
+            height: clamp(36px, 7vw, 40px);
+            background: rgba(99, 102, 241, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .music-list-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.35rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .track-count-badge {
+            font-size: clamp(0.7rem, 1.8vw, 0.78rem);
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+        }
+
+        /* =============================================
+           MUSIC LIST
+        ============================================= */
+        .music-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(7px, 1.5vw, 10px);
+            max-height: clamp(380px, 55vh, 680px);
+            overflow-y: auto;
+            padding-right: 4px;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        .music-list::-webkit-scrollbar { width: 4px; }
+        .music-list::-webkit-scrollbar-track { background: transparent; }
+        .music-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
+        .music-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(99,102,241,0.35);
+        }
+
+        /* =============================================
+           MUSIC ITEM
+        ============================================= */
+        .music-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2.5vw, 16px);
+            padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: var(--item-radius);
+            border: 1px solid rgba(255, 255, 255, 0.055);
+            cursor: pointer;
+            transition:
+                transform 0.3s var(--transition-spring),
+                background 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shimmer sweep on hover */
+        .music-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+
+        .music-item:hover::before {
+            left: 140%;
+        }
+
+        .music-item > * { position: relative; z-index: 1; }
+
+        .music-item:hover {
+            transform: translateX(6px) translateY(-1px);
+            background: rgba(99, 102, 241, 0.06);
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .music-item.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            box-shadow:
+                0 8px 24px -4px var(--glow-primary),
+                0 0 0 1px rgba(255,255,255,0.1) inset;
+            transform: translateX(4px);
+        }
+
+        .music-item.active:hover {
+            transform: translateX(4px) scale(1.01);
+        }
+
+        .music-item.active .music-item-title,
+        .music-item.active .music-item-artist,
+        .music-item.active .music-item-duration {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .music-item.active .music-item-icon {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .music-item.active .music-item-duration {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* =============================================
+           MUSIC ITEM ICON
+        ============================================= */
+        .music-item-icon {
+            width: clamp(42px, 9vw, 50px);
+            height: clamp(42px, 9vw, 50px);
+            min-width: clamp(42px, 9vw, 50px);
+            border-radius: clamp(10px, 2.5vw, 13px);
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(17px, 4vw, 21px);
+            color: var(--primary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .music-item.active .music-item-icon {
+            animation: bounce-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce-icon {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.07); }
+        }
+
+        /* =============================================
+           MUSIC ITEM TEXT
+        ============================================= */
+        .music-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .music-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: clamp(0.82rem, 2.2vw, 0.92rem);
+            letter-spacing: -0.01em;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .music-item-artist {
+            color: var(--text-secondary);
+            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+        }
+
+        /* =============================================
+           MUSIC ITEM DURATION
+        ============================================= */
+        .music-item-duration {
+            color: var(--text-muted);
+            font-size: clamp(0.68rem, 1.7vw, 0.78rem);
+            font-weight: 500;
+            padding: 3px clamp(7px, 1.8vw, 10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.03em;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* =============================================
+           PLAYING INDICATOR (active equalizer bars)
+        ============================================= */
+        .eq-bars {
+            display: none;
+            align-items: flex-end;
+            gap: 2px;
+            height: 16px;
+            margin-left: 4px;
+        }
+
+        .music-item.active .eq-bars { display: flex; }
+
+        .eq-bar {
+            width: 3px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 2px;
+            animation: eq-bounce 1s ease-in-out infinite;
+        }
+
+        .eq-bar:nth-child(1) { height: 40%; animation-delay: 0s;    animation-duration: 0.9s; }
+        .eq-bar:nth-child(2) { height: 80%; animation-delay: 0.15s; animation-duration: 0.7s; }
+        .eq-bar:nth-child(3) { height: 55%; animation-delay: 0.3s;  animation-duration: 1.0s; }
+        .eq-bar:nth-child(4) { height: 70%; animation-delay: 0.1s;  animation-duration: 0.8s; }
+
+        @keyframes eq-bounce {
+            0%, 100% { transform: scaleY(0.4); }
+            50%       { transform: scaleY(1);   }
+        }
+
+        /* =============================================
+           AUDIO ELEMENT
+        ============================================= */
+        audio { display: none; }
+
+        /* =============================================
+           FOOTER
+        ============================================= */
+        #footer-container {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =============================================
+           RESPONSIVE: MOBILE
+        ============================================= */
+        @media (max-width: 767px) {
+            .music-player-section { grid-template-columns: 1fr; }
+
+            .player-card {
+                padding: 20px;
+            }
+
+            .album-art {
+                width: clamp(160px, 65vw, 280px);
+            }
+
+            .music-list { max-height: 45vh; }
+
+            .controls-wrapper { gap: 8px; }
+        }
+
+        /* =============================================
+           RESPONSIVE: SMALL MOBILE
+        ============================================= */
+        @media (max-width: 480px) {
+            .music-item-duration { display: none; }
+            .fitur-header h1 i   { display: none; }
+            .track-count-badge   { display: none; }
+        }
+
+        /* =============================================
+           RESPONSIVE: LANDSCAPE MOBILE
+        ============================================= */
+        @media (max-height: 520px) and (orientation: landscape) {
+            .music-player-section { grid-template-columns: 1fr 1fr; }
+
+            .album-art { width: 200px; }
+
+            .music-list { max-height: 260px; }
+
+            .big-play-btn { width: 56px; height: 56px; font-size: 20px; }
+
+            .album-art.playing {
+                animation: spin 25s linear infinite;
+            }
+        }
+
+        /* =============================================
+           RESPONSIVE: LARGE SCREENS
+        ============================================= */
+        @media (min-width: 1600px) {
+            .fitur-container { padding: 24px 48px; }
+        }
+
+        /* =============================================
+           UTILITY
+        ============================================= */
+        .loading { opacity: 0.5; pointer-events: none; }
+    </style>
+    <script src="../../admin/maintenance-check.js"></script>
+</head>
+
+<body class="fitur-body">
+    <!-- Ambient Orbs -->
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+    <div class="ambient-orb ambient-orb-3"></div>
+
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <div class="fitur-container">
+        <!-- Header -->
+        <div class="fitur-header">
+            <div class="header-left">
+                <a href="../../index.html" class="home-btn" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+
+            <div class="header-center">
+                <h1>
+                    <i class="fas fa-music"></i>
+                    Musik Focus
+                </h1>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile-container" id="adminProfile" style="display: none;">
+                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                    <div id="adminDropdown" class="admin-dropdown">
+                        <div class="dropdown-header">
+                            <div class="admin-avatar">
+                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                            </div>
+                            <div class="admin-info">
+                                <span id="adminNameDisplayHeader">Admin</span>
+                                <small>Administrator</small>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="../../admin/panel.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                            <a href="../../admin/settings.html" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button onclick="adminLogout()" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Player Section -->
+        <div class="music-player-section">
+
+            <!-- Player Card -->
+            <div class="player-card">
+
+                <!-- Album Art -->
+                <div class="album-art-container">
+                    <div class="album-art-wrapper" id="albumArtWrapper">
+                        <div class="album-ring"></div>
+                        <div class="album-ring album-ring-2"></div>
+                        <div class="album-art" id="albumArt">
+                            🎵
+                            <div class="vinyl-dot"></div>
+                        </div>
+                        <div class="album-glow"></div>
+                    </div>
+                </div>
+
+                <!-- Track Info -->
+                <div class="track-info">
+                    <div class="music-title" id="nowPlayingTitle">Pilih Lagu</div>
+                    <div class="music-artist" id="nowPlayingArtist">FX Community Playlist</div>
+                </div>
+
+                <!-- Player Controls -->
+                <div class="player-controls">
+
+                    <!-- Big Play Button -->
+                    <button class="big-play-btn" id="mainPlayBtn" aria-label="Play/Pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+
+                    <!-- Progress -->
+                    <div class="progress-section">
+                        <div class="progress-bar" id="progressBar">
+                            <div id="progress"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span id="duration">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="controls-wrapper">
+                        <button class="control-btn" id="prevBtn" title="Previous">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="control-btn play-btn" id="playPauseBtn" title="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" id="nextBtn" title="Next">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+
+                    <!-- Volume Control -->
+                    <div class="volume-control">
+                        <label id="volumeLabel"><i class="fas fa-volume-up"></i></label>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" />
+                    </div>
+
+                    <!-- Audio Element -->
+                    <audio id="audioPlayer"></audio>
+                </div>
+            </div>
+
+            <!-- Playlist Card -->
+            <div class="playlist-card">
+                <div class="music-list-header">
+                    <div class="music-list-header-left">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>Daftar Putar</h3>
+                    </div>
+                    <span class="track-count-badge" id="trackCountBadge">0 lagu</span>
+                </div>
+                <div class="music-list" id="musicList">
+                    <!-- Music items will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="../../music-data.js"></script>
+    <script src="music.js"></script>
+    <script>
+        /* =============================================
+           ADMIN PROFILE LOGIC
+        ============================================= */
+        function checkAdminSession() {
+            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
+            const profileEl = document.getElementById('adminProfile');
+            if (isAdmin && profileEl) {
+                profileEl.style.display = 'block';
+                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
+                document.getElementById('adminNameDisplayHeader').textContent = adminName;
+            }
+        }
+
+        function toggleAdminDropdown() {
+            const dropdown = document.getElementById('adminDropdown');
+            dropdown.classList.toggle('active');
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        function adminLogout() {
+            if (confirm('Yakin ingin keluar dari sesi admin?')) {
+                sessionStorage.removeItem('fx_isAdmin');
+                window.location.reload();
+            }
+        }
+
+        /* =============================================
+           FOOTER LOAD
+        ============================================= */
+        fetch('../../footer/music.html')
+            .then(r => r.text())
+            .then(html => { document.getElementById('footer-container').innerHTML = html; })
+            .catch(err => console.log('Footer load error:', err));
+
+        /* =============================================
+           DOM READY
+        ============================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminSession();
+
+            /* Track count badge */
+            const musicListEl = document.getElementById('musicList');
+            const badge = document.getElementById('trackCountBadge');
+            const observer = new MutationObserver(() => {
+                const count = musicListEl.querySelectorAll('.music-item').length;
+                badge.textContent = count + ' lagu';
+            });
+            observer.observe(musicListEl, { childList: true, subtree: false });
+        });
+
+        /* =============================================
+           ALBUM ART ANIMATION
+        ============================================= */
+        const audio      = document.getElementById('audioPlayer');
+        const albumArt   = document.getElementById('albumArt');
+        const artWrapper = document.getElementById('albumArtWrapper');
+
+        audio.addEventListener('play', () => {
+            albumArt.classList.add('playing');
+            artWrapper.classList.add('playing');
+        });
+
+        audio.addEventListener('pause', () => {
+            albumArt.classList.remove('playing');
+            artWrapper.classList.remove('playing');
+        });
+
+        /* =============================================
+           VOLUME ICON UPDATE
+        ============================================= */
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeLabel  = document.getElementById('volumeLabel');
+
+        volumeSlider.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            if (v === 0) {
+                volumeLabel.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (v < 0.5) {
+                volumeLabel.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                volumeLabel.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        });
+
+        /* =============================================
+           INJECT EQ BARS INTO ACTIVE ITEM
+           (Observer watches for class changes on .music-item)
+        ============================================= */
+        function addEqBars(item) {
+            if (!item.querySelector('.eq-bars')) {
+                const eq = document.createElement('div');
+                eq.className = 'eq-bars';
+                eq.innerHTML = '<span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>';
+                const info = item.querySelector('.music-item-info');
+                if (info) info.appendChild(eq);
+            }
+        }
+
+        const listEl = document.getElementById('musicList');
+        const itemObserver = new MutationObserver((mutations) => {
+            mutations.forEach(m => {
+                m.addedNodes.forEach(node => {
+                    if (node.classList && node.classList.contains('music-item')) {
+                        addEqBars(node);
+                    }
+                });
+                if (m.type === 'attributes' && m.attributeName === 'class') {
+                    if (m.target.classList.contains('music-item')) {
+                        addEqBars(m.target);
+                    }
+                }
+            });
+        });
+
+        itemObserver.observe(listEl, {
+            childList: true,
+            attributes: true,
+            attributeFilter: ['class'],
+            subtree: true
         });
     </script>
 </body>

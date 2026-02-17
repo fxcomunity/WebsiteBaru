@@ -130,13 +130,19 @@ if (document.head) {
 
 // Check maintenance mode on page load
 async function checkMaintenanceMode() {
-    // Load local config first
+    // Load local config first (Admin panel updates this)
     let cfg = getMaintenanceConfig();
 
-    // Try remote config; if present, use it to override local settings
+    // If locally enabled, we don't need to check remote
+    if (cfg.enabled) {
+        processMaintenance(cfg);
+        return;
+    }
+
+    // Try remote config if local is disabled
     try {
         const remoteCfg = await fetchRemoteMaintenanceConfig();
-        if (remoteCfg) {
+        if (remoteCfg && remoteCfg.enabled) {
             console.log('🌐 Using remote maintenance config', remoteCfg);
             cfg = Object.assign({}, cfg, remoteCfg);
         }
@@ -144,6 +150,11 @@ async function checkMaintenanceMode() {
         console.warn('Remote maintenance config check failed', e && e.message);
     }
 
+    processMaintenance(cfg);
+}
+
+// Separate processing logic
+async function processMaintenance(cfg) {
     // If maintenance disabled, allow normal access immediately
     if (!cfg.enabled) {
         return;

@@ -705,3 +705,37 @@ function closeMusicModal() {
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 }
+
+// Admin Profile Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const adminBtn = document.getElementById('adminLoginBtn');
+    const adminDropdown = document.getElementById('adminDropdown');
+    const adminNameDisplay = document.getElementById('adminNameDisplay');
+    
+    if (adminBtn && adminDropdown) {
+        adminBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
+            
+            if (isAdmin) {
+                adminDropdown.classList.toggle('active');
+                // Update name from localStorage if available
+                const savedName = localStorage.getItem('fx_adminName') || 'Admin';
+                if (adminNameDisplay) adminNameDisplay.textContent = savedName;
+            } else {
+                window.open('admin/index.html', '_blank');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!adminDropdown.contains(e.target) && !adminBtn.contains(e.target)) {
+                adminDropdown.classList.remove('active');
+            }
+        });
+    }
+});
+
+function adminLogout() {
+    sessionStorage.removeItem('fx_isAdmin');
+    window.location.reload();
+}

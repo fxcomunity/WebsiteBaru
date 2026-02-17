@@ -22,7 +22,10 @@
         const u = usernameEl.value.trim();
         const p = passwordEl.value;
 
-        if(u === ADMIN_USER && p === ADMIN_PASS){
+        const dynamicUser = localStorage.getItem('fx_adminName') || ADMIN_USER;
+        const dynamicPass = localStorage.getItem('fx_adminPass') || ADMIN_PASS;
+
+        if(u === dynamicUser && p === dynamicPass){
             sessionStorage.setItem('fx_isAdmin', '1');
             showMessage('Login berhasil. Mengarahkan ke panel...', 'success');
             setTimeout(() => { window.location.href = 'panel.html'; }, 700);

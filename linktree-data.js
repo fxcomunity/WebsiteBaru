@@ -36,6 +36,12 @@ function getLinktreeLinks() {
             icon: "fab fa-tiktok",
             url: "https://www.tiktok.com/@uciii0106",
             color: "#00f2ea"
+        },
+        {
+            title: "Email",
+            icon: "fas fa-envelope",
+            url: "mailto:ajar0895404147521@gmail.com",
+            color: "#6366f1"
         }
     ];
 }
