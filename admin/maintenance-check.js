@@ -128,6 +128,271 @@ if (document.head) {
     document.head.appendChild(style);
 }
 
+// Show admin login modal for maintenance mode
+function showMaintenanceAdminLogin(cfg) {
+    // Remove any existing overlay first
+    const existing = document.getElementById('maintenance-admin-login');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'maintenance-admin-login';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 15, 35, 0.95);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        animation: fadeIn 0.3s ease;
+    `;
+
+    const loginBox = document.createElement('div');
+    loginBox.style.cssText = `
+        background: linear-gradient(135deg, rgba(35, 35, 71, 0.95) 0%, rgba(45, 45, 85, 0.95) 100%);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        max-width: 420px;
+        width: 90%;
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    `;
+
+    loginBox.innerHTML = `
+        <style>
+            @keyframes slideUp {
+                from { 
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            .maintenance-input {
+                width: 100%;
+                padding: 12px 16px;
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.1);
+                color: #fff;
+                font-size: 1rem;
+                font-family: 'Poppins', sans-serif;
+                margin-bottom: 16px;
+                outline: none;
+                transition: all 0.3s ease;
+            }
+            .maintenance-input:focus {
+                border-color: #6366f1;
+                background: rgba(99, 102, 241, 0.2);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            }
+            .maintenance-input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            .maintenance-btn {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: 'Poppins', sans-serif;
+            }
+            .maintenance-btn-login {
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                color: white;
+                margin-bottom: 10px;
+            }
+            .maintenance-btn-login:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            }
+            .maintenance-btn-login:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            .maintenance-btn-exit {
+                background: transparent;
+                color: #a8a8d8;
+                border: 1px solid rgba(168, 168, 216, 0.3);
+            }
+            .maintenance-btn-exit:hover {
+                background: rgba(168, 168, 216, 0.1);
+                border-color: rgba(168, 168, 216, 0.6);
+            }
+            .maintenance-error {
+                display: none;
+                background: rgba(239, 68, 68, 0.15);
+                border: 1px solid rgba(239, 68, 68, 0.5);
+                color: #fca5a5;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                margin-bottom: 16px;
+                animation: shake 0.5s ease;
+            }
+            .maintenance-error.show {
+                display: block;
+            }
+        </style>
+
+        <div style="text-align: center; margin-bottom: 24px;">
+            <div style="
+                font-size: 40px;
+                margin-bottom: 12px;
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            ">
+                🔒
+            </div>
+            <h2 style="
+                font-family: 'Poppins', sans-serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #fff;
+                margin: 0 0 8px 0;
+            ">Maintenance Mode</h2>
+            <p style="
+                color: #a8a8d8;
+                margin: 0;
+                font-size: 0.95rem;
+            ">Admin login to continue</p>
+        </div>
+
+        <form id="maintenance-login-form" style="margin-bottom: 16px;">
+            <div class="maintenance-error" id="maintenance-error-msg"></div>
+            
+            <input 
+                type="text" 
+                class="maintenance-input" 
+                id="maintenance-admin-email" 
+                placeholder="Admin Email"
+                autocomplete="off"
+                required
+            >
+            
+            <input 
+                type="password" 
+                class="maintenance-input" 
+                id="maintenance-admin-password" 
+                placeholder="Admin Password"
+                autocomplete="off"
+                required
+            >
+            
+            <button 
+                type="submit" 
+                class="maintenance-btn maintenance-btn-login"
+                id="maintenance-login-btn"
+            >
+                Masuk
+            </button>
+        </form>
+
+        <button 
+            type="button" 
+            class="maintenance-btn maintenance-btn-exit"
+            id="maintenance-exit-btn"
+        >
+            Keluar
+        </button>
+
+        <p style="
+            text-align: center;
+            color: #767a9e;
+            font-size: 0.85rem;
+            margin-top: 16px;
+        ">
+            Hanya admin yang dapat login
+        </p>
+    `;
+
+    modal.appendChild(loginBox);
+    document.body.appendChild(modal);
+
+    // Form submission
+    const form = document.getElementById('maintenance-login-form');
+    const emailInput = document.getElementById('maintenance-admin-email');
+    const passwordInput = document.getElementById('maintenance-admin-password');
+    const loginBtn = document.getElementById('maintenance-login-btn');
+    const exitBtn = document.getElementById('maintenance-exit-btn');
+    const errorMsg = document.getElementById('maintenance-error-msg');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Memverifikasi...';
+        errorMsg.classList.remove('show');
+
+        try {
+            // Check against admin credentials (you can customize this)
+            // For security, you should use a real backend API
+            const adminEmail = 'admin@fxcommunity.com'; // Change this
+            const adminPassword = 'admin123'; // Change this to match your admin panel
+
+            if (email === adminEmail && password === adminPassword) {
+                // Set admin session
+                sessionStorage.setItem('fx_isAdmin', '1');
+                sessionStorage.setItem('fx_adminName', 'Administrator');
+                sessionStorage.setItem('maintenanceAccess', 'true');
+                sessionStorage.setItem('accessTime', Date.now().toString());
+
+                // Smooth transition
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    modal.remove();
+                    // Reload page with access granted
+                    window.location.reload();
+                }, 300);
+            } else {
+                throw new Error('Email atau password salah');
+            }
+        } catch (error) {
+            errorMsg.textContent = error.message;
+            errorMsg.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Masuk';
+            passwordInput.value = '';
+        }
+    });
+
+    // Exit button
+    exitBtn.addEventListener('click', () => {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            modal.remove();
+            // Redirect to maintenance page
+            setTimeout(() => {
+                window.location.href = cfg.maintenancePage || DEFAULT_MAINTENANCE_CONFIG.maintenancePage;
+            }, 300);
+        }, 300);
+    });
+
+    // Focus on email input
+    emailInput.focus();
+}
+
+
 // Check maintenance mode on page load
 async function checkMaintenanceMode() {
     // Load local config first (Admin panel updates this)
@@ -207,45 +472,11 @@ async function processMaintenance(cfg) {
             // On error, be conservative and redirect to maintenance
         }
 
-        // Not authorized, redirect to maintenance page with transition
-        console.log('🚫 Access denied - Redirecting to maintenance page');
+        // Not authorized, show admin login option
+        console.log('🚫 Access denied - Showing admin login option');
         
-        // Add smooth transition before redirect
-        if (progressOverlay && progressOverlay.querySelector('div > div')) {
-            const content = progressOverlay.querySelector('div > div');
-            content.innerHTML = `
-                <div style="
-                    width: 64px;
-                    height: 64px;
-                    margin: 0 auto 20px;
-                    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 32px;
-                    animation: pulse 1s ease-in-out infinite;
-                ">
-                    <i class="fas fa-tools" style="color: white;"></i>
-                </div>
-                <h3 style="
-                    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    margin-bottom: 12px;
-                    color: #fff;
-                ">Maintenance Mode</h3>
-                <p style="
-                    color: #a8a8d8;
-                    font-size: 0.95rem;
-                ">Redirecting to maintenance page...</p>
-            `;
-        }
-
-        // Delay redirect for smooth transition
-        setTimeout(() => {
-            window.location.href = cfg.maintenancePage || DEFAULT_MAINTENANCE_CONFIG.maintenancePage;
-        }, 1500);
+        hideMaintenanceCheckProgress(progressOverlay);
+        showMaintenanceAdminLogin(cfg);
 
     } catch (error) {
         console.error('❌ Maintenance check failed:', error);
