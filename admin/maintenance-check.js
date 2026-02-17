@@ -281,8 +281,8 @@ function showMaintenanceAdminLogin(cfg) {
             <input 
                 type="text" 
                 class="maintenance-input" 
-                id="maintenance-admin-email" 
-                placeholder="Admin Email"
+                id="maintenance-admin-username" 
+                placeholder="Admin Username"
                 autocomplete="off"
                 required
             >
@@ -328,7 +328,7 @@ function showMaintenanceAdminLogin(cfg) {
 
     // Form submission
     const form = document.getElementById('maintenance-login-form');
-    const emailInput = document.getElementById('maintenance-admin-email');
+    const emailInput = document.getElementById('maintenance-admin-username');
     const passwordInput = document.getElementById('maintenance-admin-password');
     const loginBtn = document.getElementById('maintenance-login-btn');
     const exitBtn = document.getElementById('maintenance-exit-btn');
@@ -345,15 +345,14 @@ function showMaintenanceAdminLogin(cfg) {
         errorMsg.classList.remove('show');
 
         try {
-            // Check against admin credentials (you can customize this)
-            // For security, you should use a real backend API
-            const adminEmail = 'admin@fxcommunity.com'; // Change this
-            const adminPassword = 'admin123'; // Change this to match your admin panel
+            // Use real admin credentials from localStorage or defaults
+            const adminUsername = localStorage.getItem('fx_adminName') || 'admin';
+            const adminPassword = localStorage.getItem('fx_adminPass') || 'sayanguci1';
 
-            if (email === adminEmail && password === adminPassword) {
+            if (email === adminUsername && password === adminPassword) {
                 // Set admin session
                 sessionStorage.setItem('fx_isAdmin', '1');
-                sessionStorage.setItem('fx_adminName', 'Administrator');
+                sessionStorage.setItem('fx_adminName', adminUsername);
                 sessionStorage.setItem('maintenanceAccess', 'true');
                 sessionStorage.setItem('accessTime', Date.now().toString());
 
@@ -365,7 +364,7 @@ function showMaintenanceAdminLogin(cfg) {
                     window.location.reload();
                 }, 300);
             } else {
-                throw new Error('Email atau password salah');
+                throw new Error('Username atau password admin salah');
             }
         } catch (error) {
             errorMsg.textContent = error.message;
