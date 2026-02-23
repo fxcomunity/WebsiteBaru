@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - FX Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/pocketbase/dist/pocketbase.umd.js"></script>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #10b981;
+      --accent: #ec4899;
+      --bg-dark: #0a0a1a;
+      --bg-card: rgba(30, 30, 60, 0.4);
+      --bg-hover: rgba(45, 45, 90, 0.6);
+      --bg-input: rgba(255, 255, 255, 0.05);
+      --text-primary: #ffffff;
+      --text-secondary: #a8a8d8;
+      --text-muted: #6b6b8f;
+      --border: rgba(99, 102, 241, 0.2);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --error: #ef4444;
+      --success: #10b981;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 15px rgba(99, 102, 234, 0.3);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(135deg, rgba(30, 30, 60, 0.95) 0%, rgba(15, 15, 35, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      padding: 30px 20px;
+      position: fixed;
+      height: 100vh;
+      border-right: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sidebar-logo i {
+      font-size: 28px;
+      color: var(--primary-light);
+    }
+
+    .sidebar-logo span {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: var(--bg-hover);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .sidebar-menu a.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .sidebar-menu a.disabled::after {
+      content: '\f023';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 15px;
+      font-size: 10px;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 40px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      padding: 20px 30px;
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      backdrop-filter: blur(10px);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border-light);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+
+    .card h3 {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: var(--font-heading);
+    }
+
+    .card-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      opacity: 0.2;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      margin-right: 5px;
+    }
+
+    .btn-edit {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--error);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .btn-p {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 80px;
+        padding: 20px 10px;
+      }
+
+      .sidebar-logo span,
+      .sidebar-menu a span {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 80px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="fas fa-chart-line"></i>
+        <span>FX Community</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a onclick="showSection('pdf')" data-section="pdf" class="active"><i class="fas fa-file-pdf"></i>
+            <span>Daftar PDF</span></a></li>
+        <li><a onclick="showSection('gempa')" data-section="gempa"><i class="fas fa-globe-asia"></i>
+            <span>Gempabumi</span></a></li>
+        <li><a onclick="showSection('favorites')" data-section="favorites"><i class="fas fa-heart"></i>
+            <span>Favorit</span></a></li>
+        <li><a onclick="showSection('settings')" data-section="settings"><i class="fas fa-user-circle"></i> <span>Profil
+              Saya</span></a></li>
+        <li><a class="disabled"><i class="fas fa-tools"></i> <span>Maintenance</span></a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> <span>Beranda</span></a></li>
+        <li style="margin-top: 50px;"><a onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <h1 id="pageTitle">Daftar PDF</h1>
+        <div class="user-profile">
+          <div class="user-info" style="text-align: right; margin-right: 12px;">
+            <p id="userName" style="font-weight: 700;">User</p>
+            <p id="userEmail" style="font-size: 12px; color: var(--text-muted);">Member</p>
+          </div>
+          <div class="user-avatar" id="userAvatar">U</div>
+        </div>
+      </div>
+
+      <div id="alert" class="alert"></div>
+
+      <!-- PDF Section -->
+      <div id="pdf" class="content-section active">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <h2>Dokumen PDF</h2>
+        </div>
+        <div class="grid" id="pdfStats">
+          <div class="card">
+            <i class="fas fa-chart-line card-icon"></i>
+            <h3>FX Materials</h3>
+            <div class="card-value" id="stat-fx">0</div>
+          </div>
+          <div class="card">
+            <i class="fas fa-university card-icon"></i>
+            <h3>Stock Materials</h3>
+            <div class="card-value" id="stat-saham">0</div>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Kategori</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pdfTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gempa Section -->
+      <div id="gempa" class="content-section">
+        <div class="card" style="margin-bottom: 20px;">
+          <h2>Info Gempabumi Terkini</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Data aktivitas seismik terkini dari BMKG.</p>
+          <div id="gempaList" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <p>Memuat data gempa...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Favorites Section -->
+      <div id="favorites" class="content-section">
+        <div class="card">
+          <h2>Koleksi Favorit</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">PDF yang telah Anda simpan.</p>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Judul</th>
+                  <th>Kategori</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="favoritesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="settings" class="content-section">
+        <div class="card" style="max-width: 600px;">
+          <h2>Pengaturan Profil</h2>
+          <p style="margin-bottom: 20px; color: var(--text-muted);">Perbarui informasi akun Anda.</p>
+          <form id="profileForm" onsubmit="updateProfile(event)">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="p-username" disabled>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="p-email" disabled>
+            </div>
+            <div class="form-group">
+              <label>Bio</label>
+              <textarea id="p-bio" rows="3" placeholder="Ceritakan sedikit tentang Anda..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-p">Simpan Perubahan</button>
+          </form>
+
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-light);">
+            <h3 style="color: var(--error); margin-bottom: 15px;">Zona Bahaya</h3>
+            <button class="btn"
+              style="background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error);"
+              onclick="deleteAccount()">Hapus Akun Permanen</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./data/trading-fx/data.js"></script>
+  <script src="./data/saham/data.js"></script>
+
+  <script>
+    const pb = new PocketBase("http://127.0.0.1:8090");
+
+    function checkAuth() {
+      if (!pb.authStore.isValid) {
+        window.location.href = 'auth.html';
+      }
+    }
+
+    function logout() {
+      pb.authStore.clear();
+      window.location.href = 'auth.html';
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      const activeBtn = document.querySelector(`[onclick="showSection('${id}')"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const titles = {
+        'pdf': 'Daftar PDF',
+        'gempa': 'Info Gempabumi',
+        'favorites': 'Favorit Saya',
+        'settings': 'Profil Saya'
+      };
+      document.getElementById('pageTitle').innerText = titles[id] || 'Dashboard';
+
+      if (id === 'gempa') loadGempa();
+      if (id === 'favorites') loadFavorites();
+    }
+
+    function showAlert(msg, type = 'success') {
+      const alert = document.getElementById('alert');
+      alert.innerText = msg;
+      alert.style.background = type === 'success' ? '#10b981' : '#ef4444';
+      alert.style.display = 'block';
+      setTimeout(() => alert.style.display = 'none', 3000);
+    }
+
+    function loadUserData() {
+      const user = pb.authStore.record;
+      if (user) {
+        document.getElementById('userName').innerText = user.username || 'User';
+        document.getElementById('userEmail').innerText = user.email;
+        document.getElementById('userAvatar').innerText = (user.username || 'U').charAt(0).toUpperCase();
+
+        document.getElementById('p-username').value = user.username;
+        document.getElementById('p-email').value = user.email;
+        document.getElementById('p-bio').value = user.bio || '';
+      }
+    }
+
+    function loadPDFs() {
+      const tbody = document.getElementById('pdfTable');
+      tbody.innerHTML = '';
+
+      const fx = typeof tradingFxData !== 'undefined' ? tradingFxData : [];
+      const saham = typeof sahamData !== 'undefined' ? sahamData : [];
+
+      document.getElementById('stat-fx').innerText = fx.length;
+      document.getElementById('stat-saham').innerText = saham.length;
+
+      const combined = [
+        ...fx.map(p => ({ ...p, cat: 'FX' })),
+        ...saham.map(p => ({ ...p, cat: 'Saham' }))
+      ];
+
+      combined.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${p.title || p.name}</strong></td>
+            <td>${p.cat}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="window.open('${p.url}', '_blank')"><i class="fas fa-eye"></i></button>
+              <button class="action-btn btn-edit" onclick="addToFavorites('${p.title || p.name}', '${p.cat}', '${p.url}')"><i class="fas fa-heart"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function updateProfile(e) {
+      e.preventDefault();
+      const bio = document.getElementById('p-bio').value;
+      try {
+        await pb.collection('users').update(pb.authStore.record.id, { bio });
+        showAlert('Profil berhasil diperbarui');
+        loadUserData();
+      } catch (e) { showAlert('Gagal memperbarui profil', 'error'); }
+    }
+
+    async function deleteAccount() {
+      if (confirm('Yakin ingin menghapus akun? Tindakan ini tidak bisa dibatalkan.')) {
+        const text = prompt('Ketik "HAPUS" untuk konfirmasi:');
+        if (text === 'HAPUS') {
+          try {
+            await pb.collection('users').delete(pb.authStore.record.id);
+            logout();
+          } catch (e) { showAlert('Gagal menghapus akun', 'error'); }
+        }
+      }
+    }
+
+    async function loadGempa() {
+      const container = document.getElementById('gempaList');
+      container.innerHTML = '<p>Menghubungkan ke BMKG...</p>';
+      try {
+        const res = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json');
+        const data = await res.json();
+        container.innerHTML = '';
+        data.Infogempa.gempa.slice(0, 6).forEach(g => {
+          container.innerHTML += `
+            <div class="card" style="border-left: 4px solid var(--accent);">
+              <p style="font-weight:700; font-size: 18px; margin-bottom: 10px;">M ${g.Magnitude}</p>
+              <p style="font-size: 14px; margin-bottom: 5px;">${g.Wilayah}</p>
+              <p style="font-size: 12px; color: var(--text-muted);">${g.Tanggal} | ${g.Jam}</p>
+            </div>
+          `;
+        });
+      } catch (e) { container.innerHTML = '<p>Gagal memuat data gempa.</p>'; }
+    }
+
+    function addToFavorites(title, cat, url) {
+      let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      if (favs.find(f => f.url === url)) {
+        showAlert('Sudah ada di favorit', 'error');
+        return;
+      }
+      favs.push({ title, category: cat, url, addedAt: new Date() });
+      localStorage.setItem('favorites', JSON.stringify(favs));
+      showAlert('Ditambahkan ke favorit');
+    }
+
+    function loadFavorites() {
+      const tbody = document.getElementById('favoritesTable');
+      const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      tbody.innerHTML = '';
+
+      if (favs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Belum ada favorit</td></tr>';
+        return;
+      }
+
+      favs.forEach((f, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${f.title}</strong></td>
+            <td>${f.category}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="window.open('${f.url}', '_blank')"><i class="fas fa-eye"></i></button>
+              <button class="action-btn btn-delete" onclick="removeFavorite(${i})"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function removeFavorite(i) {
+      let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favs.splice(i, 1);
+      localStorage.setItem('favorites', JSON.stringify(favs));
+      loadFavorites();
+      showAlert('Dihapus dari favorit');
+    }
+
+    // Init
+    checkAuth();
+    loadUserData();
+    loadPDFs();
+  </script>
+</body>
+
+</html>

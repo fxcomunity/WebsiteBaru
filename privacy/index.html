@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../loader/style.css">
+    <script src="../loader/script.js"></script>
+    <script src="../script.js"></script>
 </head>
 <body class="fitur-body">
     <div class="bg-glow">
@@ -19,16 +22,12 @@
         <!-- Header -->
         <div class="fitur-header">
             <div class="header-left">
-                <a href="../index.html" class="home-btn" title="Kembali ke Beranda">
-                    <i class="fas fa-home"></i>
+                <a href="../index.html" style="text-decoration: none;">
+                    <h1>
+                        <i class="fas fa-shield-alt"></i>
+                        Kebijakan Privasi
+                    </h1>
                 </a>
-            </div>
-
-            <div class="header-center">
-                <h1>
-                    <i class="fas fa-shield-alt"></i>
-                    Kebijakan Privasi
-                </h1>
             </div>
 
             <div class="header-right">
@@ -48,23 +47,86 @@
                         </div>
                         <div class="dropdown-menu">
                             <a href="../admin/panel.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Dashboard
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                             <a href="../admin/settings.html" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
+                                <i class="fas fa-cog"></i> Settings
                             </a>
                             <div class="dropdown-divider"></div>
                             <button onclick="adminLogout()" class="dropdown-item logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Keluar
+                                <i class="fas fa-sign-out-alt"></i> Keluar
                             </button>
                         </div>
                     </div>
                 </div>
+                <a href="../index.html" class="home-btn" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
+                <button class="menu-btn mobile-only" id="mobileNavBtn" onclick="toggleSidebar()" aria-label="Menu" style="margin-left: 10px;">
+                    <i class="fas fa-bars" id="mobileNavIcon"></i>
+                </button>
             </div>
         </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+                <p>Akses cepat ke fitur</p>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-item" onclick="window.location.href='../index.html'">
+                    <i class="fas fa-home"></i>
+                    <span>Beranda</span>
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='../fitur/music/music.html'">
+                    <i class="fas fa-music"></i>
+                    <span>Musik</span>
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='../fitur/favorit/index.html'">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorit</span>
+                </div>
+
+                <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+
+                <div class="mobile-nav-dropdown">
+                    <button class="mobile-nav-dropdown-trigger" onclick="toggleMobileDropdown(event)" style="padding: 14px 24px;">
+                        <span><i class="fas fa-th-large"></i> Fitur</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="mobile-nav-dropdown-content">
+                        <div class="sidebar-item" onclick="window.location.href='../gempa-bmkg/index.html'">
+                            <i class="fas fa-bullseye"></i>
+                            <span>Gempabumi</span>
+                        </div>
+                        <div class="sidebar-item" onclick="window.location.href='../fitur/about.html'">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Tentang</span>
+                        </div>
+                        <div class="sidebar-item" onclick="window.location.href='../fitur/faq.html'">
+                            <i class="fas fa-question-circle"></i>
+                            <span>FAQ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+                <div style="padding: 10px 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em;">Bantuan</div>
+
+                <div class="sidebar-item" onclick="window.open('https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', '_blank')">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>FX Community</span>
+                </div>
+                <div class="sidebar-item" onclick="window.open('https://wa.me/62895404147521', '_blank')">
+                    <i class="fas fa-headset"></i>
+                    <span>Admin Support</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
         <div class="about-content">
             <div class="about-section">
@@ -96,7 +158,7 @@
             <div class="about-section">
                 <h2><i class="fas fa-lock"></i> Keamanan Data</h2>
                 <p>
-                    Kami mengambil langkah-langika keamanan yang wajar untuk melindungi platform kami dari akses yang tidak sah. Karena kami tidak menyimpan informasi pribadi yang sensitif, risiko terhadap privasi Anda sangatlah rendah saat menggunakan FX Community.
+                    Kami mengambil langkah-langkah keamanan yang wajar untuk melindungi platform kami dari akses yang tidak sah. Karena kami tidak menyimpan informasi pribadi yang sensitif, risiko terhadap privasi Anda sangatlah rendah saat menggunakan FX Community.
                 </p>
             </div>
 
@@ -119,14 +181,22 @@
     <div id="footer-container"></div>
 
     <script>
-        // Admin Profile Logic
+        // Admin Profile Logic - UPDATED
         function checkAdminSession() {
             const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
             const profileEl = document.getElementById('adminProfile');
+            const loginLink = document.getElementById('adminLoginLink');
+            
             if (isAdmin && profileEl) {
+                // Show admin dropdown, hide login button
                 profileEl.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
                 const adminName = localStorage.getItem('fx_adminName') || 'Admin';
                 document.getElementById('adminNameDisplayHeader').textContent = adminName;
+            } else {
+                // Show login button, hide admin dropdown
+                if (profileEl) profileEl.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
             }
         }
 

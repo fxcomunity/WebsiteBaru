@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - FX Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/pocketbase/dist/pocketbase.umd.js"></script>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #10b981;
+      --accent: #ec4899;
+      --bg-dark: #0a0a1a;
+      --bg-card: rgba(30, 30, 60, 0.4);
+      --bg-hover: rgba(45, 45, 90, 0.6);
+      --bg-input: rgba(255, 255, 255, 0.05);
+      --text-primary: #ffffff;
+      --text-secondary: #a8a8d8;
+      --text-muted: #6b6b8f;
+      --border: rgba(99, 102, 241, 0.2);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --error: #ef4444;
+      --success: #10b981;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 15px rgba(99, 102, 234, 0.3);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(135deg, rgba(30, 30, 60, 0.95) 0%, rgba(15, 15, 35, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      padding: 30px 20px;
+      position: fixed;
+      height: 100vh;
+      border-right: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sidebar-logo i {
+      font-size: 28px;
+      color: var(--primary-light);
+    }
+
+    .sidebar-logo span {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: var(--bg-hover);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 40px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      padding: 20px 30px;
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      backdrop-filter: blur(10px);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border-light);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+
+    .card h3 {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: var(--font-heading);
+    }
+
+    .card-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      opacity: 0.2;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      margin-right: 5px;
+    }
+
+    .btn-edit {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--error);
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .btn-p {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #1a1a2e;
+      border: 1px solid var(--border);
+      padding: 30px;
+      border-radius: 20px;
+      width: 450px;
+      position: relative;
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 80px;
+        padding: 20px 10px;
+      }
+
+      .sidebar-logo span,
+      .sidebar-menu a span {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 80px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="fas fa-shield-alt"></i>
+        <span>FX Admin</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a onclick="showSection('overview')" data-section="overview" class="active"><i class="fas fa-th-large"></i>
+            <span>Overview</span></a></li>
+        <li><a onclick="showSection('users')" data-section="users"><i class="fas fa-users"></i> <span>Users</span></a>
+        </li>
+        <li><a onclick="showSection('pdf')" data-section="pdf"><i class="fas fa-file-pdf"></i> <span>PDF List</span></a>
+        </li>
+        <li><a onclick="showSection('maintenance')" data-section="maintenance"><i class="fas fa-tools"></i>
+            <span>Maintenance</span></a></li>
+        <li><a onclick="showSection('gempa')" data-section="gempa"><i class="fas fa-globe-asia"></i>
+            <span>Gempabumi</span></a></li>
+        <li><a onclick="showSection('settings')" data-section="settings"><i class="fas fa-cog"></i>
+            <span>Settings</span></a></li>
+        <li><a href="../index.html"><i class="fas fa-home"></i> <span>Home</span></a></li>
+        <li style="margin-top: 50px;"><a onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <h1 id="pageTitle">Overview</h1>
+        <div class="user-profile">
+          <div class="user-info" style="text-align: right; margin-right: 12px;">
+            <p id="adminName" style="font-weight: 700;">Admin</p>
+            <p style="font-size: 12px; color: var(--text-muted);">Administrator</p>
+          </div>
+          <div class="user-avatar" id="adminAvatar">A</div>
+        </div>
+      </div>
+
+      <div id="alert" class="alert"></div>
+
+      <!-- Overview Section -->
+      <div id="overview" class="content-section active">
+        <div class="grid">
+          <div class="card">
+            <i class="fas fa-users card-icon"></i>
+            <h3>Total Users</h3>
+            <div class="card-value" id="stat-users">0</div>
+          </div>
+          <div class="card">
+            <i class="fas fa-file-pdf card-icon"></i>
+            <h3>Total PDFs</h3>
+            <div class="card-value" id="stat-pdf">0</div>
+          </div>
+          <div class="card">
+            <i class="fas fa-clock card-icon"></i>
+            <h3>Active Sessions</h3>
+            <div class="card-value">1</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-bottom: 20px;">Recent Users</h2>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentUsersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Section -->
+      <div id="users" class="content-section">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <h2>Manage Users</h2>
+          <input type="text" id="userFilter" placeholder="Search user..."
+            style="width: 250px; padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border-light); background: var(--bg-card); color: white;">
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Joined</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="allUsersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PDF Section -->
+      <div id="pdf" class="content-section">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <h2>PDF Documents</h2>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="allPdfTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Maintenance Section -->
+      <div id="maintenance" class="content-section">
+        <div class="card" style="max-width: 600px;">
+          <h2 style="margin-bottom: 20px;">Maintenance Mode</h2>
+          <div class="form-group">
+            <label>Master Switch</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" id="m-switch" style="width: 20px; height: 20px;">
+              <span>Enable maintenance screen for all users</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="m-msg" rows="3"></textarea>
+          </div>
+          <button class="btn btn-p" onclick="saveMaintenance()">Save Config</button>
+        </div>
+      </div>
+
+      <!-- Gempa Section -->
+      <div id="gempa" class="content-section">
+        <div class="card" style="margin-bottom: 20px;">
+          <h2>Gempabumi Terkini (BMKG)</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Monitoring aktivitas seismik langsung dari server
+            BMKG.</p>
+          <div id="gempaList" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <p>Memuat data gempa...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="settings" class="content-section">
+        <div class="card" style="max-width: 600px;">
+          <h2>System Settings</h2>
+          <p style="margin-bottom: 20px; color: var(--text-muted);">Configure core platform parameters.</p>
+          <div class="form-group">
+            <label>Platform Name</label>
+            <input type="text" value="FX Community">
+          </div>
+          <p>Fitur tambahan akan segera hadir.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- User Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <h2 style="margin-bottom: 20px;">User Details</h2>
+      <div id="modalBody"></div>
+      <button class="btn btn-p" style="margin-top: 20px; width: 100%;"
+        onclick="document.getElementById('userModal').classList.remove('active')">Close</button>
+    </div>
+  </div>
+
+  <!-- Load Data -->
+  <script src="../data/trading-fx/data.js"></script>
+  <script src="../data/saham/data.js"></script>
+
+  <script>
+    const pb = new PocketBase("http://127.0.0.1:8090");
+
+    async function checkAuth() {
+      if (!pb.authStore.isValid || pb.authStore.record.role !== 'admin') {
+        window.location.href = '../auth.html';
+      }
+    }
+
+    function logout() {
+      pb.authStore.clear();
+      window.location.href = '../auth.html';
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      const activeBtn = document.querySelector(`[onclick="showSection('${id}')"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      document.getElementById('pageTitle').innerText = id.charAt(0).toUpperCase() + id.slice(1);
+
+      if (id === 'gempa') loadGempa();
+      if (id === 'pdf') loadPDFs();
+      if (id === 'users') loadUsers();
+    }
+
+    function showAlert(msg, type = 'success') {
+      const alert = document.getElementById('alert');
+      alert.innerText = msg;
+      alert.style.background = type === 'success' ? '#10b981' : '#ef4444';
+      alert.style.display = 'block';
+      setTimeout(() => alert.style.display = 'none', 3000);
+    }
+
+    async function loadStats() {
+      try {
+        const users = await pb.collection('users').getList(1, 1);
+        document.getElementById('stat-users').innerText = users.totalItems;
+
+        let pdfCount = 0;
+        if (typeof tradingFxData !== 'undefined') pdfCount += tradingFxData.length;
+        if (typeof sahamData !== 'undefined') pdfCount += sahamData.length;
+        document.getElementById('stat-pdf').innerText = pdfCount;
+      } catch (e) { }
+    }
+
+    async function loadUsers() {
+      try {
+        const users = await pb.collection('users').getFullList({ sort: '-created' });
+        const tbodyRecent = document.getElementById('recentUsersTable');
+        const tbodyAll = document.getElementById('allUsersTable');
+
+        tbodyRecent.innerHTML = '';
+        tbodyAll.innerHTML = '';
+
+        users.forEach((user, i) => {
+          const row = `
+            <tr>
+              <td><strong>${user.username}</strong></td>
+              <td>${user.email}</td>
+              <td>${new Date(user.created).toLocaleDateString()}</td>
+              <td>${tbodyAll ? `
+                <button class="action-btn btn-edit" onclick="viewUser('${user.id}')"><i class="fas fa-eye"></i></button>
+                <button class="action-btn btn-delete" onclick="deleteUser('${user.id}', '${user.username}')"><i class="fas fa-trash"></i></button>
+              ` : '<span class="status-badge status-active">Active</span>'}</td>
+            </tr>
+          `;
+          if (i < 5) tbodyRecent.innerHTML += row;
+          if (tbodyAll) tbodyAll.innerHTML += row;
+        });
+      } catch (e) { }
+    }
+
+    async function viewUser(id) {
+      try {
+        const user = await pb.collection('users').getOne(id);
+        document.getElementById('modalBody').innerHTML = `
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Created:</strong> ${new Date(user.created).toLocaleString()}</p>
+          <p><strong>Bio:</strong> ${user.bio || '-'}</p>
+        `;
+        document.getElementById('userModal').classList.add('active');
+      } catch (e) { }
+    }
+
+    async function deleteUser(id, name) {
+      if (confirm(`Delete user ${name}?`)) {
+        try {
+          await pb.collection('users').delete(id);
+          showAlert('User deleted');
+          loadUsers();
+          loadStats();
+        } catch (e) { showAlert('Failed', 'error'); }
+      }
+    }
+
+    function loadPDFs() {
+      const tbody = document.getElementById('allPdfTable');
+      tbody.innerHTML = '';
+
+      const combined = [
+        ...(typeof tradingFxData !== 'undefined' ? tradingFxData.map(p => ({ ...p, cat: 'FX' })) : []),
+        ...(typeof sahamData !== 'undefined' ? sahamData.map(p => ({ ...p, cat: 'Saham' })) : [])
+      ];
+
+      combined.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${p.title || p.name}</strong></td>
+            <td>${p.cat}</td>
+            <td><button class="action-btn btn-edit" onclick="window.open('${p.url}', '_blank')"><i class="fas fa-eye"></i> View</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function loadGempa() {
+      const container = document.getElementById('gempaList');
+      container.innerHTML = '<p>Menghubungkan ke BMKG...</p>';
+      try {
+        const res = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json');
+        const data = await res.json();
+        container.innerHTML = '';
+        data.Infogempa.gempa.slice(0, 6).forEach(g => {
+          container.innerHTML += `
+            <div class="card" style="border-left: 4px solid var(--accent);">
+              <p style="font-weight:700; font-size: 18px; margin-bottom: 10px;">M ${g.Magnitude}</p>
+              <p style="font-size: 14px; margin-bottom: 5px;">${g.Wilayah}</p>
+              <p style="font-size: 12px; color: var(--text-muted);">${g.Tanggal} | ${g.Jam}</p>
+              <p style="font-size: 12px; color: var(--text-muted);">Kedalaman: ${g.Kedalaman}</p>
+            </div>
+          `;
+        });
+      } catch (e) { container.innerHTML = '<p>Gagal memuat data gempa.</p>'; }
+    }
+
+    function saveMaintenance() {
+      const config = {
+        enabled: document.getElementById('m-switch').checked,
+        msg: document.getElementById('m-msg').value
+      };
+      localStorage.setItem('fx_maintenance_config', JSON.stringify(config));
+      showAlert('Maintenance config saved');
+    }
+
+    // Init
+    checkAuth();
+    loadStats();
+    loadUsers();
+
+    // UI Setup
+    document.getElementById('adminName').innerText = pb.authStore.record.username;
+    document.getElementById('adminAvatar').innerText = pb.authStore.record.username.charAt(0).toUpperCase();
+
+    // Filter
+    document.getElementById('userFilter').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#allUsersTable tr').forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+
+</html>

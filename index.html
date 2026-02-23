@@ -14,8 +14,13 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
-    <script src="admin/maintenance-check.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="loader/style.css">
+    <link rel="stylesheet" href="gempa-bmkg/gempa.css">
+
+    <script src="loader/script.js"></script>
+    <script src="gempa-bmkg/gempa.js"></script>
+
 </head>
 
 <body class="main-body">
@@ -29,24 +34,35 @@
     <!-- Header -->
     <div class="header">
         <div class="header-left">
-            <button class="menu-btn" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-        <div class="header-center">
-            <div class="header-title">
+            <a href="index.html" class="header-title">
                 <i class="fas fa-chart-line"></i> FX Community
-            </div>
+            </a>
         </div>
+
         <div class="header-right">
-            <div class="admin-profile-container">
+            <div class="nav-desktop desktop-only">
+                <a href="index.html" class="nav-link active">Beranda</a>
+                <a href="fitur/music/music.html" class="nav-link">Musik</a>
+                <a href="fitur/favorit/index.html" class="nav-link">Favorit</a>
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-trigger">Fitur <i class="fas fa-chevron-down"></i></button>
+                    <div class="nav-dropdown-content">
+                        <a href="gempa-bmkg/index.html"><i class="fas fa-bullseye"></i> Gempabumi</a>
+                        <a href="fitur/about.html"><i class="fas fa-info-circle"></i> Tentang</a>
+                        <a href="fitur/faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-profile-container desktop-only">
                 <button id="adminLoginBtn" class="admin-login-btn" title="Admin Account">
                     <i class="fas fa-user-shield"></i>
                 </button>
                 <div id="adminDropdown" class="admin-dropdown">
                     <div class="dropdown-header">
                         <div class="admin-avatar">
-                            <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                            <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png"
+                                alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                         </div>
                         <div class="admin-info">
                             <span id="adminNameDisplay">Admin</span>
@@ -54,85 +70,66 @@
                         </div>
                     </div>
                     <div class="dropdown-menu">
-                        <a href="admin/panel.html" class="dropdown-item">
-                            <i class="fas fa-tachometer-alt"></i>
-                            Dashboard
-                        </a>
-                        <a href="admin/settings.html" class="dropdown-item">
-                            <i class="fas fa-cog"></i>
-                            Settings
+                        <a href="admin/admin-dashboard.html" class="dropdown-item">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                         <div class="dropdown-divider"></div>
                         <button onclick="adminLogout()" class="dropdown-item logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Keluar
+                            <i class="fas fa-sign-out-alt"></i> Keluar
                         </button>
                     </div>
                 </div>
             </div>
+
+            <button class="menu-btn mobile-only" id="mobileNavBtn" onclick="toggleMobileNav()" aria-label="Menu">
+                <i class="fas fa-bars" id="mobileNavIcon"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <h1 class="hero-title">Akses PDF Trading</h1>
-        <p class="hero-subtitle">Koleksi lengkap materi forex, saham (soon), dan analisis teknikal untuk meningkatkan profit
-            trading Anda.</p>
-    </div>
+    <!-- Mobile Navigation Menu (Dropdown) -->
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <a href="index.html" class="mobile-nav-link active">
+            <i class="fas fa-home"></i> Beranda
+        </a>
+        <a href="fitur/music/music.html" class="mobile-nav-link">
+            <i class="fas fa-music"></i> Musik
+        </a>
+        <a href="fitur/favorit/index.html" class="mobile-nav-link">
+            <i class="fas fa-heart"></i> Favorit
+        </a>
 
-    <!-- Search -->
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Cari PDF..." onkeyup="filterPDFs()">
-            <i class="fas fa-search"></i>
-        </div>
-    </div>
+        <div class="mobile-nav-divider"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu</h3>
-            <p>Akses cepat ke fitur</p>
-        </div>
-        <div class="sidebar-menu">
-            <div class="sidebar-item" onclick="showHome()">
-                <i class="fas fa-home"></i>
-                <span>Beranda</span>
-            </div>
-            <div class="sidebar-item" onclick="showHome()">
-                <i class="fas fa-folder-open"></i>
-                <span>Semua PDF</span>
-            </div>
-            <div class="sidebar-item" onclick="window.location.href='fitur/music/music.html'">
-                <i class="fas fa-music"></i>
-                <span>Musik</span>
-            </div>
-            <div class="sidebar-item" onclick="window.location.href='fitur/favorit/index.html'">
-                <i class="fas fa-heart"></i>
-                <span>Favorit</span>
-            </div>
-            <div class="sidebar-item"
-                onclick="window.open('https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', '_blank')">
-                <i class="fab fa-whatsapp"></i>
-                <span>FX Community</span>
-            </div>
-            <div class="sidebar-item" onclick="window.open('https://wa.me/62895404147521', '_blank')">
-                <i class="fas fa-headset"></i>
-                <span>Admin Support</span>
-            </div>
-            <div class="sidebar-item" onclick="window.location.href='fitur/about.html'">
-                <i class="fas fa-info-circle"></i>
-                <span>Tentang</span>
-            </div>
-            <div class="sidebar-item" onclick="window.location.href='fitur/faq.html'">
-                <i class="fas fa-question-circle"></i>
-                <span>FAQ</span>
+        <div class="mobile-nav-dropdown">
+            <button class="mobile-nav-dropdown-trigger" onclick="toggleMobileDropdown(event)">
+                <span><i class="fas fa-th-large"></i> Fitur</span>
+                <i class="fas fa-chevron-down dropdown-icon"></i>
+            </button>
+            <div class="mobile-nav-dropdown-content">
+                <a href="gempa-bmkg/index.html" class="mobile-nav-link">
+                    <i class="fas fa-bullseye"></i> Gempabumi
+                </a>
+                <a href="fitur/about.html" class="mobile-nav-link">
+                    <i class="fas fa-info-circle"></i> Tentang
+                </a>
+                <a href="fitur/faq.html" class="mobile-nav-link">
+                    <i class="fas fa-question-circle"></i> FAQ
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+        <div class="mobile-nav-divider"></div>
+        <div class="mobile-nav-label">Admin</div>
+
+        <a href="admin/admin-dashboard.html" class="mobile-nav-link">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <button onclick="adminLogout()" class="mobile-nav-link"
+            style="width: 100%; border: none; background: none; color: #ef4444; justify-content: flex-start; padding: 13px 20px;">
+            <i class="fas fa-sign-out-alt" style="color: #ef4444;"></i> Keluar
+        </button>
+    </div>
 
     <!-- Main Content -->
     <div id="mainContent">
@@ -174,7 +171,6 @@
         </div>
     </div>
 
-        <!-- Admin login moved to /admin/index.html -->
 
     <!-- Share Modal -->
     <div id="shareModal" class="modal" style="display: none;">
@@ -277,40 +273,7 @@
 
 
 
-    <!-- Floating Contact Widget -->
-    <div id="floatingContactWidget" class="floating-contact-widget">
-        <div class="widget-header" onclick="toggleContactWidget()">
-            <i class="fas fa-envelope"></i>
-            <span>Hubungi Kami</span>
-            <i class="fas fa-chevron-up toggle-icon"></i>
-        </div>
-        <div class="widget-body" id="widgetBody" style="display: none;">
-            <form id="floatingContactForm" onsubmit="submitFloatingContact(event)">
-                <div class="form-group">
-                    <input type="text" id="fcName" required placeholder="Nama Anda" maxlength="50">
-                </div>
 
-                <div class="form-group">
-                    <select id="fcCategory" required>
-                        <option value="">Pilih Kategori</option>
-                        <option value="pertanyaan">Pertanyaan</option>
-                        <option value="bug">Bug Report</option>
-                        <option value="saran">Saran</option>
-                        <option value="partnership">Kerjasama</option>
-                        <option value="lainnya">Lainnya</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <textarea id="fcMessage" required placeholder="Pesan Anda..." maxlength="500" rows="3"></textarea>
-                </div>
-
-                <button type="submit" class="widget-submit-btn">
-                    <i class="fas fa-paper-plane"></i> Kirim
-                </button>
-            </form>
-        </div>
-    </div>
 
     <!-- Footer -->
     <div id="footer-container"></div>
@@ -318,16 +281,20 @@
     <!-- Chatango removed -->
 
     <!-- Script Files - FIXED: Removed duplicate data.js -->
+    <script src="https://unpkg.com/pocketbase/dist/pocketbase.umd.js"></script>
     <script src="data/trading-fx/data.js"></script>
     <script src="data/saham/data.js"></script>
-    <script src="linktree-data.js"></script>
+
     <script src="fitur/favorit/favorites.js"></script>
     <script src="fitur/music/music.js"></script>
     <script src="script.js"></script>
-    
+    <script src="ai-chat.js"></script>
+
+
+
     <!-- Load professional footer -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             fetch('footer/main.html')
                 .then(r => r.text())
                 .then(html => {
@@ -351,23 +318,79 @@
         </div>
     </div>
 
-    <!-- Linktree Modal -->
-    <div id="linktreeModal" class="linktree-modal" style="display: none;">
-        <div class="linktree-card">
-            <button class="lt-close-btn" onclick="closeLinktree()"><i class="fas fa-times"></i></button>
-            <div class="lt-profile">
-                <div class="lt-avatar"><i class="fas fa-user-circle"></i></div>
-                <h3>FX Trading Hub</h3>
-                <p>Koleksi link penting & cepat</p>
+    <!-- CS AI Chat Widget -->
+    <div id="groqChatWidget" class="groq-chat-widget" style="display: none;">
+        <!-- CS Header -->
+        <div class="chat-header">
+            <div class="chat-agent-info">
+                <div class="agent-avatar">
+                    <span>AI</span>
+                    <div class="agent-status-dot"></div>
+                </div>
+                <div class="agent-details">
+                    <div class="agent-name">FX Assistant</div>
+                    <div class="agent-status"><span class="status-indicator"></span> Online &bull; Siap membantu</div>
+                </div>
             </div>
-            <div class="lt-links" id="linktreeList"></div>
+            <div class="chat-header-actions">
+                <div class="model-selector">
+                    <select id="aiModelSelect" onchange="changeAIModel()" title="Pilih Model AI">
+                        <option value="groq">Groq (Llama 3)</option>
+                        <option value="gemini">Gemini (Google)</option>
+                    </select>
+                </div>
+                <button class="chat-header-btn" onclick="minimizeChat()" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="chat-header-btn" onclick="toggleGroqChat()" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome message injected by JS -->
+        </div>
+
+        <!-- Quick Replies -->
+        <div class="quick-replies" id="quickReplies">
+            <button class="quick-reply-btn" onclick="sendQuickReply('Materi trading untuk pemula?')">📚 Materi
+                Pemula</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Jelaskan Smart Money Concept')">💰 Smart
+                Money</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Ada materi tentang saham?')">📈 Saham BEI</button>
+            <button class="quick-reply-btn contact-reply-btn" onclick="startContactFlow()">📞 Hubungi Admin</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <input type="text" id="chatInput" placeholder="Ketik pesan..." onkeypress="handleChatInput(event)"
+                    autocomplete="off">
+                <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="chat-footer-note">
+                <span id="tokenDisplay" class="token-display"><i class="fas fa-bolt"></i> <span
+                        id="tokenCount">10</span> token tersisa</span>
+                <span class="footer-divider">&bull;</span>
+                Powered by Groq AI
+            </div>
         </div>
     </div>
 
-    <!-- Floating Linktree Button -->
-    <button id="linktreeFloatingBtn" class="linktree-floating-btn" onclick="openLinktree()" title="Link Saya">
-        <i class="fas fa-link"></i>
-    </button>
+    <!-- Floating Chat Button with notification badge -->
+    <div class="groq-fab-wrapper">
+        <button id="groqFloatingBtn" class="groq-floating-btn" onclick="toggleGroqChat()" title="Chat dengan CS">
+            <i class="fas fa-headset"></i>
+        </button>
+        <div class="fab-tooltip">Ada yang bisa kami bantu? 👋</div>
+        <div class="fab-badge" id="fabBadge">1</div>
+    </div>
+
+
 
 </body>
 

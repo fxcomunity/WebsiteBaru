@@ -4,2422 +4,873 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Musik - FX Community</title>
+    <title>Music Player — FX Community</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../loader/style.css">
+    <script src="../../loader/script.js"></script>
+
     <style>
-        /* =============================================
-           RESET & ROOT VARIABLES
-        ============================================= */
-        :root {
-            --player-radius: 28px;
-            --card-radius: 24px;
-            --item-radius: 16px;
-            --glow-primary: rgba(99, 102, 241, 0.35);
-            --glow-accent: rgba(168, 85, 247, 0.25);
-            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        * { box-sizing: border-box; }
+        :root {
+            --ink: #0a0a0f;
+            --surface: #12121e;
+            --surface-glass: rgba(28, 28, 46, 0.65);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(124, 95, 255, 0.3);
+            --accent: #7c5fff;
+            --accent-2: #e35fff;
+            --accent-3: #5fddff;
+            --text: #f0eeff;
+            --text-dim: #8886a8;
+            --text-muted: #4e4c6a;
+            --success: #4fffb0;
+        }
 
         body {
-            font-family: 'DM Sans', sans-serif;
+            background: var(--ink);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* =============================================
-           AMBIENT BACKGROUND
-        ============================================= */
-        .ambient-orb {
+        /* ── BG AMBIENT ── */
+        .scene-bg {
             position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
+            inset: 0;
             z-index: 0;
-            will-change: transform;
-        }
-        .ambient-orb-1 {
-            width: clamp(200px, 40vw, 500px);
-            height: clamp(200px, 40vw, 500px);
-            background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
-            top: -10%;
-            left: -5%;
-            animation: drift-1 18s ease-in-out infinite alternate;
-        }
-        .ambient-orb-2 {
-            width: clamp(150px, 30vw, 400px);
-            height: clamp(150px, 30vw, 400px);
-            background: radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%);
-            bottom: 10%;
-            right: -5%;
-            animation: drift-2 22s ease-in-out infinite alternate;
-        }
-        .ambient-orb-3 {
-            width: clamp(100px, 20vw, 300px);
-            height: clamp(100px, 20vw, 300px);
-            background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
-            top: 50%;
-            left: 40%;
-            animation: drift-3 15s ease-in-out infinite alternate;
-        }
-        @keyframes drift-1 {
-            from { transform: translate(0, 0) scale(1); }
-            to   { transform: translate(5%, 8%) scale(1.1); }
-        }
-        @keyframes drift-2 {
-            from { transform: translate(0, 0) scale(1.05); }
-            to   { transform: translate(-6%, -5%) scale(0.95); }
-        }
-        @keyframes drift-3 {
-            from { transform: translate(0, 0); }
-            to   { transform: translate(-8%, 6%); }
+            pointer-events: none;
+            overflow: hidden;
         }
 
-        /* =============================================
-           LAYOUT CONTAINER
-        ============================================= */
-        .fitur-container {
+        /* Grid pattern */
+        .scene-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(124, 95, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 95, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.14;
+            animation: orbDrift 22s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            top: -120px;
+            left: -120px;
+        }
+
+        .orb-2 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, var(--accent-2), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -8s;
+        }
+
+        .orb-3 {
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, var(--accent-3), transparent 70%);
+            top: 42%;
+            left: 58%;
+            animation-delay: -15s;
+        }
+
+        @keyframes orbDrift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(60px, 50px) scale(1.2);
+            }
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(28px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-mark {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: var(--surface-glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-btn:hover {
+            color: var(--text);
+            border-color: var(--border-glow);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn i {
+            font-size: 14px;
+        }
+
+        /* ── PAGE ── */
+        .page {
             position: relative;
             z-index: 1;
+            min-height: 100vh;
+            padding: 100px 28px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        /* =============================================
-           HEADER
-        ============================================= */
-        .fitur-header {
-            font-family: 'Syne', sans-serif;
+        /* ── HEADER ── */
+        .page-header {
+            text-align: center;
+            margin-bottom: 56px;
+            animation: fadeUp 0.8s ease both;
         }
-        .fitur-header h1 {
-            font-weight: 800;
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 18px;
+            background: rgba(227, 95, 255, 0.08);
+            border: 1px solid rgba(227, 95, 255, 0.25);
+            border-radius: 100px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 16px;
+        }
+
+        .page-badge i {
+            font-size: 11px;
+        }
+
+        .page-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 14px;
             letter-spacing: -0.03em;
-        }
-        .fitur-header h1 i {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent-2) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* =============================================
-           MAIN GRID
-        ============================================= */
-        .music-player-section {
+        .page-subtitle {
+            font-size: clamp(0.92rem, 2.2vw, 1.05rem);
+            color: var(--text-dim);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ── LAYOUT ── */
+        .music-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: clamp(16px, 3vw, 28px);
-            align-items: start;
+            gap: 28px;
+            animation: fadeUp 0.8s ease 0.15s both;
         }
 
-        @media (min-width: 900px) {
-            .music-player-section {
-                grid-template-columns: minmax(320px, 400px) 1fr;
-            }
-        }
-        @media (min-width: 1200px) {
-            .music-player-section {
-                grid-template-columns: 420px 1fr;
-                gap: 32px;
-            }
-        }
-        @media (min-width: 1440px) {
-            .music-player-section {
-                grid-template-columns: 460px 1fr;
+        @media (min-width: 920px) {
+            .music-grid {
+                grid-template-columns: 440px 1fr;
                 gap: 40px;
+                align-items: start;
             }
         }
 
-        /* =============================================
-           PLAYER CARD
-        ============================================= */
+        /* ── PLAYER CARD ── */
         .player-card {
-            background: var(--bg-card);
-            border-radius: var(--player-radius);
-            padding: clamp(20px, 5vw, 36px);
+            background: var(--surface-glass);
+            backdrop-filter: blur(32px);
             border: 1px solid var(--border);
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04) inset,
-                0 24px 48px -12px rgba(0,0,0,0.4),
-                0 0 80px -20px var(--glow-primary);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            position: relative;
-            overflow: hidden;
-            height: fit-content;
-            transition: box-shadow 0.5s ease;
-        }
-
-        .player-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255,255,255,0.15) 40%,
-                rgba(255,255,255,0.05) 100%
-            );
-        }
-
-        .player-card::after {
-            content: '';
-            position: absolute;
-            top: -60%;
-            left: -40%;
-            width: 180%;
-            height: 180%;
-            background: radial-gradient(
-                ellipse at 30% 20%,
-                rgba(99, 102, 241, 0.06) 0%,
-                transparent 60%
-            );
-            pointer-events: none;
-            animation: inner-glow 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes inner-glow {
-            from { opacity: 0.5; transform: translate(0, 0); }
-            to   { opacity: 1;   transform: translate(5%, 3%); }
-        }
-
-        /* =============================================
-           ALBUM ART
-        ============================================= */
-        .album-art-container {
-            position: relative;
-            margin-bottom: clamp(20px, 4vw, 28px);
-            z-index: 1;
-        }
-
-        .album-art-wrapper {
-            position: relative;
-            width: fit-content;
-            margin: 0 auto;
-        }
-
-        /* Ring decoration */
-        .album-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            inset: -12px;
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-        .album-ring-2 {
-            inset: -22px;
-            border-color: rgba(168, 85, 247, 0.12);
-        }
-
-        .album-art-wrapper:hover .album-ring,
-        .album-art-wrapper.playing .album-ring {
-            opacity: 1;
+            border-radius: 28px;
+            padding: 36px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 90px;
         }
 
         .album-art {
-            width: clamp(180px, 55vw, 340px);
-            aspect-ratio: 1;
-            background: var(--gradient-primary);
-            border-radius: clamp(20px, 5vw, 28px);
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 22px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(3rem, 12vw, 5.5rem);
-            box-shadow:
-                0 20px 60px -15px rgba(0,0,0,0.5),
-                0 0 40px -10px var(--glow-primary);
             position: relative;
-            overflow: hidden;
-            animation: float 8s ease-in-out infinite;
-            transition: border-radius 0.6s var(--transition-smooth),
-                        box-shadow 0.5s ease;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
-        .album-art::before {
-            content: '';
-            position: absolute;
-            top: -30%; left: -30%;
-            width: 80%; height: 80%;
-            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
-            pointer-events: none;
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .album-art::after {
-            content: '';
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 60%; height: 60%;
-            background: radial-gradient(circle, rgba(0,0,0,0.25) 0%, transparent 70%);
-            pointer-events: none;
+        .album-art.playing img {
+            animation: artPulse 5s ease-in-out infinite alternate;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33%       { transform: translateY(-8px) rotate(0.5deg); }
-            66%       { transform: translateY(-4px) rotate(-0.5deg); }
+        @keyframes artPulse {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            100% {
+                transform: scale(1.06);
+                filter: brightness(1.1);
+            }
         }
 
-        .album-art.playing {
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite, spin 25s linear infinite;
-            box-shadow:
-                0 20px 60px -15px rgba(0,0,0,0.6),
-                0 0 60px -5px var(--glow-primary),
-                0 0 100px -20px var(--glow-accent);
+        .album-art i {
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.06);
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
-        /* Vinyl shine dot */
-        .vinyl-dot {
-            position: absolute;
-            width: 18%;
-            height: 18%;
-            background: radial-gradient(circle, rgba(0,0,0,0.8) 40%, rgba(30,30,30,0.6) 100%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 2;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
-        }
-
-        .album-art.playing .vinyl-dot {
-            opacity: 1;
-        }
-
-        /* Ambient glow under art */
-        .album-glow {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            filter: blur(20px);
-            opacity: 0.3;
-            transition: opacity 0.5s ease;
-        }
-
-        .album-art.playing ~ .album-glow {
-            opacity: 0.55;
-        }
-
-        /* =============================================
-           TRACK INFO
-        ============================================= */
+        /* Track Info */
         .track-info {
             text-align: center;
-            margin-bottom: clamp(20px, 4vw, 28px);
-            z-index: 1;
-            position: relative;
+            margin-bottom: 28px;
         }
 
-        .music-title {
-            font-size: clamp(1rem, 4.5vw, 1.5rem);
-            font-weight: 700;
-            font-family: 'Syne', sans-serif;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-            line-height: 1.25;
-            letter-spacing: -0.02em;
+        .track-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            letter-spacing: -0.01em;
         }
 
-        .music-artist {
-            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 0.01em;
+        .track-artist {
+            font-size: 1rem;
+            color: var(--text-dim);
+            font-weight: 600;
         }
 
-        /* =============================================
-           PROGRESS BAR
-        ============================================= */
-        .player-controls {
-            z-index: 1;
-            position: relative;
-        }
-
-        .progress-section {
-            margin-bottom: clamp(18px, 3.5vw, 24px);
+        /* Progress */
+        .progress-wrap {
+            margin-bottom: 12px;
         }
 
         .progress-bar {
             width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 20px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            position: relative;
-            overflow: visible;
-            transition: height 0.2s ease;
-        }
-
-        .progress-bar:hover {
             height: 7px;
-        }
-
-        #progress {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 20px;
-            transition: width 0.1s linear;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            cursor: pointer;
             position: relative;
-            box-shadow: 0 0 12px var(--glow-primary);
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        #progress::after {
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 12px;
+            width: 0%;
+            position: relative;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 16px rgba(124, 95, 255, 0.5);
+        }
+
+        .progress-fill::after {
             content: '';
             position: absolute;
             right: -7px;
             top: 50%;
-            transform: translateY(-50%) scale(0);
-            width: 15px;
-            height: 15px;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
             background: white;
             border-radius: 50%;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4), 0 0 0 3px var(--glow-primary);
-            transition: transform 0.25s var(--transition-spring);
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.7), 0 2px 6px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .progress-bar:hover #progress::after {
-            transform: translateY(-50%) scale(1);
+        .progress-bar:hover .progress-fill::after {
+            opacity: 1;
         }
 
-        .time-display {
+        .time-row {
             display: flex;
             justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-            font-weight: 500;
-            font-variant-numeric: tabular-nums;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 24px;
             letter-spacing: 0.02em;
         }
 
-        /* =============================================
-           MAIN PLAY BUTTON
-        ============================================= */
-        .big-play-btn {
-            width: clamp(64px, 14vw, 80px);
-            height: clamp(64px, 14vw, 80px);
-            border-radius: 50%;
-            background: var(--gradient-primary);
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .ctrl-btn {
+            background: none;
             border: none;
-            color: white;
-            font-size: clamp(22px, 5vw, 28px);
+            color: var(--text-dim);
             cursor: pointer;
-            transition: all 0.35s var(--transition-spring);
-            box-shadow: 0 8px 28px -4px var(--glow-primary);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto clamp(18px, 3.5vw, 24px);
-            position: relative;
         }
 
-        .big-play-btn::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(99, 102, 241, 0.3);
-            animation: ring-pulse 2.5s ease-out infinite;
-            opacity: 0;
-        }
-
-        @keyframes ring-pulse {
-            0%   { opacity: 0.8; transform: scale(1); }
-            100% { opacity: 0;   transform: scale(1.5); }
-        }
-
-        .big-play-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 36px -4px var(--glow-primary);
-        }
-
-        .big-play-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* =============================================
-           CONTROL BUTTONS
-        ============================================= */
-        .controls-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(8px, 2vw, 14px);
-            margin-bottom: clamp(16px, 3vw, 20px);
-        }
-
-        .control-btn {
-            width: clamp(40px, 9.5vw, 46px);
-            height: clamp(40px, 9.5vw, 46px);
-            border-radius: clamp(10px, 2.5vw, 12px);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            color: var(--text-primary);
-            font-size: clamp(14px, 3.5vw, 16px);
-            cursor: pointer;
-            transition: all 0.3s var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-        }
-
-        .control-btn:hover {
-            background: rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.35);
-            color: var(--primary);
+        .ctrl-btn:hover {
+            color: var(--text);
             transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
         }
 
-        .control-btn:active {
-            transform: translateY(0) scale(0.95);
-        }
-
-        .play-btn {
-            width: clamp(46px, 11vw, 54px);
-            height: clamp(46px, 11vw, 54px);
+        .ctrl-btn.play {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
             border-radius: 50%;
-            background: var(--gradient-primary);
-            border: none;
-            box-shadow: 0 4px 16px var(--glow-primary);
             color: white;
+            font-size: 24px;
+            box-shadow: 0 10px 28px rgba(124, 95, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        .play-btn:hover {
-            transform: scale(1.08) translateY(0);
-            box-shadow: 0 6px 22px var(--glow-primary);
+        .ctrl-btn.play:hover {
+            transform: scale(1.06);
+            box-shadow: 0 14px 36px rgba(124, 95, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* =============================================
-           VOLUME CONTROL
-        ============================================= */
-        .volume-control {
+        .ctrl-btn.skip {
+            font-size: 20px;
+            width: 44px;
+            height: 44px;
+        }
+
+        /* Volume */
+        .volume {
             display: flex;
             align-items: center;
-            gap: clamp(10px, 2.5vw, 14px);
-            padding: clamp(11px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: clamp(12px, 3vw, 14px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            gap: 14px;
         }
 
-        #volumeLabel {
-            color: var(--text-secondary);
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            min-width: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .volume i {
+            color: var(--text-muted);
+            font-size: 15px;
         }
 
-        #volumeSlider {
+        .volume-slider {
             flex: 1;
-            height: 4px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
             outline: none;
+            cursor: pointer;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            cursor: pointer;
-            position: relative;
-        }
-
-        #volumeSlider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: clamp(14px, 3.5vw, 16px);
-            height: clamp(14px, 3.5vw, 16px);
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
             border-radius: 50%;
-            background: white;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-            border: 2px solid rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 10px rgba(124, 95, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
         }
 
-        #volumeSlider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            border-color: var(--primary);
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 14px rgba(124, 95, 255, 0.8);
         }
 
-        #volumeSlider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
             border-radius: 50%;
-            background: white;
+            border: none;
             cursor: pointer;
-            border: 2px solid rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 10px rgba(124, 95, 255, 0.6);
         }
 
-        /* =============================================
-           PLAYLIST CARD
-        ============================================= */
+        /* ── PLAYLIST ── */
         .playlist-card {
-            background: var(--bg-card);
-            border-radius: var(--card-radius);
-            padding: clamp(18px, 4vw, 28px);
+            background: var(--surface-glass);
+            backdrop-filter: blur(32px);
             border: 1px solid var(--border);
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.03) inset,
-                0 24px 48px -12px rgba(0,0,0,0.35);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            height: fit-content;
-            position: relative;
-            overflow: hidden;
+            border-radius: 28px;
+            padding: 36px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            min-height: 680px;
         }
 
-        .playlist-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255,255,255,0.1) 50%,
-                transparent 100%
-            );
-        }
-
-        /* =============================================
-           PLAYLIST HEADER
-        ============================================= */
-        .music-list-header {
+        .playlist-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            margin-bottom: clamp(14px, 2.5vw, 20px);
-            padding-bottom: clamp(12px, 2.5vw, 18px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .music-list-header-left {
+        .playlist-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .music-list-header i {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            color: var(--primary);
-            width: clamp(36px, 7vw, 40px);
-            height: clamp(36px, 7vw, 40px);
-            background: rgba(99, 102, 241, 0.12);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+        .playlist-title i {
+            color: var(--accent-2);
+            font-size: 1.2rem;
         }
 
-        .music-list-header h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1rem, 3vw, 1.35rem);
+        .song-count {
+            padding: 5px 16px;
+            background: rgba(227, 95, 255, 0.08);
+            border: 1px solid rgba(227, 95, 255, 0.2);
+            border-radius: 100px;
+            font-size: 0.78rem;
             font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-            letter-spacing: -0.02em;
+            color: var(--accent-2);
+            letter-spacing: 0.02em;
         }
 
-        .track-count-badge {
-            font-size: clamp(0.7rem, 1.8vw, 0.78rem);
-            font-weight: 600;
-            color: var(--primary);
-            background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-family: 'DM Sans', sans-serif;
-            letter-spacing: 0.01em;
-            white-space: nowrap;
-        }
-
-        /* =============================================
-           MUSIC LIST
-        ============================================= */
-        .music-list {
+        /* Song List */
+        .song-list {
             display: flex;
             flex-direction: column;
-            gap: clamp(7px, 1.5vw, 10px);
-            max-height: clamp(380px, 55vh, 680px);
+            gap: 10px;
+            max-height: 580px;
             overflow-y: auto;
-            padding-right: 4px;
-            scroll-behavior: smooth;
+            padding-right: 10px;
         }
 
-        /* Scrollbar */
-        .music-list::-webkit-scrollbar { width: 4px; }
-        .music-list::-webkit-scrollbar-track { background: transparent; }
-        .music-list::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.08);
+        .song-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .song-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
         }
-        .music-list::-webkit-scrollbar-thumb:hover {
-            background: rgba(99,102,241,0.35);
+
+        .song-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
 
-        /* =============================================
-           MUSIC ITEM
-        ============================================= */
-        .music-item {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 2.5vw, 16px);
-            padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
-            background: rgba(255, 255, 255, 0.025);
-            border-radius: var(--item-radius);
-            border: 1px solid rgba(255, 255, 255, 0.055);
-            cursor: pointer;
-            transition:
-                transform 0.3s var(--transition-spring),
-                background 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Shimmer sweep on hover */
-        .music-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-            transition: left 0.5s ease;
-            pointer-events: none;
-        }
-
-        .music-item:hover::before {
-            left: 140%;
-        }
-
-        .music-item > * { position: relative; z-index: 1; }
-
-        .music-item:hover {
-            transform: translateX(6px) translateY(-1px);
-            background: rgba(99, 102, 241, 0.06);
-            border-color: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-
-        .music-item.active {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            box-shadow:
-                0 8px 24px -4px var(--glow-primary),
-                0 0 0 1px rgba(255,255,255,0.1) inset;
-            transform: translateX(4px);
-        }
-
-        .music-item.active:hover {
-            transform: translateX(4px) scale(1.01);
-        }
-
-        .music-item.active .music-item-title,
-        .music-item.active .music-item-artist,
-        .music-item.active .music-item-duration {
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .music-item.active .music-item-icon {
-            background: rgba(255, 255, 255, 0.18);
-            color: white;
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .music-item.active .music-item-duration {
+        .song-list::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.15);
         }
 
-        /* =============================================
-           MUSIC ITEM ICON
-        ============================================= */
-        .music-item-icon {
-            width: clamp(42px, 9vw, 50px);
-            height: clamp(42px, 9vw, 50px);
-            min-width: clamp(42px, 9vw, 50px);
-            border-radius: clamp(10px, 2.5vw, 13px);
-            background: rgba(99, 102, 241, 0.08);
-            border: 1px solid rgba(99, 102, 241, 0.15);
+        .song-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: clamp(17px, 4vw, 21px);
-            color: var(--primary);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
+            gap: 16px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .music-item.active .music-item-icon {
-            animation: bounce-icon 2s ease-in-out infinite;
+        .song-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
-        @keyframes bounce-icon {
-            0%, 100% { transform: scale(1); }
-            50%       { transform: scale(1.07); }
+        .song-item.active {
+            background: rgba(227, 95, 255, 0.08);
+            border-color: rgba(227, 95, 255, 0.3);
         }
 
-        /* =============================================
-           MUSIC ITEM TEXT
-        ============================================= */
-        .music-item-info {
+        .song-num {
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.85rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .song-item.active .song-num {
+            display: none;
+        }
+
+        .equalizer {
+            display: none;
+            width: 24px;
+            height: 20px;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .song-item.active .equalizer {
+            display: flex;
+        }
+
+        .eq-bar {
+            width: 4px;
+            background: var(--accent-2);
+            border-radius: 3px;
+            animation: eq 1.1s infinite alternate ease-in-out;
+        }
+
+        .eq-bar:nth-child(1) {
+            height: 9px;
+            animation-delay: -0.2s;
+        }
+
+        .eq-bar:nth-child(2) {
+            height: 16px;
+            animation-delay: -0.4s;
+        }
+
+        .eq-bar:nth-child(3) {
+            height: 11px;
+            animation-delay: -0.6s;
+        }
+
+        @keyframes eq {
+            0% {
+                height: 7px;
+            }
+
+            100% {
+                height: 20px;
+            }
+        }
+
+        .song-meta {
             flex: 1;
             min-width: 0;
         }
 
-        .music-item-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 3px;
+        .song-name {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.92rem;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: clamp(0.82rem, 2.2vw, 0.92rem);
-            letter-spacing: -0.01em;
-            font-family: 'DM Sans', sans-serif;
         }
 
-        .music-item-artist {
-            color: var(--text-secondary);
-            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: 400;
+        .song-item.active .song-name {
+            color: var(--accent-2);
         }
 
-        /* =============================================
-           MUSIC ITEM DURATION
-        ============================================= */
-        .music-item-duration {
-            color: var(--text-muted);
-            font-size: clamp(0.68rem, 1.7vw, 0.78rem);
+        .song-author {
+            font-size: 0.8rem;
+            color: var(--text-dim);
             font-weight: 500;
-            padding: 3px clamp(7px, 1.8vw, 10px);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            flex-shrink: 0;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 0.03em;
-            border: 1px solid rgba(255,255,255,0.06);
         }
 
-        /* =============================================
-           PLAYING INDICATOR (active equalizer bars)
-        ============================================= */
-        .eq-bars {
-            display: none;
-            align-items: flex-end;
-            gap: 2px;
-            height: 16px;
-            margin-left: 4px;
+        .song-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 700;
         }
 
-        .music-item.active .eq-bars { display: flex; }
-
-        .eq-bar {
-            width: 3px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 2px;
-            animation: eq-bounce 1s ease-in-out infinite;
-        }
-
-        .eq-bar:nth-child(1) { height: 40%; animation-delay: 0s;    animation-duration: 0.9s; }
-        .eq-bar:nth-child(2) { height: 80%; animation-delay: 0.15s; animation-duration: 0.7s; }
-        .eq-bar:nth-child(3) { height: 55%; animation-delay: 0.3s;  animation-duration: 1.0s; }
-        .eq-bar:nth-child(4) { height: 70%; animation-delay: 0.1s;  animation-duration: 0.8s; }
-
-        @keyframes eq-bounce {
-            0%, 100% { transform: scaleY(0.4); }
-            50%       { transform: scaleY(1);   }
-        }
-
-        /* =============================================
-           AUDIO ELEMENT
-        ============================================= */
-        audio { display: none; }
-
-        /* =============================================
-           FOOTER
-        ============================================= */
-        #footer-container {
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* =============================================
-           RESPONSIVE: MOBILE
-        ============================================= */
-        @media (max-width: 767px) {
-            .music-player-section { grid-template-columns: 1fr; }
-
+        /* Responsive */
+        @media (max-width: 920px) {
             .player-card {
-                padding: 20px;
+                position: relative;
+                top: 0;
             }
-
-            .album-art {
-                width: clamp(160px, 65vw, 280px);
-            }
-
-            .music-list { max-height: 45vh; }
-
-            .controls-wrapper { gap: 8px; }
         }
 
-        /* =============================================
-           RESPONSIVE: SMALL MOBILE
-        ============================================= */
+        @media (max-width: 768px) {
+            .page {
+                padding: 90px 20px 60px;
+            }
+
+            .nav {
+                padding: 0 16px;
+            }
+        }
+
         @media (max-width: 480px) {
-            .music-item-duration { display: none; }
-            .fitur-header h1 i   { display: none; }
-            .track-count-badge   { display: none; }
-        }
+            .page-title {
+                font-size: 1.8rem;
+            }
 
-        /* =============================================
-           RESPONSIVE: LANDSCAPE MOBILE
-        ============================================= */
-        @media (max-height: 520px) and (orientation: landscape) {
-            .music-player-section { grid-template-columns: 1fr 1fr; }
-
-            .album-art { width: 200px; }
-
-            .music-list { max-height: 260px; }
-
-            .big-play-btn { width: 56px; height: 56px; font-size: 20px; }
-
-            .album-art.playing {
-                animation: spin 25s linear infinite;
+            .player-card,
+            .playlist-card {
+                padding: 24px;
             }
         }
-
-        /* =============================================
-           RESPONSIVE: LARGE SCREENS
-        ============================================= */
-        @media (min-width: 1600px) {
-            .fitur-container { padding: 24px 48px; }
-        }
-
-        /* =============================================
-           UTILITY
-        ============================================= */
-        .loading { opacity: 0.5; pointer-events: none; }
     </style>
-    <script src="../../admin/maintenance-check.js"></script>
+    <script src="../../music-data.js"></script>
+    <script src="spotify-client.js"></script>
+    <script src="music.js" defer></script>
 </head>
 
-<body class="fitur-body">
-    <!-- Ambient Orbs -->
-    <div class="ambient-orb ambient-orb-1"></div>
-    <div class="ambient-orb ambient-orb-2"></div>
-    <div class="ambient-orb ambient-orb-3"></div>
+<body>
 
-    <div class="bg-glow">
-        <div class="glow-1"></div>
-        <div class="glow-2"></div>
+    <!-- BG -->
+    <div class="scene-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
     </div>
 
-    <div class="fitur-container">
-        <!-- Header -->
-        <div class="fitur-header">
-            <div class="header-left">
-                <a href="../../index.html" class="home-btn" title="Kembali ke Beranda">
-                    <i class="fas fa-home"></i>
-                </a>
-            </div>
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-brand">
+            <div class="nav-mark">⚡</div>
+            FX<span style="color:var(--accent-2)">Community</span>
+        </a>
+        <button class="menu-btn mobile-only" id="mobileNavBtn" onclick="toggleSidebar()" style="margin-left: auto; margin-right: 10px;">
+            <i class="fas fa-bars" id="mobileNavIcon"></i>
+        </button>
+        <a href="../../index.html" class="admin-login-btn desktop-only" title="Beranda">
+            <i class="fas fa-home"></i>
+        </a>
+    </nav>
 
-            <div class="header-center">
-                <h1>
-                    <i class="fas fa-music"></i>
-                    Musik Focus
-                </h1>
-            </div>
-
-            <div class="header-right">
-                <div class="admin-profile-container" id="adminProfile" style="display: none;">
-                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
-                        <i class="fas fa-user-shield"></i>
-                    </button>
-                    <div id="adminDropdown" class="admin-dropdown">
-                        <div class="dropdown-header">
-                            <div class="admin-avatar">
-                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-                            </div>
-                            <div class="admin-info">
-                                <span id="adminNameDisplayHeader">Admin</span>
-                                <small>Administrator</small>
-                            </div>
-                        </div>
-                        <div class="dropdown-menu">
-                            <a href="../../admin/panel.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Dashboard
-                            </a>
-                            <a href="../../admin/settings.html" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <button onclick="adminLogout()" class="dropdown-item logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Keluar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <p>Akses cepat ke fitur</p>
         </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="window.location.href='../../index.html'">
+                <i class="fas fa-home"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="sidebar-item active" onclick="window.location.href='music.html'">
+                <i class="fas fa-music"></i>
+                <span>Musik</span>
+            </div>
+            <div class="sidebar-item" onclick="window.location.href='../favorit/index.html'">
+                <i class="fas fa-heart"></i>
+                <span>Favorit</span>
+            </div>
 
-        <!-- Music Player Section -->
-        <div class="music-player-section">
-
-            <!-- Player Card -->
-            <div class="player-card">
-
-                <!-- Album Art -->
-                <div class="album-art-container">
-                    <div class="album-art-wrapper" id="albumArtWrapper">
-                        <div class="album-ring"></div>
-                        <div class="album-ring album-ring-2"></div>
-                        <div class="album-art" id="albumArt">
-                            🎵
-                            <div class="vinyl-dot"></div>
-                        </div>
-                        <div class="album-glow"></div>
+            <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+            
+            <div class="mobile-nav-dropdown">
+                <button class="mobile-nav-dropdown-trigger" onclick="toggleMobileDropdown(event)" style="padding: 14px 24px;">
+                    <span><i class="fas fa-th-large"></i> Fitur</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </button>
+                <div class="mobile-nav-dropdown-content">
+                    <div class="sidebar-item" onclick="window.location.href='../../gempa-bmkg/index.html'">
+                        <i class="fas fa-bullseye"></i>
+                        <span>Gempabumi</span>
                     </div>
-                </div>
-
-                <!-- Track Info -->
-                <div class="track-info">
-                    <div class="music-title" id="nowPlayingTitle">Pilih Lagu</div>
-                    <div class="music-artist" id="nowPlayingArtist">FX Community Playlist</div>
-                </div>
-
-                <!-- Player Controls -->
-                <div class="player-controls">
-
-                    <!-- Big Play Button -->
-                    <button class="big-play-btn" id="mainPlayBtn" aria-label="Play/Pause">
-                        <i class="fas fa-play"></i>
-                    </button>
-
-                    <!-- Progress -->
-                    <div class="progress-section">
-                        <div class="progress-bar" id="progressBar">
-                            <div id="progress"></div>
-                        </div>
-                        <div class="time-display">
-                            <span id="currentTime">0:00</span>
-                            <span id="duration">0:00</span>
-                        </div>
+                    <div class="sidebar-item" onclick="window.location.href='../about.html'">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tentang</span>
                     </div>
-
-                    <!-- Control Buttons -->
-                    <div class="controls-wrapper">
-                        <button class="control-btn" id="prevBtn" title="Previous">
-                            <i class="fas fa-step-backward"></i>
-                        </button>
-                        <button class="control-btn play-btn" id="playPauseBtn" title="Play/Pause">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="control-btn" id="nextBtn" title="Next">
-                            <i class="fas fa-step-forward"></i>
-                        </button>
+                    <div class="sidebar-item" onclick="window.location.href='../faq.html'">
+                        <i class="fas fa-question-circle"></i>
+                        <span>FAQ</span>
                     </div>
-
-                    <!-- Volume Control -->
-                    <div class="volume-control">
-                        <label id="volumeLabel"><i class="fas fa-volume-up"></i></label>
-                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" />
-                    </div>
-
-                    <!-- Audio Element -->
-                    <audio id="audioPlayer"></audio>
                 </div>
             </div>
 
-            <!-- Playlist Card -->
-            <div class="playlist-card">
-                <div class="music-list-header">
-                    <div class="music-list-header-left">
-                        <i class="fas fa-list-ul"></i>
-                        <h3>Daftar Putar</h3>
-                    </div>
-                    <span class="track-count-badge" id="trackCountBadge">0 lagu</span>
-                </div>
-                <div class="music-list" id="musicList">
-                    <!-- Music items will be inserted here by JavaScript -->
-                </div>
-            </div>
+            <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+            <div style="padding: 10px 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em;">Bantuan</div>
 
+            <div class="sidebar-item" onclick="window.open('https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', '_blank')">
+                <i class="fab fa-whatsapp"></i>
+                <span>FX Community</span>
+            </div>
+            <div class="sidebar-item" onclick="window.open('https://wa.me/62895404147521', '_blank')">
+                <i class="fas fa-headset"></i>
+                <span>Admin Support</span>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div id="footer-container"></div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Scripts -->
-    <script src="../../music-data.js"></script>
-    <script src="music.js"></script>
+    <script src="../../script.js"></script>
     <script>
-        /* =============================================
-           ADMIN PROFILE LOGIC
-        ============================================= */
-        function checkAdminSession() {
-            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
-            const profileEl = document.getElementById('adminProfile');
-            if (isAdmin && profileEl) {
-                profileEl.style.display = 'block';
-                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
-                document.getElementById('adminNameDisplayHeader').textContent = adminName;
-            }
-        }
-
-        function toggleAdminDropdown() {
-            const dropdown = document.getElementById('adminDropdown');
-            dropdown.classList.toggle('active');
-            document.addEventListener('click', function closeDropdown(e) {
-                if (!e.target.closest('.admin-profile-container')) {
-                    dropdown.classList.remove('active');
-                    document.removeEventListener('click', closeDropdown);
-                }
-            });
-        }
-
-        function adminLogout() {
-            if (confirm('Yakin ingin keluar dari sesi admin?')) {
-                sessionStorage.removeItem('fx_isAdmin');
-                window.location.reload();
-            }
-        }
-
-        /* =============================================
-           FOOTER LOAD
-        ============================================= */
-        fetch('../../footer/music.html')
-            .then(r => r.text())
-            .then(html => { document.getElementById('footer-container').innerHTML = html; })
-            .catch(err => console.log('Footer load error:', err));
-
-        /* =============================================
-           DOM READY
-        ============================================= */
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAdminSession();
-
-            /* Track count badge */
-            const musicListEl = document.getElementById('musicList');
-            const badge = document.getElementById('trackCountBadge');
-            const observer = new MutationObserver(() => {
-                const count = musicListEl.querySelectorAll('.music-item').length;
-                badge.textContent = count + ' lagu';
-            });
-            observer.observe(musicListEl, { childList: true, subtree: false });
-        });
-
-        /* =============================================
-           ALBUM ART ANIMATION
-        ============================================= */
-        const audio      = document.getElementById('audioPlayer');
-        const albumArt   = document.getElementById('albumArt');
-        const artWrapper = document.getElementById('albumArtWrapper');
-
-        audio.addEventListener('play', () => {
-            albumArt.classList.add('playing');
-            artWrapper.classList.add('playing');
-        });
-
-        audio.addEventListener('pause', () => {
-            albumArt.classList.remove('playing');
-            artWrapper.classList.remove('playing');
-        });
-
-        /* =============================================
-           VOLUME ICON UPDATE
-        ============================================= */
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeLabel  = document.getElementById('volumeLabel');
-
-        volumeSlider.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            if (v === 0) {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            } else if (v < 0.5) {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-down"></i>';
-            } else {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-up"></i>';
-            }
-        });
-
-        /* =============================================
-           INJECT EQ BARS INTO ACTIVE ITEM
-           (Observer watches for class changes on .music-item)
-        ============================================= */
-        function addEqBars(item) {
-            if (!item.querySelector('.eq-bars')) {
-                const eq = document.createElement('div');
-                eq.className = 'eq-bars';
-                eq.innerHTML = '<span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>';
-                const info = item.querySelector('.music-item-info');
-                if (info) info.appendChild(eq);
-            }
-        }
-
-        const listEl = document.getElementById('musicList');
-        const itemObserver = new MutationObserver((mutations) => {
-            mutations.forEach(m => {
-                m.addedNodes.forEach(node => {
-                    if (node.classList && node.classList.contains('music-item')) {
-                        addEqBars(node);
-                    }
-                });
-                if (m.type === 'attributes' && m.attributeName === 'class') {
-                    if (m.target.classList.contains('music-item')) {
-                        addEqBars(m.target);
-                    }
-                }
-            });
-        });
-
-        itemObserver.observe(listEl, {
-            childList: true,
-            attributes: true,
-            attributeFilter: ['class'],
-            subtree: true
-        });
+        // Spotify Client Logic (moved to separate file or kept here)
+        // music.js handles the player logic.
     </script>
-</body>
 
-</html><!DOCTYPE html>
-<html lang="id">
+    <!-- PAGE -->
+    <div class="page">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Musik - FX Community</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        /* =============================================
-           RESET & ROOT VARIABLES
-        ============================================= */
-        :root {
-            --player-radius: 28px;
-            --card-radius: 24px;
-            --item-radius: 16px;
-            --glow-primary: rgba(99, 102, 241, 0.35);
-            --glow-accent: rgba(168, 85, 247, 0.25);
-            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        /* =============================================
-           AMBIENT BACKGROUND
-        ============================================= */
-        .ambient-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-            will-change: transform;
-        }
-        .ambient-orb-1 {
-            width: clamp(200px, 40vw, 500px);
-            height: clamp(200px, 40vw, 500px);
-            background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
-            top: -10%;
-            left: -5%;
-            animation: drift-1 18s ease-in-out infinite alternate;
-        }
-        .ambient-orb-2 {
-            width: clamp(150px, 30vw, 400px);
-            height: clamp(150px, 30vw, 400px);
-            background: radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%);
-            bottom: 10%;
-            right: -5%;
-            animation: drift-2 22s ease-in-out infinite alternate;
-        }
-        .ambient-orb-3 {
-            width: clamp(100px, 20vw, 300px);
-            height: clamp(100px, 20vw, 300px);
-            background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
-            top: 50%;
-            left: 40%;
-            animation: drift-3 15s ease-in-out infinite alternate;
-        }
-        @keyframes drift-1 {
-            from { transform: translate(0, 0) scale(1); }
-            to   { transform: translate(5%, 8%) scale(1.1); }
-        }
-        @keyframes drift-2 {
-            from { transform: translate(0, 0) scale(1.05); }
-            to   { transform: translate(-6%, -5%) scale(0.95); }
-        }
-        @keyframes drift-3 {
-            from { transform: translate(0, 0); }
-            to   { transform: translate(-8%, 6%); }
-        }
-
-        /* =============================================
-           LAYOUT CONTAINER
-        ============================================= */
-        .fitur-container {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* =============================================
-           HEADER
-        ============================================= */
-        .fitur-header {
-            font-family: 'Syne', sans-serif;
-        }
-        .fitur-header h1 {
-            font-weight: 800;
-            letter-spacing: -0.03em;
-        }
-        .fitur-header h1 i {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* =============================================
-           MAIN GRID
-        ============================================= */
-        .music-player-section {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: clamp(16px, 3vw, 28px);
-            align-items: start;
-        }
-
-        @media (min-width: 900px) {
-            .music-player-section {
-                grid-template-columns: minmax(320px, 400px) 1fr;
-            }
-        }
-        @media (min-width: 1200px) {
-            .music-player-section {
-                grid-template-columns: 420px 1fr;
-                gap: 32px;
-            }
-        }
-        @media (min-width: 1440px) {
-            .music-player-section {
-                grid-template-columns: 460px 1fr;
-                gap: 40px;
-            }
-        }
-
-        /* =============================================
-           PLAYER CARD
-        ============================================= */
-        .player-card {
-            background: var(--bg-card);
-            border-radius: var(--player-radius);
-            padding: clamp(20px, 5vw, 36px);
-            border: 1px solid var(--border);
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04) inset,
-                0 24px 48px -12px rgba(0,0,0,0.4),
-                0 0 80px -20px var(--glow-primary);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            position: relative;
-            overflow: hidden;
-            height: fit-content;
-            transition: box-shadow 0.5s ease;
-        }
-
-        .player-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255,255,255,0.15) 40%,
-                rgba(255,255,255,0.05) 100%
-            );
-        }
-
-        .player-card::after {
-            content: '';
-            position: absolute;
-            top: -60%;
-            left: -40%;
-            width: 180%;
-            height: 180%;
-            background: radial-gradient(
-                ellipse at 30% 20%,
-                rgba(99, 102, 241, 0.06) 0%,
-                transparent 60%
-            );
-            pointer-events: none;
-            animation: inner-glow 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes inner-glow {
-            from { opacity: 0.5; transform: translate(0, 0); }
-            to   { opacity: 1;   transform: translate(5%, 3%); }
-        }
-
-        /* =============================================
-           ALBUM ART
-        ============================================= */
-        .album-art-container {
-            position: relative;
-            margin-bottom: clamp(20px, 4vw, 28px);
-            z-index: 1;
-        }
-
-        .album-art-wrapper {
-            position: relative;
-            width: fit-content;
-            margin: 0 auto;
-        }
-
-        /* Ring decoration */
-        .album-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            inset: -12px;
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-        .album-ring-2 {
-            inset: -22px;
-            border-color: rgba(168, 85, 247, 0.12);
-        }
-
-        .album-art-wrapper:hover .album-ring,
-        .album-art-wrapper.playing .album-ring {
-            opacity: 1;
-        }
-
-        .album-art {
-            width: clamp(180px, 55vw, 340px);
-            aspect-ratio: 1;
-            background: var(--gradient-primary);
-            border-radius: clamp(20px, 5vw, 28px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(3rem, 12vw, 5.5rem);
-            box-shadow:
-                0 20px 60px -15px rgba(0,0,0,0.5),
-                0 0 40px -10px var(--glow-primary);
-            position: relative;
-            overflow: hidden;
-            animation: float 8s ease-in-out infinite;
-            transition: border-radius 0.6s var(--transition-smooth),
-                        box-shadow 0.5s ease;
-        }
-
-        .album-art::before {
-            content: '';
-            position: absolute;
-            top: -30%; left: -30%;
-            width: 80%; height: 80%;
-            background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .album-art::after {
-            content: '';
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 60%; height: 60%;
-            background: radial-gradient(circle, rgba(0,0,0,0.25) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33%       { transform: translateY(-8px) rotate(0.5deg); }
-            66%       { transform: translateY(-4px) rotate(-0.5deg); }
-        }
-
-        .album-art.playing {
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite, spin 25s linear infinite;
-            box-shadow:
-                0 20px 60px -15px rgba(0,0,0,0.6),
-                0 0 60px -5px var(--glow-primary),
-                0 0 100px -20px var(--glow-accent);
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
-        /* Vinyl shine dot */
-        .vinyl-dot {
-            position: absolute;
-            width: 18%;
-            height: 18%;
-            background: radial-gradient(circle, rgba(0,0,0,0.8) 40%, rgba(30,30,30,0.6) 100%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 2;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
-        }
-
-        .album-art.playing .vinyl-dot {
-            opacity: 1;
-        }
-
-        /* Ambient glow under art */
-        .album-glow {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            filter: blur(20px);
-            opacity: 0.3;
-            transition: opacity 0.5s ease;
-        }
-
-        .album-art.playing ~ .album-glow {
-            opacity: 0.55;
-        }
-
-        /* =============================================
-           TRACK INFO
-        ============================================= */
-        .track-info {
-            text-align: center;
-            margin-bottom: clamp(20px, 4vw, 28px);
-            z-index: 1;
-            position: relative;
-        }
-
-        .music-title {
-            font-size: clamp(1rem, 4.5vw, 1.5rem);
-            font-weight: 700;
-            font-family: 'Syne', sans-serif;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-            line-height: 1.25;
-            letter-spacing: -0.02em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .music-artist {
-            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 0.01em;
-        }
-
-        /* =============================================
-           PROGRESS BAR
-        ============================================= */
-        .player-controls {
-            z-index: 1;
-            position: relative;
-        }
-
-        .progress-section {
-            margin-bottom: clamp(18px, 3.5vw, 24px);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 20px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            position: relative;
-            overflow: visible;
-            transition: height 0.2s ease;
-        }
-
-        .progress-bar:hover {
-            height: 7px;
-        }
-
-        #progress {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 20px;
-            transition: width 0.1s linear;
-            position: relative;
-            box-shadow: 0 0 12px var(--glow-primary);
-        }
-
-        #progress::after {
-            content: '';
-            position: absolute;
-            right: -7px;
-            top: 50%;
-            transform: translateY(-50%) scale(0);
-            width: 15px;
-            height: 15px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4), 0 0 0 3px var(--glow-primary);
-            transition: transform 0.25s var(--transition-spring);
-        }
-
-        .progress-bar:hover #progress::after {
-            transform: translateY(-50%) scale(1);
-        }
-
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-            font-weight: 500;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 0.02em;
-        }
-
-        /* =============================================
-           MAIN PLAY BUTTON
-        ============================================= */
-        .big-play-btn {
-            width: clamp(64px, 14vw, 80px);
-            height: clamp(64px, 14vw, 80px);
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            border: none;
-            color: white;
-            font-size: clamp(22px, 5vw, 28px);
-            cursor: pointer;
-            transition: all 0.35s var(--transition-spring);
-            box-shadow: 0 8px 28px -4px var(--glow-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto clamp(18px, 3.5vw, 24px);
-            position: relative;
-        }
-
-        .big-play-btn::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(99, 102, 241, 0.3);
-            animation: ring-pulse 2.5s ease-out infinite;
-            opacity: 0;
-        }
-
-        @keyframes ring-pulse {
-            0%   { opacity: 0.8; transform: scale(1); }
-            100% { opacity: 0;   transform: scale(1.5); }
-        }
-
-        .big-play-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 36px -4px var(--glow-primary);
-        }
-
-        .big-play-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* =============================================
-           CONTROL BUTTONS
-        ============================================= */
-        .controls-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(8px, 2vw, 14px);
-            margin-bottom: clamp(16px, 3vw, 20px);
-        }
-
-        .control-btn {
-            width: clamp(40px, 9.5vw, 46px);
-            height: clamp(40px, 9.5vw, 46px);
-            border-radius: clamp(10px, 2.5vw, 12px);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            color: var(--text-primary);
-            font-size: clamp(14px, 3.5vw, 16px);
-            cursor: pointer;
-            transition: all 0.3s var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-        }
-
-        .control-btn:hover {
-            background: rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.35);
-            color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
-        }
-
-        .control-btn:active {
-            transform: translateY(0) scale(0.95);
-        }
-
-        .play-btn {
-            width: clamp(46px, 11vw, 54px);
-            height: clamp(46px, 11vw, 54px);
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            border: none;
-            box-shadow: 0 4px 16px var(--glow-primary);
-            color: white;
-        }
-
-        .play-btn:hover {
-            transform: scale(1.08) translateY(0);
-            box-shadow: 0 6px 22px var(--glow-primary);
-        }
-
-        /* =============================================
-           VOLUME CONTROL
-        ============================================= */
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 2.5vw, 14px);
-            padding: clamp(11px, 2.5vw, 14px) clamp(14px, 3vw, 18px);
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: clamp(12px, 3vw, 14px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        #volumeLabel {
-            color: var(--text-secondary);
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            min-width: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #volumeSlider {
-            flex: 1;
-            height: 4px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            outline: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-            position: relative;
-        }
-
-        #volumeSlider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: clamp(14px, 3.5vw, 16px);
-            height: clamp(14px, 3.5vw, 16px);
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-            border: 2px solid rgba(99, 102, 241, 0.6);
-        }
-
-        #volumeSlider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            border-color: var(--primary);
-        }
-
-        #volumeSlider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            border: 2px solid rgba(99, 102, 241, 0.6);
-        }
-
-        /* =============================================
-           PLAYLIST CARD
-        ============================================= */
-        .playlist-card {
-            background: var(--bg-card);
-            border-radius: var(--card-radius);
-            padding: clamp(18px, 4vw, 28px);
-            border: 1px solid var(--border);
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.03) inset,
-                0 24px 48px -12px rgba(0,0,0,0.35);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            height: fit-content;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .playlist-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255,255,255,0.1) 50%,
-                transparent 100%
-            );
-        }
-
-        /* =============================================
-           PLAYLIST HEADER
-        ============================================= */
-        .music-list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: clamp(14px, 2.5vw, 20px);
-            padding-bottom: clamp(12px, 2.5vw, 18px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .music-list-header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .music-list-header i {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            color: var(--primary);
-            width: clamp(36px, 7vw, 40px);
-            height: clamp(36px, 7vw, 40px);
-            background: rgba(99, 102, 241, 0.12);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .music-list-header h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1rem, 3vw, 1.35rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-            letter-spacing: -0.02em;
-        }
-
-        .track-count-badge {
-            font-size: clamp(0.7rem, 1.8vw, 0.78rem);
-            font-weight: 600;
-            color: var(--primary);
-            background: rgba(99, 102, 241, 0.12);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-family: 'DM Sans', sans-serif;
-            letter-spacing: 0.01em;
-            white-space: nowrap;
-        }
-
-        /* =============================================
-           MUSIC LIST
-        ============================================= */
-        .music-list {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(7px, 1.5vw, 10px);
-            max-height: clamp(380px, 55vh, 680px);
-            overflow-y: auto;
-            padding-right: 4px;
-            scroll-behavior: smooth;
-        }
-
-        /* Scrollbar */
-        .music-list::-webkit-scrollbar { width: 4px; }
-        .music-list::-webkit-scrollbar-track { background: transparent; }
-        .music-list::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.08);
-            border-radius: 10px;
-        }
-        .music-list::-webkit-scrollbar-thumb:hover {
-            background: rgba(99,102,241,0.35);
-        }
-
-        /* =============================================
-           MUSIC ITEM
-        ============================================= */
-        .music-item {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 2.5vw, 16px);
-            padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
-            background: rgba(255, 255, 255, 0.025);
-            border-radius: var(--item-radius);
-            border: 1px solid rgba(255, 255, 255, 0.055);
-            cursor: pointer;
-            transition:
-                transform 0.3s var(--transition-spring),
-                background 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Shimmer sweep on hover */
-        .music-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-            transition: left 0.5s ease;
-            pointer-events: none;
-        }
-
-        .music-item:hover::before {
-            left: 140%;
-        }
-
-        .music-item > * { position: relative; z-index: 1; }
-
-        .music-item:hover {
-            transform: translateX(6px) translateY(-1px);
-            background: rgba(99, 102, 241, 0.06);
-            border-color: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-
-        .music-item.active {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            box-shadow:
-                0 8px 24px -4px var(--glow-primary),
-                0 0 0 1px rgba(255,255,255,0.1) inset;
-            transform: translateX(4px);
-        }
-
-        .music-item.active:hover {
-            transform: translateX(4px) scale(1.01);
-        }
-
-        .music-item.active .music-item-title,
-        .music-item.active .music-item-artist,
-        .music-item.active .music-item-duration {
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .music-item.active .music-item-icon {
-            background: rgba(255, 255, 255, 0.18);
-            color: white;
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .music-item.active .music-item-duration {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* =============================================
-           MUSIC ITEM ICON
-        ============================================= */
-        .music-item-icon {
-            width: clamp(42px, 9vw, 50px);
-            height: clamp(42px, 9vw, 50px);
-            min-width: clamp(42px, 9vw, 50px);
-            border-radius: clamp(10px, 2.5vw, 13px);
-            background: rgba(99, 102, 241, 0.08);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(17px, 4vw, 21px);
-            color: var(--primary);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .music-item.active .music-item-icon {
-            animation: bounce-icon 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce-icon {
-            0%, 100% { transform: scale(1); }
-            50%       { transform: scale(1.07); }
-        }
-
-        /* =============================================
-           MUSIC ITEM TEXT
-        ============================================= */
-        .music-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .music-item-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: clamp(0.82rem, 2.2vw, 0.92rem);
-            letter-spacing: -0.01em;
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        .music-item-artist {
-            color: var(--text-secondary);
-            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: 400;
-        }
-
-        /* =============================================
-           MUSIC ITEM DURATION
-        ============================================= */
-        .music-item-duration {
-            color: var(--text-muted);
-            font-size: clamp(0.68rem, 1.7vw, 0.78rem);
-            font-weight: 500;
-            padding: 3px clamp(7px, 1.8vw, 10px);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            flex-shrink: 0;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 0.03em;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-
-        /* =============================================
-           PLAYING INDICATOR (active equalizer bars)
-        ============================================= */
-        .eq-bars {
-            display: none;
-            align-items: flex-end;
-            gap: 2px;
-            height: 16px;
-            margin-left: 4px;
-        }
-
-        .music-item.active .eq-bars { display: flex; }
-
-        .eq-bar {
-            width: 3px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 2px;
-            animation: eq-bounce 1s ease-in-out infinite;
-        }
-
-        .eq-bar:nth-child(1) { height: 40%; animation-delay: 0s;    animation-duration: 0.9s; }
-        .eq-bar:nth-child(2) { height: 80%; animation-delay: 0.15s; animation-duration: 0.7s; }
-        .eq-bar:nth-child(3) { height: 55%; animation-delay: 0.3s;  animation-duration: 1.0s; }
-        .eq-bar:nth-child(4) { height: 70%; animation-delay: 0.1s;  animation-duration: 0.8s; }
-
-        @keyframes eq-bounce {
-            0%, 100% { transform: scaleY(0.4); }
-            50%       { transform: scaleY(1);   }
-        }
-
-        /* =============================================
-           AUDIO ELEMENT
-        ============================================= */
-        audio { display: none; }
-
-        /* =============================================
-           FOOTER
-        ============================================= */
-        #footer-container {
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* =============================================
-           RESPONSIVE: MOBILE
-        ============================================= */
-        @media (max-width: 767px) {
-            .music-player-section { grid-template-columns: 1fr; }
-
-            .player-card {
-                padding: 20px;
-            }
-
-            .album-art {
-                width: clamp(160px, 65vw, 280px);
-            }
-
-            .music-list { max-height: 45vh; }
-
-            .controls-wrapper { gap: 8px; }
-        }
-
-        /* =============================================
-           RESPONSIVE: SMALL MOBILE
-        ============================================= */
-        @media (max-width: 480px) {
-            .music-item-duration { display: none; }
-            .fitur-header h1 i   { display: none; }
-            .track-count-badge   { display: none; }
-        }
-
-        /* =============================================
-           RESPONSIVE: LANDSCAPE MOBILE
-        ============================================= */
-        @media (max-height: 520px) and (orientation: landscape) {
-            .music-player-section { grid-template-columns: 1fr 1fr; }
-
-            .album-art { width: 200px; }
-
-            .music-list { max-height: 260px; }
-
-            .big-play-btn { width: 56px; height: 56px; font-size: 20px; }
-
-            .album-art.playing {
-                animation: spin 25s linear infinite;
-            }
-        }
-
-        /* =============================================
-           RESPONSIVE: LARGE SCREENS
-        ============================================= */
-        @media (min-width: 1600px) {
-            .fitur-container { padding: 24px 48px; }
-        }
-
-        /* =============================================
-           UTILITY
-        ============================================= */
-        .loading { opacity: 0.5; pointer-events: none; }
-    </style>
-    <script src="../../admin/maintenance-check.js"></script>
-</head>
-
-<body class="fitur-body">
-    <!-- Ambient Orbs -->
-    <div class="ambient-orb ambient-orb-1"></div>
-    <div class="ambient-orb ambient-orb-2"></div>
-    <div class="ambient-orb ambient-orb-3"></div>
-
-    <div class="bg-glow">
-        <div class="glow-1"></div>
-        <div class="glow-2"></div>
-    </div>
-
-    <div class="fitur-container">
         <!-- Header -->
-        <div class="fitur-header">
-            <div class="header-left">
-                <a href="../../index.html" class="home-btn" title="Kembali ke Beranda">
-                    <i class="fas fa-home"></i>
-                </a>
+        <header class="page-header">
+            <div class="page-badge">
+                <i class="fas fa-music"></i>
+                Music Player
             </div>
+            <h1 class="page-title">Koleksi Musik</h1>
+            <p class="page-subtitle">Dengarkan musik pilihan untuk menemani sesi trading Anda</p>
+        </header>
 
-            <div class="header-center">
-                <h1>
-                    <i class="fas fa-music"></i>
-                    Musik Focus
-                </h1>
-            </div>
-
-            <div class="header-right">
-                <div class="admin-profile-container" id="adminProfile" style="display: none;">
-                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
-                        <i class="fas fa-user-shield"></i>
-                    </button>
-                    <div id="adminDropdown" class="admin-dropdown">
-                        <div class="dropdown-header">
-                            <div class="admin-avatar">
-                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-                            </div>
-                            <div class="admin-info">
-                                <span id="adminNameDisplayHeader">Admin</span>
-                                <small>Administrator</small>
-                            </div>
-                        </div>
-                        <div class="dropdown-menu">
-                            <a href="../../admin/panel.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Dashboard
-                            </a>
-                            <a href="../../admin/settings.html" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <button onclick="adminLogout()" class="dropdown-item logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Keluar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Music Player Section -->
-        <div class="music-player-section">
+        <!-- Music Grid -->
+        <div class="music-grid">
 
             <!-- Player Card -->
             <div class="player-card">
-
-                <!-- Album Art -->
-                <div class="album-art-container">
-                    <div class="album-art-wrapper" id="albumArtWrapper">
-                        <div class="album-ring"></div>
-                        <div class="album-ring album-ring-2"></div>
-                        <div class="album-art" id="albumArt">
-                            🎵
-                            <div class="vinyl-dot"></div>
-                        </div>
-                        <div class="album-glow"></div>
-                    </div>
+                <div class="album-art" id="albumArtDisplay">
+                    <i class="fas fa-music"></i>
                 </div>
 
-                <!-- Track Info -->
                 <div class="track-info">
-                    <div class="music-title" id="nowPlayingTitle">Pilih Lagu</div>
-                    <div class="music-artist" id="nowPlayingArtist">FX Community Playlist</div>
+                    <div class="track-title" id="nowPlayingTitle">Pilih Musik</div>
+                    <div class="track-artist" id="nowPlayingArtist">FX Community</div>
                 </div>
 
-                <!-- Player Controls -->
-                <div class="player-controls">
-
-                    <!-- Big Play Button -->
-                    <button class="big-play-btn" id="mainPlayBtn" aria-label="Play/Pause">
-                        <i class="fas fa-play"></i>
-                    </button>
-
-                    <!-- Progress -->
-                    <div class="progress-section">
-                        <div class="progress-bar" id="progressBar">
-                            <div id="progress"></div>
-                        </div>
-                        <div class="time-display">
-                            <span id="currentTime">0:00</span>
-                            <span id="duration">0:00</span>
-                        </div>
+                <div class="progress-wrap">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
                     </div>
-
-                    <!-- Control Buttons -->
-                    <div class="controls-wrapper">
-                        <button class="control-btn" id="prevBtn" title="Previous">
-                            <i class="fas fa-step-backward"></i>
-                        </button>
-                        <button class="control-btn play-btn" id="playPauseBtn" title="Play/Pause">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="control-btn" id="nextBtn" title="Next">
-                            <i class="fas fa-step-forward"></i>
-                        </button>
+                    <div class="time-row">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
                     </div>
-
-                    <!-- Volume Control -->
-                    <div class="volume-control">
-                        <label id="volumeLabel"><i class="fas fa-volume-up"></i></label>
-                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" />
-                    </div>
-
-                    <!-- Audio Element -->
-                    <audio id="audioPlayer"></audio>
                 </div>
+
+                <div class="controls">
+                    <button class="ctrl-btn skip" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+                    <button class="ctrl-btn play" id="playPauseBtn"><i class="fas fa-play"></i></button>
+                    <button class="ctrl-btn skip" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                </div>
+
+                <div class="volume">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.8">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+
+                <audio id="audioPlayer"></audio>
             </div>
 
             <!-- Playlist Card -->
             <div class="playlist-card">
-                <div class="music-list-header">
-                    <div class="music-list-header-left">
-                        <i class="fas fa-list-ul"></i>
-                        <h3>Daftar Putar</h3>
+                <div class="playlist-header">
+                    <div class="playlist-title">
+                        <i class="fas fa-list-ul"></i> Playlist
                     </div>
-                    <span class="track-count-badge" id="trackCountBadge">0 lagu</span>
+                    <span class="song-count" id="songCount">0 Lagu</span>
                 </div>
-                <div class="music-list" id="musicList">
-                    <!-- Music items will be inserted here by JavaScript -->
+
+                <div class="song-list" id="musicList">
+                    <!-- Generated by JS -->
                 </div>
             </div>
 
         </div>
+
     </div>
 
-    <!-- Footer -->
-    <div id="footer-container"></div>
-
-    <!-- Scripts -->
-    <script src="../../music-data.js"></script>
-    <script src="music.js"></script>
     <script>
-        /* =============================================
-           ADMIN PROFILE LOGIC
-        ============================================= */
-        function checkAdminSession() {
-            const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
-            const profileEl = document.getElementById('adminProfile');
-            if (isAdmin && profileEl) {
-                profileEl.style.display = 'block';
-                const adminName = localStorage.getItem('fx_adminName') || 'Admin';
-                document.getElementById('adminNameDisplayHeader').textContent = adminName;
-            }
-        }
-
-        function toggleAdminDropdown() {
-            const dropdown = document.getElementById('adminDropdown');
-            dropdown.classList.toggle('active');
-            document.addEventListener('click', function closeDropdown(e) {
-                if (!e.target.closest('.admin-profile-container')) {
-                    dropdown.classList.remove('active');
-                    document.removeEventListener('click', closeDropdown);
-                }
-            });
-        }
-
-        function adminLogout() {
-            if (confirm('Yakin ingin keluar dari sesi admin?')) {
-                sessionStorage.removeItem('fx_isAdmin');
-                window.location.reload();
-            }
-        }
-
-        /* =============================================
-           FOOTER LOAD
-        ============================================= */
-        fetch('../../footer/music.html')
-            .then(r => r.text())
-            .then(html => { document.getElementById('footer-container').innerHTML = html; })
-            .catch(err => console.log('Footer load error:', err));
-
-        /* =============================================
-           DOM READY
-        ============================================= */
         document.addEventListener('DOMContentLoaded', () => {
-            checkAdminSession();
-
-            /* Track count badge */
-            const musicListEl = document.getElementById('musicList');
-            const badge = document.getElementById('trackCountBadge');
-            const observer = new MutationObserver(() => {
-                const count = musicListEl.querySelectorAll('.music-item').length;
-                badge.textContent = count + ' lagu';
-            });
-            observer.observe(musicListEl, { childList: true, subtree: false });
-        });
-
-        /* =============================================
-           ALBUM ART ANIMATION
-        ============================================= */
-        const audio      = document.getElementById('audioPlayer');
-        const albumArt   = document.getElementById('albumArt');
-        const artWrapper = document.getElementById('albumArtWrapper');
-
-        audio.addEventListener('play', () => {
-            albumArt.classList.add('playing');
-            artWrapper.classList.add('playing');
-        });
-
-        audio.addEventListener('pause', () => {
-            albumArt.classList.remove('playing');
-            artWrapper.classList.remove('playing');
-        });
-
-        /* =============================================
-           VOLUME ICON UPDATE
-        ============================================= */
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeLabel  = document.getElementById('volumeLabel');
-
-        volumeSlider.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            if (v === 0) {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            } else if (v < 0.5) {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-down"></i>';
-            } else {
-                volumeLabel.innerHTML = '<i class="fas fa-volume-up"></i>';
-            }
-        });
-
-        /* =============================================
-           INJECT EQ BARS INTO ACTIVE ITEM
-           (Observer watches for class changes on .music-item)
-        ============================================= */
-        function addEqBars(item) {
-            if (!item.querySelector('.eq-bars')) {
-                const eq = document.createElement('div');
-                eq.className = 'eq-bars';
-                eq.innerHTML = '<span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>';
-                const info = item.querySelector('.music-item-info');
-                if (info) info.appendChild(eq);
-            }
-        }
-
-        const listEl = document.getElementById('musicList');
-        const itemObserver = new MutationObserver((mutations) => {
-            mutations.forEach(m => {
-                m.addedNodes.forEach(node => {
-                    if (node.classList && node.classList.contains('music-item')) {
-                        addEqBars(node);
-                    }
-                });
-                if (m.type === 'attributes' && m.attributeName === 'class') {
-                    if (m.target.classList.contains('music-item')) {
-                        addEqBars(m.target);
-                    }
-                }
-            });
-        });
-
-        itemObserver.observe(listEl, {
-            childList: true,
-            attributes: true,
-            attributeFilter: ['class'],
-            subtree: true
+            if (typeof initPlayer === 'function') initPlayer();
         });
     </script>
 </body>

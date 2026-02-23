@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../loader/style.css">
+    <script src="../loader/script.js"></script>
     <script src="../admin/maintenance-check.js"></script>
     <style>
         /* About Specific Content */
@@ -179,7 +181,8 @@
         }
 
         /* Lists */
-        ol, ul {
+        ol,
+        ul {
             padding-left: 24px;
             color: var(--text-secondary);
         }
@@ -199,7 +202,7 @@
             margin-top: 16px;
         }
 
-        .device-info > p {
+        .device-info>p {
             margin: 0 0 20px 0;
             color: var(--primary);
             font-weight: 600;
@@ -306,6 +309,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -316,11 +320,25 @@
             animation: fadeInUp 0.6s ease-out backwards;
         }
 
-        .about-section:nth-child(1) { animation-delay: 0.1s; }
-        .about-section:nth-child(2) { animation-delay: 0.2s; }
-        .about-section:nth-child(3) { animation-delay: 0.3s; }
-        .about-section:nth-child(4) { animation-delay: 0.4s; }
-        .about-section:nth-child(5) { animation-delay: 0.5s; }
+        .about-section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .about-section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .about-section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .about-section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .about-section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -407,27 +425,25 @@
         <!-- Header -->
         <div class="fitur-header">
             <div class="header-left">
-                <a href="../index.html" class="home-btn" title="Kembali ke Beranda">
-                    <i class="fas fa-home"></i>
+                <a href="../index.html" style="text-decoration: none;">
+                    <h1>
+                        <i class="fas fa-info-circle"></i>
+                        Tentang Kami
+                    </h1>
                 </a>
-            </div>
-
-            <div class="header-center">
-                <h1>
-                    <i class="fas fa-info-circle"></i>
-                    Tentang Kami
-                </h1>
             </div>
 
             <div class="header-right">
                 <div class="admin-profile-container" id="adminProfile" style="display: none;">
-                    <button id="adminLoginBtn" class="home-btn" onclick="toggleAdminDropdown()" title="Admin Account">
+                    <button id="adminLoginBtn" class="admin-login-btn" onclick="toggleAdminDropdown()" title="Admin Account">
                         <i class="fas fa-user-shield"></i>
                     </button>
                     <div id="adminDropdown" class="admin-dropdown">
                         <div class="dropdown-header">
                             <div class="admin-avatar">
-                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png" alt="Admin Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                                <img src="https://i.ibb.co.com/N2YYrQBS/Pngtree-character-default-avatar-5407167.png"
+                                    alt="Admin Avatar"
+                                    style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                             </div>
                             <div class="admin-info">
                                 <span id="adminNameDisplayHeader">Admin</span>
@@ -436,23 +452,86 @@
                         </div>
                         <div class="dropdown-menu">
                             <a href="../admin/panel.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Dashboard
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                             <a href="../admin/settings.html" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
+                                <i class="fas fa-cog"></i> Settings
                             </a>
                             <div class="dropdown-divider"></div>
                             <button onclick="adminLogout()" class="dropdown-item logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Keluar
+                                <i class="fas fa-sign-out-alt"></i> Keluar
                             </button>
                         </div>
                     </div>
                 </div>
+                <button class="menu-btn mobile-only" id="mobileNavBtn" onclick="toggleSidebar()" aria-label="Menu" style="margin-right: 10px;">
+                    <i class="fas fa-bars" id="mobileNavIcon"></i>
+                </button>
+                <a href="../index.html" class="admin-login-btn desktop-only" title="Kembali ke Beranda">
+                    <i class="fas fa-home"></i>
+                </a>
             </div>
         </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+                <p>Akses cepat ke fitur</p>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-item" onclick="window.location.href='../index.html'">
+                    <i class="fas fa-home"></i>
+                    <span>Beranda</span>
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='music/music.html'">
+                    <i class="fas fa-music"></i>
+                    <span>Musik</span>
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='favorit/index.html'">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorit</span>
+                </div>
+
+                <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+                
+                <div class="mobile-nav-dropdown">
+                    <button class="mobile-nav-dropdown-trigger" onclick="toggleMobileDropdown(event)" style="padding: 14px 24px;">
+                        <span><i class="fas fa-th-large"></i> Fitur</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="mobile-nav-dropdown-content">
+                        <div class="sidebar-item" onclick="window.location.href='../gempa-bmkg/index.html'">
+                            <i class="fas fa-bullseye"></i>
+                            <span>Gempabumi</span>
+                        </div>
+                        <div class="sidebar-item active" onclick="window.location.href='about.html'">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Tentang</span>
+                        </div>
+                        <div class="sidebar-item" onclick="window.location.href='faq.html'">
+                            <i class="fas fa-question-circle"></i>
+                            <span>FAQ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mobile-nav-divider" style="margin: 10px 20px; opacity: 0.1;"></div>
+                <div style="padding: 10px 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em;">Bantuan</div>
+
+                <div class="sidebar-item" onclick="window.open('https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0', '_blank')">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>FX Community</span>
+                </div>
+                <div class="sidebar-item" onclick="window.open('https://wa.me/62895404147521', '_blank')">
+                    <i class="fas fa-headset"></i>
+                    <span>Admin Support</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
         <div class="about-content">
             <!-- Mission Section -->
@@ -549,10 +628,14 @@
             <div class="about-section">
                 <h2><i class="fas fa-graduation-cap"></i> Jalur Pembelajaran Kami</h2>
                 <ol>
-                    <li><strong>Trading FX Basic</strong> - Pahami dasar-dasar forex, instrumen, dan cara kerja pasar</li>
-                    <li><strong>Analisa Teknikal</strong> - Kuasai pattern, support resistance, dan strategi chart analysis</li>
-                    <li><strong>Psikologi Trading</strong> - Kembangkan mindset trader profesional dan manajemen emosi</li>
-                    <li><strong>Trading Lanjutan</strong> - Pelajari ICT, order blocks, dan strategi advanced lainnya</li>
+                    <li><strong>Trading FX Basic</strong> - Pahami dasar-dasar forex, instrumen, dan cara kerja pasar
+                    </li>
+                    <li><strong>Analisa Teknikal</strong> - Kuasai pattern, support resistance, dan strategi chart
+                        analysis</li>
+                    <li><strong>Psikologi Trading</strong> - Kembangkan mindset trader profesional dan manajemen emosi
+                    </li>
+                    <li><strong>Trading Lanjutan</strong> - Pelajari ICT, order blocks, dan strategi advanced lainnya
+                    </li>
                 </ol>
             </div>
 
@@ -590,43 +673,34 @@
             <div class="about-section">
                 <h2><i class="fas fa-handshake"></i> Nilai-Nilai Kami</h2>
                 <ul>
-                    <li><strong>Transparansi</strong> - Kami percaya pada kejujuran dan transparansi dalam setiap aspek</li>
-                    <li><strong>Kualitas</strong> - Materi kami dikurasi dari sumber-sumber terpercaya dan berpengalaman</li>
+                    <li><strong>Transparansi</strong> - Kami percaya pada kejujuran dan transparansi dalam setiap aspek
+                    </li>
+                    <li><strong>Kualitas</strong> - Materi kami dikurasi dari sumber-sumber terpercaya dan berpengalaman
+                    </li>
                     <li><strong>Aksesibilitas</strong> - Trading education harus mudah diakses oleh semua orang</li>
-                    <li><strong>Komunitas</strong> - Kami membangun komunitas trader yang saling mendukung dan belajar</li>
-                    <li><strong>Inovasi</strong> - Terus berkembang dengan teknologi dan metode pembelajaran terbaru</li>
+                    <li><strong>Komunitas</strong> - Kami membangun komunitas trader yang saling mendukung dan belajar
+                    </li>
+                    <li><strong>Inovasi</strong> - Terus berkembang dengan teknologi dan metode pembelajaran terbaru
+                    </li>
                 </ul>
             </div>
 
             <div class="divider"></div>
 
-            <!-- Contact Section -->
-            <div class="about-section">
-                <h2><i class="fas fa-envelope"></i> Hubungi Kami</h2>
-                <p>
-                    Kami selalu terbuka untuk feedback, saran, atau pertanyaan dari komunitas kami. Jangan ragu untuk
-                    menghubungi kami melalui channel yang tersedia di bawah ini.
-                </p>
-                <div class="contact-buttons">
-                    <a href="https://wa.me/62895404147521" target="_blank" rel="noopener noreferrer" class="contact-btn">
-                        <i class="fab fa-whatsapp"></i> Chat Admin
-                    </a>
-                    <a href="https://chat.whatsapp.com/KnkESJgEUKT5PEki4SpDD0" target="_blank" rel="noopener noreferrer" class="contact-btn">
-                        <i class="fab fa-whatsapp"></i> Join Komunitas
-                    </a>
-                </div>
-            </div>
+
 
             <!-- Footer -->
             <div class="about-footer">
                 <p>&copy; 2025-<span id="footerYear"></span> FX Community. Semua hak dilindungi.</p>
-                <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">Platform pembelajaran trading untuk semua level</p>
+                <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">Platform pembelajaran trading untuk semua
+                    level</p>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="data.js"></script>
+    <script src="../script.js"></script>
     <script>
         // Admin Profile Logic
         function checkAdminSession() {
@@ -642,7 +716,7 @@
         function toggleAdminDropdown() {
             const dropdown = document.getElementById('adminDropdown');
             dropdown.classList.toggle('active');
-            
+
             document.addEventListener('click', function closeDropdown(e) {
                 if (!e.target.closest('.admin-profile-container')) {
                     dropdown.classList.remove('active');
@@ -691,10 +765,10 @@
         document.getElementById('deviceBrowser').textContent = deviceInfo.browserName;
         document.getElementById('totalPDF').textContent = (typeof pdfData !== 'undefined' ? pdfData.length : '38');
         document.getElementById('pdfCount').textContent = (typeof pdfData !== 'undefined' ? pdfData.length : '38');
-        
+
         // Set current year
         document.getElementById('footerYear').textContent = new Date().getFullYear();
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             checkAdminSession();
         });

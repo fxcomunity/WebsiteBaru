@@ -86,14 +86,82 @@ function applyDeviceStyles() {
     document.body.className = deviceInfo.deviceClass;
 }
 
-// Fungsi untuk toggle sidebar
+// Fungsi untuk toggle sidebar (hamburger menu mobile)
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const icon = document.getElementById('mobileNavIcon');
+    const btn = document.getElementById('mobileNavBtn');
 
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
+    if (!sidebar) return;
+
+    const isActive = sidebar.classList.toggle('active');
+    if (overlay) overlay.classList.toggle('active');
+
+    // Update icon if exists
+    if (icon) {
+        icon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+    }
+    // Update aria-expanded if btn exists
+    if (btn) {
+        btn.setAttribute('aria-expanded', isActive);
+    }
 }
+
+// Fungsi untuk toggle mobile nav dropdown
+function toggleMobileNav() {
+    const menu = document.getElementById('mobileNavMenu');
+    const icon = document.getElementById('mobileNavIcon');
+    const btn = document.getElementById('mobileNavBtn');
+
+    if (!menu) return;
+
+    const isOpen = menu.classList.toggle('open');
+    if (icon) {
+        icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+    }
+    if (btn) {
+        btn.setAttribute('aria-expanded', isOpen);
+    }
+}
+
+// Fungsi untuk toggle dropdown di mobile nav
+function toggleMobileDropdown(event) {
+    event.stopPropagation();
+    const trigger = event.currentTarget;
+    const content = trigger.nextElementSibling;
+    const icon = trigger.querySelector('.dropdown-icon');
+
+    if (content) {
+        content.classList.toggle('active');
+    }
+    if (icon) {
+        icon.classList.toggle('rotate');
+    }
+}
+
+// Tutup sidebar atau mobile nav saat klik di luar
+document.addEventListener('click', function (e) {
+    const sidebar = document.getElementById('sidebar');
+    const mobileNavMenu = document.getElementById('mobileNavMenu');
+    const btn = document.getElementById('mobileNavBtn');
+    const overlay = document.getElementById('overlay');
+
+    // Handle Sidebar
+    if (sidebar && sidebar.classList.contains('active') &&
+        !sidebar.contains(e.target) &&
+        btn && !btn.contains(e.target) &&
+        (!overlay || e.target === overlay)) {
+        toggleSidebar();
+    }
+
+    // Handle Mobile Nav Menu
+    if (mobileNavMenu && mobileNavMenu.classList.contains('open') &&
+        !mobileNavMenu.contains(e.target) &&
+        btn && !btn.contains(e.target)) {
+        toggleMobileNav();
+    }
+});
 
 // Fungsi untuk mendapatkan ID dari URL Google Drive
 function getGoogleDriveId(url) {
@@ -388,7 +456,7 @@ function filterByCategory(category) {
     pills.forEach(pill => {
         pill.classList.remove('active');
         const pillText = pill.textContent.trim();
-        
+
         if ((category === 'all' && pillText === 'Semua') ||
             (category === 'trading-fx' && pillText === 'Trading FX') ||
             (category === 'saham' && pillText === 'Saham')) {
@@ -415,7 +483,7 @@ function filterPDFs() {
         filteredPDFs = filteredPDFs.filter(pdf =>
             pdf.name.toLowerCase().includes(searchTerm)
         );
-        
+
         // Show notification if search returned no results
         if (beforeFilterCount > 0 && filteredPDFs.length === 0) {
             showNotification(`Pencarian "${searchTerm}" tidak menemukan PDF`, 'info');
@@ -563,133 +631,9 @@ function toggleMusicFavorite(index) {
 }
 
 // Contact Modal Functions
-function toggleContactWidget() {
-    const widget = document.getElementById('floatingContactWidget');
-    const widgetBody = document.getElementById('widgetBody');
-    const header = widget.querySelector('.widget-header');
 
-    if (widgetBody.style.display === 'none') {
-        widgetBody.style.display = 'block';
-        header.classList.remove('collapsed');
-        document.getElementById('floatingContactForm').reset();
-    } else {
-        widgetBody.style.display = 'none';
-        header.classList.add('collapsed');
-    }
-}
 
-function submitFloatingContact(event) {
-    event.preventDefault();
 
-    const name = document.getElementById('fcName').value;
-    const category = document.getElementById('fcCategory').value;
-    const message = document.getElementById('fcMessage').value;
-
-    const categoryMap = {
-        'pertanyaan': '❓ Pertanyaan',
-        'bug': '🐛 Bug Report',
-        'saran': '💡 Saran',
-        'partnership': '🤝 Kerjasama',
-        'lainnya': '📋 Lainnya'
-    };
-
-    const whatsappMessage = `*HUBUNGI KAMI - TRADING PDF*\n\n` +
-        `*Nama:* ${name}\n` +
-        `*Kategori:* ${categoryMap[category] || category}\n\n` +
-        `*Pesan:*\n${message}`;
-
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappURL = `https://wa.me/62895404147521?text=${encodedMessage}`;
-
-    window.open(whatsappURL, '_blank');
-
-    // Reset form
-    document.getElementById('floatingContactForm').reset();
-
-    // Collapse widget after submit
-    const widgetBody = document.getElementById('widgetBody');
-    const header = document.querySelector('.widget-header');
-    widgetBody.style.display = 'none';
-    header.classList.add('collapsed');
-}
-
-// Close widget when clicking outside
-document.addEventListener('click', function (event) {
-    const widget = document.getElementById('floatingContactWidget');
-    if (widget && !widget.contains(event.target)) {
-        const widgetBody = document.getElementById('widgetBody');
-        if (widgetBody.style.display === 'block') {
-            // Optionally close on outside click
-            // widgetBody.style.display = 'none';
-        }
-    }
-});
-
-/* Linktree feature */
-function openLinktree() {
-    const modal = document.getElementById('linktreeModal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    renderLinktree();
-}
-
-function closeLinktree() {
-    const modal = document.getElementById('linktreeModal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function renderLinktree() {
-    const list = document.getElementById('linktreeList');
-    if (!list || typeof getLinktreeLinks !== 'function') return;
-    const items = getLinktreeLinks();
-    list.innerHTML = '';
-
-    items.forEach(item => {
-        const a = document.createElement('a');
-        a.className = 'lt-link-btn';
-        a.href = item.url;
-        a.title = item.title;
-
-        const icon = document.createElement('i');
-        if (item.icon) icon.className = item.icon;
-        a.appendChild(icon);
-
-        const span = document.createElement('span');
-        span.textContent = item.title;
-        a.appendChild(span);
-
-        a.addEventListener('click', function (e) {
-            // Internal anchors: handle in-page actions
-            if (item.url && item.url.startsWith('#')) {
-                e.preventDefault();
-                closeLinktree();
-                if (item.url === '#music') showMusic();
-                else if (item.url === '#catalog') showHome();
-                const targetId = item.url.replace('#', '');
-                const el = document.getElementById(targetId);
-                if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 200);
-            } else if (item.url && item.url.startsWith('http')) {
-                // external link - open new tab
-                // allow default behavior but ensure new tab
-                window.open(item.url, '_blank');
-                closeLinktree();
-                e.preventDefault();
-            }
-        });
-
-        list.appendChild(a);
-    });
-}
-
-// Close Linktree on outside click
-document.addEventListener('click', function (e) {
-    const modal = document.getElementById('linktreeModal');
-    const btn = document.getElementById('linktreeFloatingBtn');
-    if (!modal || modal.style.display !== 'flex') return;
-    if (modal.contains(e.target) || (btn && btn.contains(e.target))) return;
-    closeLinktree();
-});
 
 // Music modal open/close
 function openMusicModal() {
@@ -707,27 +651,34 @@ function closeMusicModal() {
 }
 
 // Admin Profile Logic
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const adminBtn = document.getElementById('adminLoginBtn');
     const adminDropdown = document.getElementById('adminDropdown');
     const adminNameDisplay = document.getElementById('adminNameDisplay');
-    
+
     if (adminBtn && adminDropdown) {
-        adminBtn.addEventListener('click', function(e) {
+        adminBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             const isAdmin = sessionStorage.getItem('fx_isAdmin') === '1';
-            
+
             if (isAdmin) {
                 adminDropdown.classList.toggle('active');
-                // Update name from localStorage if available
-                const savedName = localStorage.getItem('fx_adminName') || 'Admin';
-                if (adminNameDisplay) adminNameDisplay.textContent = savedName;
+                // Update name from session storage
+                const userData = sessionStorage.getItem('fx_user');
+                if (userData) {
+                    try {
+                        const user = JSON.parse(userData);
+                        if (adminNameDisplay) adminNameDisplay.textContent = user.nama || 'Admin';
+                    } catch (e) {
+                        if (adminNameDisplay) adminNameDisplay.textContent = 'Admin';
+                    }
+                }
             } else {
-                window.open('admin/index.html', '_blank');
+                window.location.href = 'auth.html';
             }
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!adminDropdown.contains(e.target) && !adminBtn.contains(e.target)) {
                 adminDropdown.classList.remove('active');
             }
@@ -737,5 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function adminLogout() {
     sessionStorage.removeItem('fx_isAdmin');
-    window.location.reload();
+    sessionStorage.removeItem('fx_user');
+    localStorage.removeItem('fx_adminName');
+    window.location.href = 'auth.html';
 }
